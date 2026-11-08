@@ -10,12 +10,11 @@ The Hamiltonian of Eq.~\eqref{eq:H} uses $h=1/2$ and couplings $J_{ij}$ drawn un
 transverse field runs from $h$ to $2h$. Each input $u$ is drawn uniformly from $[0,1]$ and held for a step of length
 $\Delta t=1/2$. We integrate Eq.~\eqref{eq:lindblad} in the 1024-dimensional basis of Pauli operators and evaluate the
 step map $E(u)=e^{\Delta t\mathcal L(u)}$ by Chebyshev interpolation in $u$ at ten nodes. Each reservoir draws its
-couplings and its input stream from one seed, and every shape uses the same eight seeds; runs with the input on
-one spin use the first four. After a washout of
+couplings and its input stream from one seed, and every shape uses the same eight seeds, and runs with the input on one spin use the first four. After a washout of
 $\max(800,60\gamma)$ steps, at least four times the time to forget, we record the 45 features, the expectation values of $X_i$, $Y_i$, $Z_i$ and of $X_iX_j$,
 $Y_iY_j$, $Z_iZ_j$, for 2000 training, 400 validation and 1600 test inputs. The readout is a least-squares fit with an
 intercept on the training and validation inputs, and $C_\tau$ is the squared correlation of its estimate with
-$u_{t-\tau}$ on the test inputs. The memory sums $C_\tau$ over delays 1 to 300; a delay without any recall reads about
+$u_{t-\tau}$ on the test inputs. The memory sums $C_\tau$ over delays 1 to 300. A delay without any recall reads about
 $1/1600$ on the test inputs, so the sum has a floor of about 0.2 units. Figures show the mean of the eight reservoirs,
 with bands from the 16th to the 84th percentile.
 
@@ -36,9 +35,9 @@ for every shape and every Hamiltonian. The protected operators form the kernel o
 The input-averaged step $\bar E=\mathbb E_uE(u)$ is computed by six-point Gauss--Legendre quadrature. Its eigenvalues
 $\lambda_j$ give decay rates $\kappa_j=-\ln|\lambda_j|/\Delta t$. If the dissipator protects $n$ operators, the slow
 modes are the $n-1$ slowest decaying ones besides the stationary state, and the time to forget is
-$t_{\mathrm f}=1/(\Delta t\,\bar\kappa)$, with $\bar\kappa$ their mean rate; without protected operators we use the
+$t_{\mathrm f}=1/(\Delta t\,\bar\kappa)$, with $\bar\kappa$ their mean rate. Without protected operators we use the
 slowest mode. The mean rate adds the leak and the scrambling exactly (Appendix~\ref{app:numerics}). Figure~\ref{fig:clock}d shows instead the decay rates
-$-\operatorname{Re}\lambda$ of the generator at the mean input, $u=1/2$; with a shared channel we call the $n-1$
+$-\operatorname{Re}\lambda$ of the generator at the mean input, $u=1/2$. With a shared channel we call the $n-1$
 slowest of them dark and all faster ones bright.
 
 Let $\mathcal D$ be the unit-rate dissipator, $\mathcal P=\lim_{t\to\infty}e^{t\mathcal D}$ the projector onto its
@@ -49,8 +48,7 @@ coordinates,
   \mathcal G(u)=\mathcal P\mathcal H(u)\mathcal P-\frac1\gamma\,\mathcal P\mathcal H(u)\mathcal S\mathcal H(u)\mathcal P ,
   \label{eq:reduced}
 \end{equation}
-with $\mathcal H=-i[H,\cdot\,]$. The first term is the Hamiltonian restricted to the protected operators, which turns
-them; the second is the leak through brief excursions into bright states.
+with $\mathcal H=-i[H,\cdot\,]$. The first term is the Hamiltonian restricted to the protected operators, which turns them, and the second is the leak through brief excursions into bright states.
 
 For gentle writing we replace $h(1+u)$ in Eq.~\eqref{eq:H} by $h[\tfrac32+\eta(u-\tfrac12)]$, which keeps the mean
 field: $\eta=\min(1,\gamma^{-1/2})$ for opposite phases and $\eta=\min(1,\gamma^{1/2})$
@@ -60,8 +58,8 @@ for local loss.
 \label{sec:order}
 A stored signal can depend on one past input or on products of several, and its order counts them: $u_{t-3}$ has
 order one, $u_{t-3}u_{t-5}$ order two. Precisely, for independent inputs, every function of the past inputs with finite
-variance splits uniquely into orthogonal parts, each of which depends on a fixed finite set of inputs; the order of a part is the size of its set. For signs
-$u_t=\pm1$ the parts are the products $\prod_{j\in J}u_{t-j}$; for continuous inputs one uses orthogonal polynomials
+variance splits uniquely into orthogonal parts, each of which depends on a fixed finite set of inputs. The order of a part is the size of its set. For signs
+$u_t=\pm1$ the parts are the products $\prod_{j\in J}u_{t-j}$, and for continuous inputs one uses orthogonal polynomials
 in each input. Quantum channels act affinely on traceless
 coordinates~\cite{MartinezPenaOrtega2023,MartinezPenaOrtega2025}, $r_t=A(u_t)r_{t-1}+b(u_t)$. Let $\bar A=\mathbb EA$
 be the mean step, $m$ the stationary mean and $\xi=A(u)m+b(u)-m$ the innovation, the change that one input writes,
@@ -71,8 +69,7 @@ $\mathcal K=\mathcal T-\mathcal B$, the covariance $G_k$ carried by products of 
   G_1=(1-\mathcal B)^{-1}V,\qquad G_{k+1}=(1-\mathcal B)^{-1}\mathcal KG_k .
   \label{eq:recursion}
 \end{equation}
-The innovation adds the current input alone; the mean step carries a stored product along without adding an input;
-and the fluctuating part $\mathcal K$ of the step multiplies it by the current input, which raises its order by one.
+The innovation adds the current input alone. The mean step carries a stored product along without adding an input. The fluctuating part $\mathcal K$ of the step multiplies it by the current input, which raises its order by one.
 The $G_k$ add up to the stationary covariance $\Sigma$. A readout of features $y=Mr$ explains the share
 $\Tr[(M\Sigma M^{\mathsf T})^+MG_kM^{\mathsf T}]$ of order $k$, and these shares add up to the rank of the
 readout~\cite{Dambre2012}. For one observable with coordinates $a$ the share of order $k$ is
@@ -90,7 +87,7 @@ For each step we form the outcome distributions of the three settings and draw $
 readout is fitted as above, with a ridge chosen from fourteen values between 0 and $10^4$ on the validation inputs.
 In Sec.~\ref{sec:price} the distributions come from the replay: each output step replays its last $\tau_{90}$ inputs
 from $|00000\rangle$, with $n=10^3$ to $10^{8.5}$ in half decades or, for a budget $B$ of preparations times
-replayed steps per output step, $n=B/(3\tau_{90})$; only Fig.~\ref{fig:sampling}b uses the state with the full
+replayed steps per output step, $n=B/(3\tau_{90})$. Only Fig.~\ref{fig:sampling}b uses the state with the full
 history. The matched clock of Fig.~\ref{fig:sampling}b is a leak time
 $t_{\mathrm{leak}}=1/(\Delta t\,\bar\kappa_0)$ of 32 steps, where $\bar\kappa_0$ is the mean decay rate of the slow
 modes of the generator at the mean input (Appendix~\ref{app:numerics}).
