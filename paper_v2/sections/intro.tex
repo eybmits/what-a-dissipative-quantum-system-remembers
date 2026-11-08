@@ -37,13 +37,13 @@ even compute with quantum states~\cite{Poyatos1996,Verstraete2009,Pastawski2011,
 the decay paths interfere. For two spins, an excitation on either spin, $|10\rangle$ or $|01\rangle$, decays into the
 same channel, so the two decay amplitudes add for the symmetric superposition $|{+}\rangle$ and cancel for the
 antisymmetric one $|{-}\rangle$ (Fig.~\ref{fig:concept}c). The state $|{-}\rangle$ is dark: it cannot decay at all, as
-in subradiance~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. It still leaks slowly, because the couplings between
-the spins turn it into the bright state $|{+}\rangle$, which does decay. Strong dissipation slows this leak. It acts
+in subradiance~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. It still leaks slowly, because any difference between
+the two spins, such as unequal frequencies, turns it into the bright state $|{+}\rangle$, which does decay. Strong dissipation slows this leak. It acts
 like a measurement that keeps asking whether the spins have emitted, and every answer ``no'' returns them to the dark
 state. This is the quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}: the stronger the
 dissipation, the slower the leak (Fig.~\ref{fig:concept}c, inset).
 
-Earlier QRC studies tuned local loss rates~\cite{Sannia2024}, compared local noise types~\cite{Kubota2023,Fry2023} or
+Earlier QRC studies compared local noise types~\cite{Kubota2023,Fry2023} or
 photon loss in Kerr oscillators~\cite{Cheamsawat2025}, and read a static classifier out of a decoherence-free
 subspace~\cite{Akshay2026}. Classical networks have limits on short-term memory~\cite{JaegerESP2001,White2004,Ganguli2008},
 a stronger input trades memory for nonlinearity~\cite{Dambre2012,Inubushi2017}, also across quantum reservoir
@@ -58,8 +58,8 @@ operators a design variable for memory (Fig.~\ref{fig:concept}):
   loss grows, while spins that share one channel forget more slowly. The Zeno effect turns loss into protection, and
   the memory lives in coherences between dark states.
 \item \textbf{A long memory has an exact price.} Each later input turns the stored state by a small, input-dependent
-  angle, so an old input survives only multiplied by later ones, in products such as $u_{t-3}u_{t-5}$ that a linear
-  readout cannot use. For every reservoir whose stored signal fades along one slow direction, classical or quantum, we
+  angle. As the turns add up, an old input survives only multiplied by later ones, in products such as
+  $u_{t-3}u_{t-5}$ that a linear readout cannot use. For every reservoir whose stored signal fades along one slow direction, classical or quantum, we
   prove that the number of inputs mixed into a memory is exponentially distributed, with mean equal to how strongly
   one input turns the stored state times how long the memory lasts (Appendix~\ref{app:law}), and we certify the
   three-spin limits by interval arithmetic (Appendix~\ref{app:spins}). An input that weakens as the memory grows
