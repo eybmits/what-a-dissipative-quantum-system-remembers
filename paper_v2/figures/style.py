@@ -243,13 +243,15 @@ def _line(fig, xs, ys, **kw):
     fig.add_artist(Line2D(np.asarray(xs) / W, np.asarray(ys) / Hf, transform=fig.transFigure, **kw))
 
 
-def line_handle(color, ls="-", lw=None, marker=None, ms=None, mfc="white", band=None):
-    """A line, with a marker in its middle and with a light band behind it (alpha `band`) if asked."""
+def line_handle(color, ls="-", lw=None, marker=None, ms=None, mfc="white", band=None, under=None):
+    """A line, with a marker in its middle and with a light band behind it (alpha `band`) if asked; `under` draws it on
+    a small swatch of that colour (a white line drawn on a map)."""
     def draw(fig, x0, x1, y):
-        if band:
-            W, Hf = _pts(fig)
+        W, Hf = _pts(fig)
+        if band or under is not None:
             fig.add_artist(Rectangle((x0 / W, (y - 3.0) / Hf), (x1 - x0) / W, 6.0 / Hf, transform=fig.transFigure,
-                                     color=color, alpha=band, lw=0))
+                                     color=color if under is None else under, alpha=band if under is None else 1.0,
+                                     lw=0))
         _line(fig, [x0, x1], [y, y], color=color, ls=ls, lw=LW if lw is None else lw, solid_capstyle="butt",
               dash_capstyle="butt")
         if marker:
@@ -284,36 +286,42 @@ def key_baseline(fig, row):
 ASC, DESC = 7.0, 2.0                        # height of a 10 pt label above and below its baseline
 
 
-def key(fig, x, entries, ncol=1, row=0, right=False, y=None):
+def key(fig, x, entries, ncol=1, row=0, right=False, y=None, handle=HANDLE, gap=HANDLE_PAD, sep=KEY_SEP,
+        center=False):
     """Entries in rows of `ncol` columns, the first handle at x points from the left edge of the figure (or, with
-    right=True, the end of the longest label of the last column at x); each column as wide as its longest label.
-    The first row sits on the baseline y (points from the bottom of the figure), by default in the band under the
-    panels."""
+    right=True, the end of the longest label of the last column at x, or with center=True the middle of the key);
+    each column as wide as its longest label. The first row sits on the baseline y (points from the bottom of the
+    figure), by default in the band under the panels. `handle` is the length of a handle (shorter for markers),
+    `gap` the space between handle and label, `sep` the space between columns."""
     W, Hf = _pts(fig)
     base = (lambda r: key_baseline(fig, r)) if y is None else (lambda r: y - (r - row) * KEY_ROW)
     texts = []
-    for i, (handle, label) in enumerate(entries):
+    for i, (draw, label) in enumerate(entries):
         r = row + i // ncol
         texts.append(fig.text(0, base(r) / Hf, label, ha="left", va="baseline", fontsize=TXT))
     fig.canvas.draw()
     rend = fig.canvas.get_renderer()
     widths = [t.get_window_extent(rend).width / fig.dpi / PT for t in texts]
     colw = [max(widths[c::ncol]) for c in range(ncol)]
+    total = sum(colw) + ncol * (handle + gap) + (ncol - 1) * sep
     if right:
-        x -= sum(colw) + ncol * (HANDLE + HANDLE_PAD) + (ncol - 1) * KEY_SEP
-    x0 = [x + sum(colw[:c]) + c * (HANDLE + HANDLE_PAD + KEY_SEP) for c in range(ncol)]
-    for i, ((handle, label), t) in enumerate(zip(entries, texts)):
+        x -= total
+    elif center:
+        x -= total / 2
+    x0 = [x + sum(colw[:c]) + c * (handle + gap + sep) for c in range(ncol)]
+    for i, ((draw, label), t) in enumerate(zip(entries, texts)):
         c, r = i % ncol, row + i // ncol
         yb = base(r)
-        handle(fig, x0[c], x0[c] + HANDLE, yb + MID)
-        t.set_x((x0[c] + HANDLE + HANDLE_PAD) / W)
-        fig.key_boxes.append((label, (x0[c], yb - DESC, x0[c] + HANDLE + HANDLE_PAD + widths[i], yb + ASC)))
-    return x0[-1] + HANDLE + HANDLE_PAD + colw[-1]
+        draw(fig, x0[c], x0[c] + handle, yb + MID)
+        t.set_x((x0[c] + handle + gap) / W)
+        fig.key_boxes.append((label, (x0[c], yb - DESC, x0[c] + handle + gap + widths[i], yb + ASC)))
+    return x0[-1] + handle + gap + colw[-1]
 
 
-def inkey(ax, entries, loc="upper left", ncol=1, pad=(4.5, 5.0), at=None):
+def inkey(ax, entries, loc="upper left", ncol=1, pad=(4.5, 5.0), at=None, **kw):
     """A key inside a panel, in the corner `loc` ('upper left', 'upper right', 'lower left' or 'lower right'), `pad`
-    points from the frame (across, up or down), or with that corner at `at` (axes fraction)."""
+    points from the frame (across, up or down), or with that corner at `at` (axes fraction); further keywords go to
+    key."""
     fig = ax.figure
     W, Hf = _pts(fig)
     p = ax.get_position()
@@ -325,7 +333,7 @@ def inkey(ax, entries, loc="upper left", ncol=1, pad=(4.5, 5.0), at=None):
     else:
         cx, cy = (p.x0 + at[0] * p.width) * W, (p.y0 + at[1] * p.height) * Hf
     y = cy - ASC if vert == "upper" else cy + DESC + (rows - 1) * KEY_ROW
-    return key(fig, cx, entries, ncol=ncol, y=y, right=horiz == "right")
+    return key(fig, cx, entries, ncol=ncol, y=y, right=horiz == "right", **kw)
 
 
 def colour_key(fig, im, x, x1, title, ticks, row=0):

@@ -4,8 +4,9 @@ Recall curves are drawn smoothed over neighbouring delays (smooth, curve); every
 unsmoothed recall.
 
 Figures 2 and 3 span the page with one row of four panels, as large as the page allows, with their keys and colour
-scale inside the panels, in space the data leave free; Figure 4 and the appendix figures span one text column on the
-panel grid of style.py, with their keys in a band under the panels. Aligned spines, letters and axis labels, no
+scale inside the panels, in space the data leave free; Figure 4 and the appendix figures span one text column, with
+their keys inside the panels too, except the colour key of Figure 4, which both its panels share, in a row under
+them. Every colour, marker and line style is named in its own figure. Aligned spines, letters and axis labels, no
 titles, one set of sizes for lines and markers, all text at the 10 pt of the captions, and no text on the data.
 """
 from __future__ import annotations
@@ -16,7 +17,6 @@ from pathlib import Path
 import numpy as np
 from matplotlib import ticker
 from matplotlib.collections import LineCollection
-from matplotlib.lines import Line2D
 from scipy.interpolate import Akima1DInterpolator
 
 import style as st
@@ -205,13 +205,13 @@ def fig2():
         st.band(c, gx, np.c_[rows, one], st.FAMILY["separate"], ls=SCALED, marker="o", ms=st.MS, alpha=0.12)
     c.axhline(45, color=st.INK3, lw=st.LW_GUIDE, ls=FEATURES)
     # the limit named under its line, where the data leave room; the key of the shapes sits above it
-    c.annotate("45 features", xy=(0, 45), xycoords=("axes fraction", "data"), xytext=(4.5, -10.5),
+    c.annotate("45 features", xy=(0.25, 45), xycoords="data", xytext=(0, -10.5),
                textcoords="offset points", ha="left", va="baseline", color=st.INK3, fontsize=st.TXT)
     c.set_xscale("log")
     st.decades(c, "x", every=2)
     c.set_xlim(1 / 40, 400)
     c.set_xlabel(r"Loss rate $\gamma$")
-    c.set_ylim(0, 64)
+    c.set_ylim(0, 78)                       # room above the limit for the three rows of the key
     c.set_yticks([0, 15, 30, 45])
     c.set_ylabel(r"Memory $\sum_\tau C_\tau$")
 
@@ -223,7 +223,14 @@ def fig2():
         st.letter(ax, name)
     st.align(fig, rows=[(a, b, c, d)])
     st.inset_colour_key(a, im, r"$C_\tau$", [0, 0.5, 1])
-    st.inkey(c, [(st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f]) for f in st.MAIN], "upper left", ncol=2)
+    # under the colour scale, in the empty top of a: the white dashed line of both maps
+    st.inkey(a, [(st.line_handle("white", ls=(0, (3, 1.5)), under=st.RECALL(0.6)), "median")], "upper right",
+             pad=(4.5, 26.0))
+    shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
+    st.inkey(c, [shape("separate"), shape("signed"),
+                 shape("shared"), (st.line_handle(st.OTHER, lw=st.LW_THIN), "other shapes"),
+                 shape("dephasing"), (st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing")],
+             "upper left", ncol=2)
     st.save(fig, HERE / "fig2_clock.pdf")
 
 
@@ -239,7 +246,7 @@ def qubit(k):
 def fig3():
     """The price of a long memory and how the input pays it: the collapse of the time to forget, the write along and
     across the phases, the five-spin order against the mixing law and the qubit, in one row; the keys sit inside the
-    panels (the colours of a are those of c)."""
+    panels (a names its markers, its colours are those of c)."""
     fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c, d = (st.wide_place(fig, k) for k in range(4))
     dashed = (0, (3, 1.5))
@@ -265,7 +272,7 @@ def fig3():
     st.decades(a, "x", labels="power", every=2)
     st.decades(a, "y", labels="power", every=2)
     a.set_xlim(2e-3, 5e3)
-    a.set_ylim(1e-3, 1e3)
+    a.set_ylim(1e-3, 1e4)                   # room above the points for the key of the amplitudes
     a.set_xlabel(r"$\gamma/\eta^2$ or $\gamma\eta^2$")
     a.set_ylabel(r"$\eta^2\,t_{\mathrm f}$")
 
@@ -283,7 +290,7 @@ def fig3():
     st.decades(b, "x", every=2)
     st.decades(b, "y", labels="power")
     b.set_xlim(0.15, 250)
-    b.set_ylim(1e-3, 1)
+    b.set_ylim(5e-4, 1)                     # room under the curves for the key
     b.set_xlabel(r"Loss rate $\gamma$")
     b.set_ylabel(r"Write per input")
 
@@ -310,8 +317,12 @@ def fig3():
     for ax, name in zip((a, b, c, d), "abcd"):
         st.letter(ax, name)
     st.align(fig, rows=[(a, b, c, d)])
+    st.inkey(a, [(st.marker_handle(st.INK2, marker=m, ms=2.9, mfc="white", mec=st.INK2, mew=0.8), label)
+                 for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
+             "upper right", ncol=2, handle=6.0, gap=2.5)
     st.inkey(b, [(st.line_handle(st.FAMILY["shared"], marker="o"), "along"),
-                 (st.line_handle(st.FAMILY["signed"], marker="o"), "across")], "lower left")
+                 (st.line_handle(st.FAMILY["signed"], marker="o"), "across"),
+                 (st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), r"$1/\gamma$")], "lower left")
     st.inkey(c, [(st.marker_handle(st.FAMILY["separate"], mfc=st.FAMILY["separate"], mec=st.FAMILY["separate"],
                                    mew=0.9), "local"),
                  (st.marker_handle(st.FAMILY["signed"], mfc=st.FAMILY["signed"], mec=st.FAMILY["signed"], mew=0.9),
@@ -363,6 +374,9 @@ def fig_spins():
         st.letter(ax, name)
     st.align(fig, rows=[(a, b)])
     st.inset_colour_key(b, im, r"Share per $\ln k$", [0, 0.4, 0.8], stacked=True)
+    # under the colour scale, in the empty top of b: the white dashed line of both maps
+    st.inkey(b, [(st.line_handle("white", ls=(0, (3, 1.5)), under=st.RECALL(0.6)), "mean")], "upper right",
+             pad=(4.5, 35.0))
     st.save(fig, HERE / "figC_spins.pdf")
 
 
@@ -389,7 +403,7 @@ def fig_darkmodel():
         recall_band(b, curves[field], col, alpha=0.14)
     recall_axes(b, 100)
     for ax in (a, b):
-        ax.set_ylim(0, 1.45)                # room above the curves for the keys
+        ax.set_ylim(0, 1.7)                 # room above the curves for the keys, three rows in b
     b.set_ylabel("")
     b.tick_params(axis="y", which="both", labelleft=False)
 
@@ -402,8 +416,8 @@ def fig_darkmodel():
              "upper right", ncol=2)
     st.inkey(a, [(st.marker_handle(st.INK2, mfc="white", mec=st.INK2, mew=0.9), "dark-state model")],
              "upper right", pad=(4.5, 5.0 + st.KEY_ROW))
-    # the intact reservoir (dark line) is named in the caption
-    st.inkey(b, [(st.line_handle(rot), "copy erased"), (st.line_handle(st.ERASED), "dark erased")], "upper right")
+    st.inkey(b, [(st.line_handle(st.FAMILY["shared"]), "intact"), (st.line_handle(rot), "copy erased"),
+                 (st.line_handle(st.ERASED), "dark erased")], "upper right")
     st.save(fig, HERE / "figD_dark.pdf")
 
 
@@ -469,10 +483,10 @@ def five_shape(ax):
 # ----------------------------------------------------------------------------------------------- Figure A1
 def fig_law():
     """One reservoir at three reset probabilities against the mixing law exp(-K/(s t_mem)) = exp(-beta p K): lines
-    the exact moments, circles the law; the key names the reset probabilities."""
+    the exact moments, circles the law; one key names the reset probabilities, the key left of it lines and circles."""
     fig, a = st.column_figure(height=56.0)
     law = SNAP["law"]
-    handles = []
+    entries = []
     for p, f in (("0.003", 0.0), ("0.01", 0.28), ("0.03", 0.55)):
         y = np.array(law["one"][p])
         K = np.arange(len(y))
@@ -482,16 +496,19 @@ def fig_law():
         Ks = K[::step]
         Ks = Ks[Ks <= 300]
         a.plot(Ks, np.exp(-law["beta"][p] * float(p) * Ks), "o", ms=st.MS, mfc="white", mec=col, clip_on=False)
-        handles.append(Line2D([], [], color=col, marker="o", ms=st.MS, mfc="white", mec=col,
-                              label=rf"$p={float(p) * 100:g}\%$"))
+        entries.append((st.line_handle(col, marker="o"), rf"$p={float(p) * 100:g}\%$"))
     a.set_xlim(0, 300)
-    a.set_ylim(0, 1.06)
+    a.set_ylim(0, 1.2)                      # room above the curves for the keys
     a.set_yticks([0, 0.5, 1])
     a.set_xlabel(r"Inputs mixed, $K$")
     a.set_ylabel(r"Share beyond $K$")
-    a.legend(handles=handles, loc="upper right", handlelength=st.HANDLE / st.TXT, handletextpad=st.HANDLE_PAD / st.TXT,
-             labelspacing=0.2, borderaxespad=0.5)
     st.align(fig, rows=[(a,)])
+    st.inkey(a, entries, "upper right")
+    left = min(box[0] for _, box in fig.key_boxes[-len(entries):])
+    W, Hf = st._pts(fig)
+    st.key(fig, left - st.KEY_SEP, [(st.line_handle(st.INK2), "exact"),
+                                    (st.marker_handle(st.INK2, mfc="white", mec=st.INK2, mew=0.8), "mixing law")],
+           y=a.get_position().y1 * Hf - 5.0 - st.ASC, right=True)
     st.save(fig, HERE / "figA_law.pdf")
 
 
@@ -521,8 +538,9 @@ def budget_line(design, rule, budget):
 
 def fig_sampling():
     """What survives sampling (run B) and why (run C): two panels across one text column, as tall as those of Figs. 2
-    and 3, with the keys inside them; the colours are those of Fig. 2c."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW)
+    and 3, with the keys of the line styles and the fit inside them and the key of the colours, which both panels
+    share and which is too wide for either, in one row under them."""
+    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW, keys=1)
     a = st.wide_place(fig, 0)
     b = st.wide_place(fig, 1)
 
@@ -573,6 +591,11 @@ def fig_sampling():
     st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
                  (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper right")
     st.inkey(b, [(st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), "fit")], "lower right")
+    dot = lambda col: st.marker_handle(col, mfc=col, mec=col, mew=0.5)
+    W, _ = st._pts(fig)
+    st.key(fig, W / 2, [(dot(st.FAMILY["separate"]), "local"), (dot(st.FAMILY["shared"]), "shared"),
+                        (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other shapes")],
+           ncol=4, center=True, handle=5.0, gap=2.5, sep=6.0)
     st.save(fig, HERE / "fig4_sampling.pdf")
 
 
