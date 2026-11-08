@@ -21,8 +21,8 @@ the same, and since an isolated quantum system never forgets, its environment de
 lasts~\cite{ChenNurdin2019}. Reservoir computing turns such a record into a machine~\cite{Maass2002,JaegerESP2001}: a
 fixed dynamical system, the reservoir, is driven by a stream of inputs, and only a linear readout of its state is
 trained. In quantum reservoir computing (QRC) the reservoir is quantum~\cite{Fujii2017}, here a few interacting spins
-whose expectation values are read out. Damping, absorption, measurement and resets all create or regulate its fading
-memory~\cite{Chen2020,Sannia2024,Ricci2026,Goetting2025,Mujal2023,Franceschetto2026,
+(qubits) whose expectation values are read out. Damping, absorption, measurement and resets all create or regulate its
+fading memory~\cite{Chen2020,Sannia2024,Ricci2026,Goetting2025,Mujal2023,Franceschetto2026,
 KobayashiFeedback2024,Cindrak2024,Sannia2026Memory,Paparelle2026}.
 
 The usual knob is the loss rate. Tuning how fast each qubit relaxes improves a driven spin
@@ -32,32 +32,41 @@ together~\cite{MartinezPenaPRL2021}, also by us~\cite{Baumann2026}. In this pict
 spot: the more the reservoir leaks, the faster it forgets.
 
 But dissipation can be designed, not just dialled. Its jump operators describe how a reservoir leaks: each spin into
-its own channel, or all spins through one shared channel. In a shared channel the decay paths interfere, and some
-collective states, the dark states, cannot decay at all, as in subradiance~\cite{Dicke1954,AsenjoGarcia2017,
-Facchinetti2016}. Dissipation engineering chooses jump operators to prepare, protect and even compute with quantum
-states~\cite{Poyatos1996,Verstraete2009,Pastawski2011,Harrington2022}. Earlier QRC studies tuned local loss rates~\cite{Sannia2024},
-compared local noise types~\cite{Kubota2023,Fry2023} or photon loss in Kerr oscillators~\cite{Cheamsawat2025}, and
-read a static classifier out of a decoherence-free subspace~\cite{Akshay2026}. Here we ask how the shape of the dissipation, not
-only its strength, sets the memory of a quantum reservoir.
+its own channel, or all spins through one shared channel. Dissipation engineering chooses them to prepare, protect and
+even compute with quantum states~\cite{Poyatos1996,Verstraete2009,Pastawski2011,Harrington2022}. A shared channel makes
+the decay paths interfere. For two spins, an excitation on either spin, $|10\rangle$ or $|01\rangle$, decays into the
+same channel, so the two decay amplitudes add for the symmetric superposition $|{+}\rangle$ and cancel for the
+antisymmetric one $|{-}\rangle$ (Fig.~\ref{fig:concept}c). The state $|{-}\rangle$ is dark: it cannot decay at all, as
+in subradiance~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. It still leaks slowly, because the couplings between
+the spins turn it into the bright state $|{+}\rangle$, which does decay. Strong dissipation slows this leak. It acts
+like a measurement that keeps asking whether the spins have emitted, and every answer ``no'' returns them to the dark
+state. This is the quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}: the stronger the
+dissipation, the slower the leak (Fig.~\ref{fig:concept}c, inset).
 
-We find three things, which become three design rules (Fig.~\ref{fig:concept}). First, the jump operators decide
-whether loss shortens or lengthens the memory time, the clock of the reservoir. At the same total coupling, spins that
-leak on their own forget faster as the loss grows, while spins that share one channel forget more slowly, because
-strong loss holds the reservoir in its dark states through the quantum Zeno
-effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019}. Second, the input must follow this clock. Each later input
-turns the stored state by a small, input-dependent angle. As the turns add up, an old input survives only multiplied
-by the inputs that followed, in products such as $u_{t-3}u_{t-5}$ that a linear readout cannot use. For reservoirs in which a stored signal fades along a single slow direction, we
-prove that the number of inputs mixed into a memory is exponentially distributed, with mean equal to how strongly one
-input turns it times how long it lasts. Nothing in this law is quantum. Dissipation enters through its two factors.
-An input that weakens as the memory grows therefore more than doubles the linear memory with exact expectation
-values. Third, the shape decides how large, and hence how measurable, a memory is. Once measurements are counted, weak local loss keeps the most memory by cooling the spins, and dark-state memories last as long but are fainter.
-Dark states pay where a reservoir must dissipate strongly: a dark-state memory of $T$
-steps needs collective loss about $4T^2$ times stronger than ordinary local loss, and today's waveguide dark states~\cite{Zanner2022} reach about five steps.
+Earlier QRC studies tuned local loss rates~\cite{Sannia2024}, compared local noise types~\cite{Kubota2023,Fry2023} or
+photon loss in Kerr oscillators~\cite{Cheamsawat2025}, and read a static classifier out of a decoherence-free
+subspace~\cite{Akshay2026}. Classical networks have limits on short-term memory~\cite{JaegerESP2001,White2004,Ganguli2008},
+a stronger input trades memory for nonlinearity~\cite{Dambre2012,Inubushi2017}, also across quantum reservoir
+protocols~\cite{Cindrak2026}, and weakening the input as the memory grows has a classical counterpart in
+leaky-integrator echo-state networks~\cite{Jaeger2007Leaky}. What has been missing is how the shape of the dissipation,
+not only its strength, sets the memory of a quantum reservoir, and an exact law for the price of a long memory.
 
-Some ingredients are known. Classical networks have known limits on short-term
-memory~\cite{JaegerESP2001,White2004,Ganguli2008}, and a stronger input trades memory for
-nonlinearity~\cite{Dambre2012,Inubushi2017}, also across quantum reservoir protocols~\cite{Cindrak2026}. Weakening the input as the memory grows has a classical counterpart in leaky-integrator echo-state networks~\cite{Jaeger2007Leaky}.
-States protected by the Zeno effect are known to leak slowly~\cite{Zanardi2014,Reiter2012}. Three results are new. Under a shared channel, loss lengthens the memory, which turns Zeno protection into a memory resource. The channel phases, the signs with which the spins couple to the channel, decide whether the input reaches the dark states. The mixing law ties the input to the clock. The law is proved for a class of reservoirs (Appendix~\ref{app:law}) and
-the three-spin limits are certified by interval arithmetic (Appendix~\ref{app:spins}).
-Together, these results make the jump operators a design variable for memory: they decide how long a quantum
-reservoir remembers, how strongly it may be driven, and how much of its memory survives measurement.
+We supply both. Three results overturn the picture of dissipation as a dial with one sweet spot and make the jump
+operators a design variable for memory (Fig.~\ref{fig:concept}):
+\begin{enumerate}[label=(\roman*),leftmargin=*,itemsep=2pt,topsep=4pt]
+\item \textbf{Loss can lengthen memory.} At the same total coupling, spins that leak on their own forget faster as the
+  loss grows, while spins that share one channel forget more slowly. The Zeno effect turns loss into protection, and
+  the memory lives in coherences between dark states.
+\item \textbf{A long memory has an exact price.} Each later input turns the stored state by a small, input-dependent
+  angle, so an old input survives only multiplied by later ones, in products such as $u_{t-3}u_{t-5}$ that a linear
+  readout cannot use. For every reservoir whose stored signal fades along one slow direction, classical or quantum, we
+  prove that the number of inputs mixed into a memory is exponentially distributed, with mean equal to how strongly
+  one input turns the stored state times how long the memory lasts (Appendix~\ref{app:law}), and we certify the
+  three-spin limits by interval arithmetic (Appendix~\ref{app:spins}). An input that weakens as the memory grows
+  therefore more than doubles the memory read from exact expectation values. The phases of the channel, the signs
+  with which the spins couple to it, decide whether such an input reaches the dark states.
+\item \textbf{The shape of the environment decides what survives measurement.} Weak local loss keeps the most memory,
+  because it cools the spins into a state that the input can move, while dark-state memories last as long but are
+  fainter. A dark-state memory of $T$ steps needs collective loss about $4T^2$ times stronger than local loss, a
+  concrete target for waveguide experiments, whose dark states reach about five steps today~\cite{Zanner2022}.
+\end{enumerate}
