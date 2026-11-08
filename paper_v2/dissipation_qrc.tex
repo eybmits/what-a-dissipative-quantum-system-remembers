@@ -1,0 +1,174 @@
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[a4paper,twocolumn,11pt,unpublished]{quantumarticle}
+\pdfoutput=1
+\pdfinfoomitdate=1
+\pdftrailerid{}
+\pdfsuppressptexinfo=15
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[skins,breakable]{tcolorbox}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{needspace}
+\usepackage{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{orcidlink}
+
+% The class loads Latin Modern at begin-document time.  Re-select the document
+% font immediately afterwards so no bitmap EC fonts leak into the PDF.
+\AtBeginDocument{\normalfont}
+
+% Preserve the honest unpublished status while using Quantum's traditional
+% violet presentation for the title, hyperlinks, and page numbers.
+\hypersetup{allcolors=quantumviolet}
+\makeatletter
+\renewcommand{\@printtitle}{%
+  \color{quantumviolet}%
+  \@printtitletextwithappropriatefontsize\par\vspace{0.25em}%
+  
+}
+% The class stores each ORCID and links the author name.  Also display the
+% standard green ORCID mark, as in published Quantum articles.
+\def\@printauthor#1#2{%
+  \def\footnote{\ClassError{quantumarticle}{You must not put a
+  \string\footnote{} command inside the argument of \string\author}{}}%
+  \mbox{%
+    \ifcsdef{author#1orcid}{%
+      \href{https://orcid.org/\csname author#1orcid\endcsname}%
+        {\color{black}#2}\,\orcidlink{\csname author#1orcid\endcsname}%
+    }{#2}%
+  }%
+  \ifnumcomp{\the@affiliationcounter}{>}{1}{%
+    \textsuperscript{\forlistcsloop{\@@commaspacebefore}%
+      {author#1affiliations}\unskip}%
+  }{}%
+  \ifnumcomp{#1}{<}{\the@authorcounter-1}{, }{%
+    \ifnumcomp{#1}{=}{\the@authorcounter-1}{%
+      \ifnumcomp{#1}{=}{1}{ and~}{, and~}%
+    }{}%
+  }%
+}
+% Identify authors with contact details as corresponding authors and repeat
+% their linked ORCID mark in the contact line.
+\def\@printauthorextrainfo#1{%
+  \vspace{0.55\baselineskip}%
+  \raggedright
+  \textit{Corresponding author}\par
+  \csname @authorname#1\endcsname
+  \ifcsdef{author#1orcid}{%
+    \,\orcidlink{\csname author#1orcid\endcsname}%
+  }{}\enspace
+  \ifcsdef{author#1emails}{%
+    \forlistcsloop{\@@spaceafter}{author#1emails}%
+  }{}%
+  \ifcsdef{author#1homepages}{%
+    \ifcsdef{author#1emails}{\unskip, }{}%
+    \forlistcsloop{\@@spaceafter}{author#1homepages}%
+  }{}%
+  \ifcsdef{author#1thanks}{%
+    \ifcsdef{author#1emails}{%
+      \ifcsdef{author#1homepages}{\unskip, }{\unskip, }%
+    }{%
+      \ifcsdef{author#1homepages}{\unskip, }{}%
+    }%
+    \forlistcsloop{\@@spaceafter}{author#1thanks}%
+  }{}%
+  \par\vspace{-0.55\baselineskip}%
+}
+\fancyfoot[C]{\sffamily\textcolor{quantumviolet}{\thepage}}
+\makeatother
+
+% Floats sit a little closer to the text than the class default of 20 pt.
+\setlength{\textfloatsep}{14pt plus 2pt minus 4pt}
+\setlength{\dbltextfloatsep}{14pt plus 2pt minus 4pt}
+
+% Key statements sit in a light box with a violet rule; the theorem inside adds no extra space.
+\newtcolorbox{keybox}{enhanced,breakable,sharp corners,boxrule=0pt,leftrule=1.5pt,
+  colback=quantumviolet!4,colframe=quantumviolet!70,left=6pt,right=6pt,top=5pt,bottom=5pt,
+  before skip=10pt plus 2pt,after skip=10pt plus 2pt}
+\newtheoremstyle{keyresult}{0pt}{0pt}{\normalfont}{}{\bfseries}{.}{0.5em}{}
+\theoremstyle{keyresult}
+\newtheorem{theorem}{Theorem}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Tr}{\operatorname{Tr}}
+
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\dblfloatpagefraction}{0.5}
+\setcounter{dbltopnumber}{2}
+\setcounter{totalnumber}{6}
+\setcounter{topnumber}{4}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.5}
+
+\hypersetup{pdftitle={What a dissipative quantum system remembers},
+ pdfsubject={Dissipation engineering, dark states and the memory of quantum reservoirs}}
+\begin{document}
+\input{sections/certificate_attachment}
+
+\title{What a dissipative quantum system remembers}
+
+\author[qar,mobile]{Markus Baumann}
+\orcid{0009-0007-3575-1006}
+\email{markus.baumann@campus.lmu.de}
+\author[mobile]{Itamar Fink}
+\orcid{0009-0000-2262-4445}
+\author[mobile]{Johannes Wittmann}
+\orcid{0009-0009-9240-7257}
+\author[qar,mobile]{Claudia Linnhoff-Popien}
+\orcid{0000-0001-6284-9286}
+\author[qar,mobile]{Jonas Stein}
+\orcid{0000-0001-5727-9151}
+\affiliation[qar]{Quantum Applications and Research Laboratory (QAR-Lab),
+Ludwig-Maximilians-Universit\"at M\"unchen, Munich, Germany}
+\affiliation[mobile]{Mobile and Distributed Systems Group,
+Ludwig-Maximilians-Universit\"at M\"unchen, Munich, Germany}
+
+\input{sections/abstract}
+\maketitle
+% Ragged columns, without the section penalty that would otherwise push each heading to a new column.
+\raggedbottom
+\makeatletter\@secpenalty=0\makeatother
+
+\input{sections/intro}
+\input{sections/results}
+\input{sections/discussion}
+
+% Back matter after the conclusion, before the appendices.
+\acknowledgments{The authors thank the Quantum Applications and Research Laboratory and the Mobile and
+Distributed Systems Group at Ludwig-Maximilians-Universit\"at M\"unchen for institutional support. OpenAI Codex and
+Claude Code (Anthropic) assisted with manuscript preparation, checks of derivations and references, and simulation,
+verification and plotting code; the authors reviewed the outputs and take responsibility for the final content.}
+
+\Needspace{6\baselineskip}
+\section*{Data availability}
+The code, the data behind every figure and the interval certificates of the three-spin limits are available at
+\url{https://github.com/eybmits/what-a-dissipative-quantum-system-remembers}; the certificates are also attached to this PDF.
+
+\Needspace{6\baselineskip}
+\section*{Author contributions}
+M.B. contributed to conception, methodology, software, analysis, visualization and writing, I.F. and J.W. to
+methodology, interpretation and editing, and C.L.-P. and J.S. to supervision and conceptual development.
+
+\appendix
+% Appendix equations are numbered (A1), (A2), ..., restarting in each appendix.
+\counterwithin*{equation}{section}
+\renewcommand{\theequation}{\thesection\arabic{equation}}
+\renewcommand{\theHequation}{\thesection.\arabic{equation}}
+\input{sections/methods}
+\input{sections/appendix}
+
+\begingroup
+\bibliographystyle{quantum}
+\bibliography{references}
+\endgroup
+
+\end{document}

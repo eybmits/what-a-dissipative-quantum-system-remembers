@@ -1,0 +1,36 @@
+\section{Conclusion}
+\label{sec:conclusion}
+An isolated quantum system never forgets; a dissipative one remembers only as long as its environment lets it. We have
+shown that the environment decides far more than how long. The shape of the dissipation, set by the jump operators,
+decides whether loss shortens or lengthens the memory, how strongly an input may write it, and how much of it survives
+measurement. Dissipation is therefore not a dial with a fixed sweet spot: the damping sweet spot found at a fixed input
+scaling~\cite{Sannia2024} moves as the input weakens, and with finite sampling the measurement budget sets it.
+
+First, the jump operators reverse the clock. At the same total coupling, more loss makes spins that decay on their own
+forget faster, but spins that share one channel forget more slowly: their decay paths interfere into dark states, and
+the quantum Zeno effect turns stronger loss into stronger protection. Second, a long memory has a price, and we have
+derived it exactly: for every reservoir, classical or quantum, whose stored signal fades along one slow direction, a
+memory mixes on average as many inputs as the mixing fraction of one input times the memory time. An input that weakens
+as the memory grows pays this price and more than doubles the linear memory, with weak local loss even under
+measurement. Third, measurement decides which memory is usable: dissipation that cools the spins into a state the input
+can move keeps the most, while dark-state memories last as long but are fainter. Three design rules follow:
+\begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=4pt]
+\item choose the jump operators, not only the loss rate: they decide whether stronger dissipation shortens or lengthens
+  the memory, and their phases decide whether an input reaches the protected states;
+\item let the input follow the clock: weaken it as the memory grows, so that a stored input mixes with few later ones and
+  stays readable on its own; once measurements are counted, this pays as soon as each setting is sampled often enough;
+\item forget by cooling, not by randomizing: let the dissipation drive the system towards a polarized state that the
+  input can move, not towards the fully mixed state.
+\end{enumerate}
+
+What is quantum is the protection: the dissipator protects every operator on the dark states, coherences included, the
+memory is written into coherences between dark energy levels, and the phases of the channel decide whether an input can
+reach it. The direction of the clock, the phase rule and the mixing law need only the protected operators, the input
+operator and the conditions of Appendix~\ref{app:law}, not the details of the couplings. They therefore carry over to any platform that shares a decay channel among its qubits: shared resonators, waveguides and structured
+couplers~\cite{Cattaneo2019,Brehm2021,Sheremet2023,CattaneoPRX2023}. In a waveguide the collective decay comes with the
+coupling, the positions of the spins set the phases~\cite{Zanner2022}, and the bath is flat enough for a Markovian
+description up to $\gamma\approx64$ at couplings of order a megahertz~\cite{Sheremet2023}. A dark-state memory of $T$
+steps needs collective loss about $4T^2$ times stronger than local loss (Appendix~\ref{app:numerics}), which sets the
+target for waveguide experiments.
+
+How a quantum system leaks decides not only how fast it forgets, but what it keeps and in what form.

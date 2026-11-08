@@ -1,0 +1,222 @@
+% Figure 1: the reservoir, the shapes of the environment, dark-state protection and the two ways to forget.
+% Build: pdflatex fig1_concept.tex -> fig1_concept.pdf, drawn at the text width of the Quantum class (17 cm). All text
+% is set in Latin Modern Roman at 10 pt, the font of the text at the size of the captions, as in the other figures;
+% panels carry letters, no titles. Panels a and b are drawn in isometric projection: glass tiles carry the spins,
+% coloured baths below them take what the spins lose.
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta,decorations.pathmorphing,calc}
+\definecolor{ink}{HTML}{1A1A1A}
+\definecolor{ink2}{HTML}{3A3A3A}
+\definecolor{ink3}{HTML}{6F6F6F}
+\definecolor{local}{HTML}{C8553D}
+\definecolor{exch}{HTML}{C9852A}
+\definecolor{deph}{HTML}{6B7385}
+\definecolor{pair}{HTML}{2A9D8F}
+\definecolor{shared}{HTML}{16325C}
+\definecolor{input}{HTML}{7B5EA7}
+\definecolor{strong}{HTML}{9C6644}
+\definecolor{gentle}{HTML}{2D6A4F}
+\definecolor{env}{HTML}{A89F91}
+\definecolor{dot}{HTML}{CFCFCF}
+\definecolor{glass}{HTML}{8FA3BF}
+\definecolor{opp}{HTML}{7B5EA7}
+\definecolor{drive}{HTML}{5E6470}
+\begin{document}
+\begin{tikzpicture}[x=1pt,y=1pt,
+  font=\fontsize{10}{12}\selectfont, text=ink,
+  ttl/.style={anchor=base west,font=\fontsize{10}{12}\selectfont\bfseries},
+  head/.style={anchor=base,font=\fontsize{10}{12}\selectfont},
+  lab/.style={anchor=base,inner sep=0pt},
+  iso/.style={x={(0.8660pt,-0.5pt)},y={(0.8660pt,0.5pt)},z={(0pt,1pt)}},
+  wavy/.style={-{Stealth[length=2.5pt,width=2.3pt]},#1,line width=0.6pt,decorate,
+    decoration={snake,amplitude=0.75pt,segment length=2.8pt,pre length=0.3pt,post length=2.4pt}},
+  wavy/.default=ink3,
+  decay/.style={-{Stealth[length=3pt,width=2.6pt]},#1,line width=0.7pt,
+    decorate,decoration={snake,amplitude=0.85pt,segment length=3.4pt,pre length=0.5pt,post length=2.4pt}},
+  arr/.style={-{Stealth[length=3.4pt,width=3pt]},ink2,line width=0.6pt},
+  lvl/.style={line width=1.2pt,line cap=round,#1},
+  mix/.style={{Stealth[length=2.6pt,width=2.4pt]}-{Stealth[length=2.6pt,width=2.4pt]},ink3,dashed,line width=0.5pt},
+]
+\path[use as bounding box] (0,0) rectangle (483.7,218);
+
+% isometric boxes from (#1,#2,#3) to (#4,#5,#6) in colour #7: the three faces that face the viewer, lit from the
+% upper left; \isopale is the same, paler, for the environment
+\newcommand{\isobox}[7]{%
+  \shade[top color=#7!30,bottom color=#7!44] (#1,#2,#3) -- (#4,#2,#3) -- (#4,#2,#6) -- (#1,#2,#6) -- cycle;
+  \shade[top color=#7!50,bottom color=#7!68] (#4,#2,#3) -- (#4,#5,#3) -- (#4,#5,#6) -- (#4,#2,#6) -- cycle;
+  \shade[left color=#7!7,right color=#7!20] (#1,#2,#6) -- (#4,#2,#6) -- (#4,#5,#6) -- (#1,#5,#6) -- cycle;
+  \draw[white,line width=0.5pt,line join=round,line cap=round] (#1,#2,#6) -- (#4,#2,#6) -- (#4,#5,#6);
+  \draw[#7!70,line width=0.3pt,line join=round] (#1,#2,#3) -- (#4,#2,#3) -- (#4,#5,#3) -- (#4,#5,#6) -- (#1,#5,#6)
+    -- (#1,#2,#6) -- cycle;}
+\newcommand{\isopale}[7]{%
+  \shade[top color=#7!16,bottom color=#7!26] (#1,#2,#3) -- (#4,#2,#3) -- (#4,#2,#6) -- (#1,#2,#6) -- cycle;
+  \shade[top color=#7!28,bottom color=#7!40] (#4,#2,#3) -- (#4,#5,#3) -- (#4,#5,#6) -- (#4,#2,#6) -- cycle;
+  \shade[left color=#7!5,right color=#7!13] (#1,#2,#6) -- (#4,#2,#6) -- (#4,#5,#6) -- (#1,#5,#6) -- cycle;
+  \draw[white,line width=0.5pt,line join=round,line cap=round] (#1,#2,#6) -- (#4,#2,#6) -- (#4,#5,#6);
+  \draw[#7!55,line width=0.3pt,line join=round] (#1,#2,#3) -- (#4,#2,#3) -- (#4,#5,#3) -- (#4,#5,#6) -- (#1,#5,#6)
+    -- (#1,#2,#6) -- cycle;}
+% a sphere of radius 4.2 resting on the point #1, in colour #2, with its contact shadow
+\newcommand{\ball}[2]{%
+  \fill[black,opacity=0.20] ($#1+(0.8,-0.3)$) ellipse (4.7pt and 2.5pt);
+  \shade[ball color=#2!58!white] ($#1+(0,4.2)$) circle (4.2pt);}
+
+\begin{scope}[yshift=106pt]
+%=================================================================== a  the reservoir
+\node[ttl] at (0,104) {a};
+\begin{scope}[shift={(49.2pt,46pt)},iso]
+  % the environment: a basin under the reservoir
+  \isopale{-3}{-3}{-13}{27}{43}{-10}{env}
+  % input: one bar per time step, marching into the reservoir
+  \isobox{10}{-65}{-1}{14}{-29}{0}{drive}
+  \foreach \yy/\h in {-32/13,-38/7,-44/18,-50/10,-56/21,-62/12}{\isobox{10.6}{\yy-1.4}{0}{13.4}{\yy+1.4}{\h}{drive}}
+  \coordinate (i1) at (12,-25,1.5); \coordinate (i2) at (12,-3,1.5);
+  % the reservoir: a glass plate carrying five spins
+  \isobox{0}{0}{0}{24}{40}{3}{glass}
+  \foreach \k/\px/\py in {1/5/32,2/19/33,3/12/20,4/5/7,5/18/8}{\coordinate (f\k) at (\px,\py,3);}
+\end{scope}
+\foreach \k in {1,...,5}{\coordinate (s\k) at ($(f\k)+(0,4.2)$);}
+\foreach \i/\j in {1/2,1/3,1/4,1/5,2/3,2/4,2/5,3/4,3/5,4/5}{\draw[ink3!80,line width=0.35pt] (s\i) -- (s\j);}
+\foreach \k in {1,...,5}{\ball{(f\k)}{shared}}
+\draw[arr,drive] (i1) -- (i2);
+\node[lab,anchor=base west,text=ink2] at (0,54) {input $u_t$};
+\node[lab,text=ink2] at (77.2,83) {spins, couplings $J_{ij}$};
+\draw[wavy] (60.2,37.5) -- (60.2,29);
+\draw[wavy] (73.2,34.5) -- (73.2,25.5);
+\draw[wavy] (89.2,43) -- (89.2,34);
+\node[lab,text=ink2] at (69.2,3) {environment};
+% linear readout
+\draw[arr] (107.5,56) -- (116.5,56);
+\node[anchor=west,inner sep=0pt] (x) at (117.5,56)
+  {$\begin{pmatrix}\langle X_i\rangle\\ \langle Z_iZ_j\rangle\\ \vdots\end{pmatrix}$};
+\draw[arr] ($(x.south)+(0,-1.5)$) -- ++(0,-12);
+\node[lab,anchor=base east,text=ink2] at ($(x.south)+(-3,-10)$) {$\mathbf w$};
+\node[lab,anchor=base east] at (160.5,8) {$\hat y_t\approx u_{t-\tau}$};
+
+%=================================================================== b  the shapes of the environment
+\node[ttl] at (168.5,104) {b};
+% a glass tile with three spins, centred at x = #1, tinted #2; the baths are drawn before it
+\newcommand{\tile}[2]{%
+  \begin{scope}[shift={(#1pt-20.8pt,49pt)},iso]
+    \isobox{0}{0}{0}{12}{36}{2.5}{#2}
+    \foreach \k/\py in {1/6,2/18,3/30}{\coordinate (t\k) at (6,\py,2.5);}
+  \end{scope}}
+\newcommand{\spheres}[1]{\foreach \k in {3,2,1}{\ball{(t\k)}{#1}}}
+% baths under the tile: one for each spin, or one for all
+\newcommand{\cubes}[2]{%
+  \begin{scope}[shift={(#1pt-20.8pt,49pt)},iso]
+    \foreach \py in {30,18,6}{\isobox{3}{\py-3}{-24}{9}{\py+3}{-19}{#2}}
+  \end{scope}}
+\newcommand{\slabbath}[2]{%
+  \begin{scope}[shift={(#1pt-20.8pt,49pt)},iso]\isobox{3}{2}{-24}{9}{34}{-19}{#2}\end{scope}}
+% decays from under the tile into the baths
+\newcommand{\drops}[2]{%
+  \draw[wavy=#2] (#1-10.4,42.3) -- (#1-10.4,32.5);
+  \draw[wavy=#2] (#1,48.3) -- (#1,38.5);
+  \draw[wavy=#2] (#1+10.4,54.3) -- (#1+10.4,44.5);}
+\newcommand{\jumps}[2]{\node[lab,text=ink2] at (#1,8) {#2};}
+% four columns 77.8 pt apart, the first as far from panel a as they are from each other; the last three
+% stand above the three columns of panel d
+% local
+\node[lab,text=local] at (218.0,83) {local};
+\cubes{218.0}{local}\drops{218.0}{local}\tile{218.0}{local}\spheres{local}
+\jumps{218.0}{$L_i=\sigma_i^-$}
+% one shared channel, equal phases
+\node[lab,text=shared] at (295.8,83) {shared};
+\slabbath{295.8}{shared}\drops{295.8}{shared}\tile{295.8}{shared}\spheres{shared}
+\jumps{295.8}{$L=\sum_i\sigma_i^-$}
+% the same channel with opposite phases: the darker spin decays with the reversed phase
+\node[lab,text=opp] at (373.6,83) {opposite phases};
+\slabbath{373.6}{opp}\drops{373.6}{opp}\tile{373.6}{opp}
+\ball{(t3)}{opp!55!black}\ball{(t2)}{opp}\ball{(t1)}{opp}
+\jumps{373.6}{$L=\sum_ic_i\,\sigma_i^-$}
+% dephasing: rings of random phase around each spin; no bath takes energy
+\node[lab,text=deph] at (451.4,83) {dephasing};
+\tile{451.4}{deph}
+\foreach \k in {3,2,1}{
+  \draw[deph,line width=0.5pt,dash pattern=on 1.4pt off 1pt] ($(t\k)+(0,1.2)$) ++(7.6,0)
+     arc[start angle=0,end angle=180,x radius=7.6pt,y radius=4.0pt];
+  \ball{(t\k)}{deph}
+  \draw[deph,line width=0.5pt,dash pattern=on 1.4pt off 1pt] ($(t\k)+(0,1.2)$) ++(-7.6,0)
+     arc[start angle=180,end angle=360,x radius=7.6pt,y radius=4.0pt];}
+\jumps{451.4}{$L_i=\sigma_i^z$}
+\end{scope}
+
+%=================================================================== c  interference and the Zeno effect
+\node[ttl] at (0,98) {c};
+% two spins sharing one channel: |+> and |-> above |00>
+\draw[lvl=local] (24,60) -- (52,60);
+\node[anchor=east,inner sep=2pt] at (22,60) {$|{+}\rangle$};
+\draw[lvl=shared] (84,60) -- (112,60);
+\node[anchor=west,inner sep=2pt] at (114,60) {$|{-}\rangle$};
+\draw[lvl=ink2] (54,14) -- (82,14);
+\node[anchor=west,inner sep=2pt] at (84,14) {$|00\rangle$};
+% the decay amplitudes of |10> and |01> add or cancel
+\foreach \x in {33,43}{\draw[-{Stealth[length=2.6pt,width=2.4pt]},local,line width=0.85pt] (\x,64) -- (\x,75);}
+\node[lab,text=local] at (38,79) {add};
+\draw[-{Stealth[length=2.6pt,width=2.4pt]},shared,line width=0.85pt] (93,64) -- (93,75);
+\draw[-{Stealth[length=2.6pt,width=2.4pt]},shared,line width=0.85pt] (103,75) -- (103,64);
+\node[lab,text=shared] at (98,79) {cancel};
+% decay of the bright state, none of the dark state
+\draw[decay=local] (40,57) -- (61,17.5);
+\node[lab,anchor=base east,text=local] at (44,33) {decays};
+\draw[ink3,dashed,line width=0.5pt] (96,57) -- (75,17.5);
+\draw[local,line width=1.3pt] (81.6,33.6) -- (88.9,40.9) (81.6,40.9) -- (88.9,33.6);
+\node[lab,anchor=base west,text=shared] at (93,33) {dark};
+\draw[mix] (55,60) -- (81,60);
+\node[lab,text=ink2] at (68,64) {$H$};
+% inset: survival of the dark state, two spins with coupling H = g and shared loss gamma (time in 1/g)
+\begin{scope}[shift={(140,12)}]
+  \draw[ink,line width=0.8pt] (0,60) -- (0,0) -- (96,0);
+  \node[lab,anchor=base east,text=ink2] at (96,-10) {time};
+  \node[lab,anchor=base west,text=ink2] at (-3,64) {population of $|{-}\rangle$};
+  \begin{scope}[x=96pt,y=58pt]
+    \draw[shared!32,line width=1.8pt,line cap=round] plot[smooth] coordinates {(0.000,1.0000) (0.025,0.8277) (0.050,0.5413) (0.075,0.3112) (0.100,0.1648) (0.125,0.0825) (0.150,0.0397) (0.175,0.0185) (0.200,0.0084) (0.225,0.0037) (0.250,0.0016) (0.300,0.0003) (0.400,0.0000) (0.600,0.0000) (0.800,0.0000) (1.000,0.0000)};
+    \draw[shared!62,line width=1.8pt,line cap=round] plot[smooth] coordinates {(0.000,1.0000) (0.025,0.9092) (0.050,0.8013) (0.075,0.7057) (0.100,0.6216) (0.125,0.5474) (0.150,0.4821) (0.175,0.4246) (0.200,0.3740) (0.250,0.2901) (0.300,0.2250) (0.350,0.1745) (0.400,0.1354) (0.450,0.1050) (0.500,0.0814) (0.600,0.0490) (0.700,0.0295) (0.800,0.0177) (0.900,0.0107) (1.000,0.0064)};
+    \draw[shared,line width=1.8pt,line cap=round] plot[smooth] coordinates {(0.000,1.0000) (0.050,0.9412) (0.100,0.8841) (0.150,0.8305) (0.200,0.7801) (0.250,0.7328) (0.300,0.6884) (0.350,0.6466) (0.400,0.6074) (0.450,0.5706) (0.500,0.5360) (0.600,0.4729) (0.700,0.4173) (0.800,0.3682) (0.900,0.3249) (1.000,0.2867)};
+  \end{scope}
+  \node[lab,anchor=base west,text=shared!45] at (13,6) {$2$};
+  \node[lab,anchor=base west,text=shared!70] at (32,18) {$8$};
+  \node[lab,anchor=base east,text=shared] at (96,29) {$\gamma=32$};
+  \node[anchor=north east,inner sep=0pt,align=right,text=shared] at (96,59) {stronger loss,\\slower leak};
+\end{scope}
+
+%=================================================================== d  two ways to forget
+\node[ttl] at (246,98) {d};
+\newcommand{\bloch}[1]{%
+  \fill[ink3!5] #1 circle (22pt);
+  \draw[ink3!70,line width=0.45pt] #1 circle (22pt);
+  \draw[ink3!40,line width=0.35pt] ($#1+(-22pt,0)$) -- ($#1+(22pt,0)$);
+  \draw[ink3!40,line width=0.35pt] ($#1+(0,-22pt)$) -- ($#1+(0,22pt)$);
+  \node[text=ink3,anchor=south west,inner sep=1pt] at ($#1+(0.5pt,22pt)$) {$Y$};
+  \node[text=ink3,anchor=south west,inner sep=1pt] at ($#1+(22pt,0.3pt)$) {$X$};}
+\tikzset{vec/.style={-{Stealth[length=2.6pt,width=2.4pt]},line width=0.55pt},
+         bold/.style={-{Stealth[length=3.2pt,width=3pt]},line width=1.05pt}}
+% leak: the stored arrow shrinks while the environment takes what is stored
+\bloch{(295.8,51.5)}
+\draw[vec,ink3!45,dashed] (295.8,51.5) -- ++(50:19pt);
+\draw[bold,ink2] (295.8,51.5) -- ++(50:9pt);
+\draw[decay=ink3] ($(295.8,51.5)+(-150:23pt)$) -- ++(-150:8pt);
+\draw[decay=ink3] ($(295.8,51.5)+(-30:23pt)$) -- ++(-30:8pt);
+\node[head,text=env!55!black] at (295.8,88) {leak};
+\node[lab,text=ink2] at (295.8,17.5) {shrinks:};
+\node[lab,text=ink2] at (295.8,4) {leaks away};
+% large turns: the direction spreads over the whole circle
+\bloch{(373.6,51.5)}
+\fill[strong!16] (373.6,51.5) circle (21.3pt);
+\foreach \a in {0,60,120,180,240,300}{\draw[vec,strong!45] (373.6,51.5) -- ++(\a:19pt);}
+\draw[bold,strong] (373.6,51.5) -- ++(60:19pt);
+\node[head,text=strong] at (373.6,88) {large turns};
+\node[lab,text=ink2] at (373.6,17.5) {wraps around:};
+\node[lab,text=ink2] at (373.6,4) {input products};
+% small turns: the direction stays in a narrow fan
+\bloch{(451.4,51.5)}
+\fill[gentle!22] (451.4,51.5) -- ++(-22:21.3pt) arc[start angle=-22,end angle=22,radius=21.3pt] -- cycle;
+\foreach \a in {-16,-8,0,8,16}{\draw[vec,gentle!50] (451.4,51.5) -- ++(\a:19pt);}
+\draw[bold,gentle] (451.4,51.5) -- ++(8:19pt);
+\node[head,text=gentle] at (451.4,88) {small turns};
+\node[lab,text=ink2] at (451.4,17.5) {stays small:};
+\node[lab,text=ink2] at (451.4,4) {single inputs};
+\end{tikzpicture}
+\end{document}
