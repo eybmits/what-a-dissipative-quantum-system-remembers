@@ -1,12 +1,14 @@
 \begin{abstract}
-An isolated quantum system never forgets: a quantum reservoir computer remembers its past inputs only as long as its
-environment lets it. We show that how the environment takes energy away, set by the jump operators, matters as much as
-how fast. When spins decay on their own, stronger loss shortens the memory; when they share one decay channel,
-stronger loss lengthens it, because the quantum Zeno effect holds them in dark states that cannot decay. A long memory
-has a price: later inputs mix earlier ones into products that a linear readout cannot use. For a broad class of
-reservoirs, classical or quantum, we prove that the number of inputs mixed is exponentially distributed, with mean
-equal to how strongly one input nudges the stored state times how long the memory lasts. The input must therefore
-weaken as the memory grows, which more than doubles the linear memory with exact expectation values. Once measurements
-are counted, weak local loss, which cools the spins, keeps the most memory; dark-state memories last as long but are
-fainter.
+Quantum reservoir computing processes a stream of inputs with the natural dynamics of a driven quantum system and
+trains only a linear readout of measured expectation values. An isolated quantum system never forgets, so its
+environment decides how long it remembers. We show that the form of the dissipation, set by its jump operators,
+matters as much as its strength. Qubits that decay independently forget faster as the dissipation grows; qubits that
+decay collectively through one shared channel forget more slowly, because interference creates dark states that cannot
+decay and the quantum Zeno effect holds the system in them. A long memory has a price: later inputs mix earlier ones
+into products that a linear readout cannot use. For a broad class of reservoirs, classical or quantum, we prove that the
+average number of inputs mixed together grows as the product of how strongly one input turns the stored state and how
+long the memory lasts. The input must therefore weaken as the memory grows, which more than doubles the memory a linear
+readout recovers from exact expectation values. With finitely many measurements, weak independent decay, which cools
+the qubits towards a state the inputs can rotate, keeps the most memory; dark-state memories last as long but give
+weaker signals.
 \end{abstract}
