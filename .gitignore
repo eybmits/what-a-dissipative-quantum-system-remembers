@@ -17,3 +17,6 @@ results/
 *.log
 *.out
 *.synctex.gz
+
+# macOS
+.DS_Store

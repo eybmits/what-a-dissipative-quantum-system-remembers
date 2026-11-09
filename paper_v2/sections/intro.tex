@@ -4,69 +4,83 @@
 \centering
 \includegraphics[width=\textwidth]{figures/fig1_concept.pdf}
 \caption{\textbf{Engineering how a quantum reservoir leaks.}
-\textbf{a}~Inputs drive interacting spins, and a trained linear readout recalls past inputs from the spins' expectation
-values.
-\textbf{b}~Four shapes of the environment at equal total coupling. With opposite phases the darker spins couple to the
-shared channel with the opposite sign.
-\textbf{c}~Two spins sharing one channel: the decays of $|10\rangle$ and $|01\rangle$ add for $|{+}\rangle$ and cancel
-for $|{-}\rangle$, which is dark. The Hamiltonian lets $|{-}\rangle$ leak through $|{+}\rangle$, and the stronger the
-loss, the slower the leak (inset).
-\textbf{d}~Two ways to forget: a stored input leaks away, or later inputs turn the stored state at random until only
-products of inputs remain. Small turns keep each input readable.}
+\textbf{a}~A stream of inputs drives interacting spins, and a trained linear readout recalls past inputs from the spins'
+expectation values.
+\textbf{b}~Four forms of dissipation with the same total coupling. Each spin decays on its own (independent), all spins
+decay through one shared channel (collective decay with equal phases), the darker spins couple to that channel with
+the opposite sign (opposite phases), or the spins lose only their phase (dephasing).
+\textbf{c}~Two spins share one channel and one excitation. If the excitation sits on both spins with the same sign,
+their decays add and the state decays fast (bright). With opposite signs they cancel, and the state cannot decay
+(dark). When the two spins differ, their own dynamics ($H$) drives them out of the dark state, but strong loss acts
+like a measurement repeated so often that they hardly leave it: the quantum Zeno effect.
+\textbf{d}~Two ways to forget the record of one input, drawn as an arrow, dashed where it was written. It shrinks as it
+leaks away, or later inputs turn it at random. Large turns scatter it until only products of inputs remain, while
+small turns keep the input readable on its own.}
 \label{fig:concept}
 \end{figure*}
 
-Throw pebbles into a pond, and the ripples hold a fading record of the last few throws. A driven quantum system does
-the same, and since an isolated quantum system never forgets, its environment decides how long the record
-lasts~\cite{ChenNurdin2019}. Reservoir computing turns such a record into a machine~\cite{Maass2002,JaegerESP2001}: a
-fixed dynamical system, the reservoir, is driven by a stream of inputs, and only a linear readout of its state is
-trained. In quantum reservoir computing (QRC) the reservoir is quantum~\cite{Fujii2017}, here a few interacting spins
-(qubits) whose expectation values are read out. Damping, absorption, measurement and resets all create or regulate its
-fading memory~\cite{Chen2020,Sannia2024,Ricci2026,Goetting2025,Mujal2023,Franceschetto2026,
-KobayashiFeedback2024,Cindrak2024,Sannia2026Memory,Paparelle2026}.
+Processing information over time requires a memory of what came before. A physical system can provide such a memory
+because each input changes its state and leaves traces that influence its later response. Reservoir computing uses these
+traces to perform a task: an input stream drives a dynamical system, and a weighted sum of quantities describing its
+state produces the output. Only these weights are trained; this mapping is called a linear
+readout~\cite{Maass2002,JaegerESP2001}. In quantum reservoir computing (QRC), the evolving system is quantum mechanical,
+and the readout uses quantities obtained by measuring it~\cite{Fujii2017}. The challenge is to keep earlier inputs
+accessible while new information continues to arrive.
 
-The usual knob is the loss rate. Tuning how fast each qubit relaxes improves a driven spin
-reservoir~\cite{Sannia2024}, memory peaks at an intermediate decay that coincides with maximal optical
-absorption~\cite{Goetting2025}, and drive, interactions and damping have been tuned
-together~\cite{MartinezPenaPRL2021}, also by us~\cite{Baumann2026}. In this picture dissipation is a dial with a sweet
-spot: the more the reservoir leaks, the faster it forgets.
+The environment shapes how these traces fade. A system can lose energy or information to its surroundings through
+processes collectively described as
+dissipation~\cite{ChenNurdin2019,Chen2020,Sannia2024,Ricci2026,Goetting2025,Mujal2023,Franceschetto2026,KobayashiFeedback2024,Cindrak2024,Sannia2026Memory,Paparelle2026}.
+Previous work has shown that tuning the dissipation rate can improve memory, sometimes yielding the best performance at
+an intermediate loss rate~\cite{Sannia2024,Goetting2025}. Input, interactions, and dissipation can also be optimized
+together~\cite{MartinezPenaPRL2021,Baumann2026}. The rate specifies how strongly the environment acts, but the way it
+acts is a separate design choice. Engineering this interaction can prepare and protect selected quantum
+states~\cite{Poyatos1996,Verstraete2009,Pastawski2011,Harrington2022}. For a system processing an ongoing input stream,
+this raises the possibility of controlling which traces of the past survive.
 
-But dissipation can be designed, not just dialled. Its jump operators describe how a reservoir leaks: each spin into
-its own channel, or all spins through one shared channel. Dissipation engineering chooses them to prepare, protect and
-even compute with quantum states~\cite{Poyatos1996,Verstraete2009,Pastawski2011,Harrington2022}. A shared channel makes
-the decay paths interfere. For two spins, an excitation on either spin, $|10\rangle$ or $|01\rangle$, decays into the
-same channel, so the two decay amplitudes add for the symmetric superposition $|{+}\rangle$ and cancel for the
-antisymmetric one $|{-}\rangle$ (Fig.~\ref{fig:concept}c). The state $|{-}\rangle$ is dark: it cannot decay at all, as
-in subradiance~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. It still leaks slowly, because any difference between
-the two spins, such as unequal frequencies, turns it into the bright state $|{+}\rangle$, which does decay. Strong dissipation slows this leak. It acts
-like a measurement that keeps asking whether the spins have emitted, and every answer ``no'' returns them to the dark
-state. This is the quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}: the stronger the
-dissipation, the slower the leak (Fig.~\ref{fig:concept}c, inset).
+This distinction becomes concrete for a reservoir of interacting spins, each a two-level quantum system. When the spins
+decay through separate routes into the environment, they undergo independent decay. When they share a common route, they
+undergo collective decay. In certain joint states, the different emission paths interfere and cancel, preventing decay
+through that shared route. These protected states are called dark
+states~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. Internal dynamics can still move the system into states that
+do decay. If this decay is sufficiently rapid, however, it suppresses those transitions, a phenomenon known as the
+dissipative quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}. Stronger loss can
+therefore slow the escape of information from the protected states (Fig.~\ref{fig:concept}c).
 
-Earlier QRC studies compared local noise types~\cite{Kubota2023,Fry2023} or
-photon loss in Kerr oscillators~\cite{Cheamsawat2025}, and read a static classifier out of a decoherence-free
-subspace~\cite{Akshay2026}. Classical networks have limits on short-term memory~\cite{JaegerESP2001,White2004,Ganguli2008},
-a stronger input trades memory for nonlinearity~\cite{Dambre2012,Inubushi2017}, also across quantum reservoir
-protocols~\cite{Cindrak2026}, and weakening the input as the memory grows has a classical counterpart in
-leaky-integrator echo-state networks~\cite{Jaeger2007Leaky}. What has been missing is how the shape of the dissipation,
-not only its strength, sets the memory of a quantum reservoir, and an exact law for the price of a long memory.
+Information that survives can nevertheless become difficult to use. Each new input changes the same state that stores
+the past. A signal that initially records one input may therefore come to depend on combinations of several inputs, such
+as their product. This mixing is useful for tasks that require relationships between inputs, but it reduces the capacity
+available for recalling individual inputs~\cite{Dambre2012,Inubushi2017,Cindrak2026}. The lifetime of stored information
+and the time over which an individual input remains readable are therefore different quantities. Previous work has
+established memory limits in classical reservoirs~\cite{JaegerESP2001,White2004,Ganguli2008}, explored input
+strength~\cite{Jaeger2007Leaky}, and investigated how noise and protected states affect quantum information
+processing~\cite{Kubota2023,Fry2023,Cheamsawat2025,Akshay2026}. The question is how protection, continued input, and
+measurement together determine the part of the past that remains recoverable.
 
-We supply both. Three results overturn the picture of dissipation as a dial with one sweet spot and make the jump
-operators a design variable for memory (Fig.~\ref{fig:concept}):
-\begin{enumerate}[label=(\roman*),leftmargin=*,itemsep=2pt,topsep=4pt]
-\item \textbf{Loss can lengthen memory.} At the same total coupling, spins that leak on their own forget faster as the
-  loss grows, while spins that share one channel forget more slowly. The Zeno effect turns loss into protection, and
-  the memory lives in coherences between dark states.
-\item \textbf{A long memory has an exact price.} Each later input turns the stored state by a small, input-dependent
-  angle. As the turns add up, an old input survives only multiplied by later ones, in products such as
-  $u_{t-3}u_{t-5}$ that a linear readout cannot use. For every reservoir whose stored signal fades along one slow direction, classical or quantum, we
-  prove that the number of inputs mixed into a memory is exponentially distributed, with mean equal to how strongly
-  one input turns the stored state times how long the memory lasts (Appendix~\ref{app:law}), and we certify the
-  three-spin limits by interval arithmetic (Appendix~\ref{app:spins}). An input that weakens as the memory grows
-  therefore more than doubles the memory read from exact expectation values. The phases of the channel, the signs
-  with which the spins couple to it, decide whether such an input reaches the dark states.
-\item \textbf{The shape of the environment decides what survives measurement.} Weak local loss keeps the most memory,
-  because it cools the spins into a state that the input can move, while dark-state memories last as long but are
-  fainter. A dark-state memory of $T$ steps needs collective loss about $4T^2$ times stronger than local loss, a
-  concrete target for waveguide experiments, whose dark states reach about five steps today~\cite{Zanner2022}.
-\end{enumerate}
+Here we establish this connection in dissipative spin reservoirs (Fig.~\ref{fig:concept}). We compare decay processes at
+the same total coupling strength to the environment, keeping the internal interactions fixed. Increasing independent
+decay shortens memory, whereas collective decay supports a regime in which stronger loss prolongs it. We further show
+that the way the spins participate in the shared decay process determines how readily an input can change the protected
+part of the state. The environment thus controls both how information survives and how new information can be written.
+
+We then prove a law for the accumulation of input mixing. Under explicit mixing assumptions and for long memories, the
+law relates the number of distinct inputs combined in the stored record to the memory lifetime and the disturbance
+caused by each new input. It motivates a practical principle: reduce how strongly each input changes the system as
+memory grows. We call this gentle writing. In our spin reservoirs, it more than doubles the capacity to recall
+individual past inputs when measured quantities are known without statistical error. The improvement reallocates
+existing capacity from combinations of inputs towards individual inputs; the total capacity available to the readout
+remains unchanged.
+
+Finally, we include the resources required to recover the stored information. Resolving a weak quantum signal requires
+repeated preparation and measurement to distinguish it from statistical
+fluctuations~\cite{Mujal2023,Cindrak2024,Hu2023}. A long-lived record can therefore be difficult to retrieve if its
+signal is too faint. At a fixed measurement budget, weak independent decay with gentle writing recovers the most memory
+in our comparison. The protected memories can persist just as long, but their weaker signals require more measurements.
+The available resources consequently change which environmental interaction and input strength are most useful.
+
+Together, these results establish a quantitative connection between the physical survival of information and its
+usefulness during continued computation. They show how dissipation can be structured to preserve a memory that remains
+writable, how input strength should be matched to its lifetime, and how measurement resources constrain what can be
+recovered. The protection mechanism relies on quantum interference, while the mixing law also applies to classical
+reservoirs under the same assumptions. The resulting design principle extends beyond a particular decay process: the
+environment, the input, and the readout must be coordinated around the information that remains accessible. This makes
+recoverable memory a quantitative target for engineering physical systems that process information over time.

@@ -46,24 +46,24 @@ KEY_TOP, KEY_ROW, HANDLE, HANDLE_PAD, KEY_SEP = 10.0, 12.0, 11.0, 3.5, 7.0
 # the same colours as figures/fig1_concept.tex
 INK, INK2, INK3, RULE, SHADE = "#1a1a1a", "#3a3a3a", "#6f6f6f", "#d9d9d9", "#f2f2f2"
 FAMILY = {
-    "separate": "#c8553d",    # local loss
-    "exchange": "#c9852a",    # local loss with exchange
+    "separate": "#c8553d",    # independent decay
+    "exchange": "#c9852a",    # independent decay with exchange
     "gainloss": "#8f2d56",    # local gain and loss
     "dephasing": "#6b7385",   # local dephasing
     "pair": "#2a9d8f",        # pair loss
-    "signed": "#7b5ea7",      # one shared channel, opposite phases
-    "groups": "#4f86c6",      # two shared channels
-    "shared": "#16325c",      # one shared channel, equal phases
+    "signed": "#7b5ea7",      # collective decay, opposite phases
+    "groups": "#4f86c6",      # two collective channels
+    "shared": "#16325c",      # collective decay, equal phases
 }
 NAME = {
-    "separate": "local", "exchange": "exchange", "gainloss": "gain/loss", "dephasing": "dephasing",
-    "pair": "pairwise", "signed": "opposite phases", "groups": "two channels", "shared": "shared",
+    "separate": "independent", "exchange": "exchange", "gainloss": "gain/loss", "dephasing": "dephasing",
+    "pair": "pairwise", "signed": "opposite phases", "groups": "two channels", "shared": "equal phases",
 }
 STRONG, GENTLE, ERASED = "#9c6644", "#2d6a4f", "#8c8c8c"
 # one set of sizes for every figure: data lines, lines in the background, guide lines, markers, text
 LW, LW_THIN, LW_GUIDE, MS, TXT = 1.2, 0.9, 0.7, 3.2, 10.0
-# the four shapes that carry the story, and the grey of the others; shapes without protected operators dashed,
-# dephasing dotted, shapes with dark states solid
+# the four channels that carry the argument, and the grey of the others; channels without protected operators dashed,
+# dephasing dotted, channels with dark states solid
 MAIN = ("separate", "dephasing", "shared", "signed")
 OTHER = "#b4b4b4"
 DASH = {"separate": (0, (4, 1.6)), "exchange": (0, (4, 1.6)), "gainloss": (0, (4, 1.6)),

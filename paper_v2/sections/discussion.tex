@@ -1,36 +1,23 @@
 \section{Conclusion}
 \label{sec:conclusion}
-An isolated quantum system never forgets. A dissipative one remembers only as long as its environment lets it. We have
-shown that the environment decides far more than how long. The shape of the dissipation, set by the jump operators,
-decides whether loss shortens or lengthens the memory, how strongly an input may write it, and how much of it survives
-measurement. Dissipation is therefore not a dial with a fixed sweet spot: the damping sweet spot found at a fixed input
-scaling~\cite{Sannia2024} moves as the input weakens, and with finite sampling the measurement budget sets it.
+A useful quantum reservoir must retain a readable record of the past while continuing to accept new information. We
+have shown that the structure of dissipation can fundamentally change how this record survives. Independent decay
+shortens memory as loss grows, whereas strong collective decay can prolong it by protecting information in dark states
+through the quantum Zeno effect. The environment therefore provides a physical means of designing the memory of a
+driven quantum system.
 
-First, the jump operators reverse the clock. At the same total coupling, more loss makes spins that decay on their own
-forget faster, but spins that share one channel forget more slowly: their decay paths interfere into dark states, and
-the quantum Zeno effect turns stronger loss into stronger protection. Second, a long memory has a price, and we have
-derived it exactly: for every reservoir, classical or quantum, whose stored signal fades along one slow direction, a
-memory mixes on average as many inputs as the mixing fraction of one input times the memory time. An input that weakens
-as the memory grows pays this price and more than doubles the linear memory, with weak local loss even under
-measurement. Third, measurement decides which memory is usable: dissipation that cools the spins into a state the input
-can move keeps the most, while dark-state memories last as long but are fainter. Three design rules follow:
-\begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=4pt]
-\item Choose the jump operators, not only the loss rate: they decide whether stronger dissipation shortens or lengthens
-  the memory, and their phases decide whether an input reaches the protected states.
-\item Let the input follow the clock: weaken it as the memory grows, so that a stored input mixes with few later ones and
-  stays readable on its own. Once measurements are counted, this pays as soon as each setting is sampled often enough.
-\item Forget by cooling, not by randomizing: let the dissipation drive the system towards a polarized state that the
-  input can move, not towards the fully mixed state.
-\end{enumerate}
+Longer storage also leaves more time for subsequent inputs to mix with the stored information. Our mixing law makes this accumulation quantitative. It identifies a practical principle:
+new information should be written more gently as memory grows, so that earlier inputs remain individually
+recoverable. In the spin reservoirs studied, this strategy more than doubles the capacity to recall past inputs with
+exact readout.
 
-What is quantum is the protection: the dissipator protects every operator on the dark states, coherences included, the
-memory is written into coherences between dark energy levels, and the phases of the channel decide whether an input can
-reach it. The direction of the clock, the phase rule and the mixing law need only the protected operators, the input
-operator and the conditions of Appendix~\ref{app:law}, not the details of the couplings. They therefore carry over to any platform that shares a decay channel among its qubits: shared resonators, waveguides and structured
-couplers~\cite{Cattaneo2019,Brehm2021,Sheremet2023,CattaneoPRX2023}. In a waveguide the collective decay comes with the
-coupling, the positions of the spins set the phases~\cite{Zanner2022}, and the bath is flat enough for a Markovian
-description up to $\gamma\approx64$ at couplings of order a megahertz~\cite{Sheremet2023}. A dark-state memory of $T$
-steps needs collective loss about $4T^2$ times stronger than local loss (Appendix~\ref{app:numerics}), which sets the
-target for waveguide experiments.
+Measurement adds a further requirement: the stored information must produce a signal strong enough to resolve.
+Dark-state memories can remain protected for long times while becoming difficult to read. At a fixed measurement
+budget, weak independent decay recovers the most memory in our comparison because its signals are stronger. The
+resources needed to retrieve information are therefore part of the design of the memory itself.
 
-How a quantum system leaks decides not only how fast it forgets, but what it keeps and in what form.
+Together, these results connect the protection of information stored in quantum dynamics to the practical demands of
+processing a continuous stream of inputs. They establish a quantitative design principle: match the memory lifetime to the
+disturbance caused by new inputs, and match the stored signal to the available measurement resources. Engineering the
+environment, the input, and the readout together provides a route from long-lived quantum dynamics to memory that
+remains useful during continued computation.

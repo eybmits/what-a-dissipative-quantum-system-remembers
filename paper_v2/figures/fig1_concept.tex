@@ -1,7 +1,7 @@
-% Figure 1: the reservoir, the shapes of the environment, dark-state protection and the two ways to forget.
+% Figure 1: the reservoir, the shapes of the environment, bright and dark states, and the two ways to forget.
 % Build: pdflatex fig1_concept.tex -> fig1_concept.pdf, drawn at the text width of the Quantum class (17 cm). All text
 % is set in Latin Modern Roman at 10 pt, the font of the text at the size of the captions, as in the other figures;
-% panels carry letters, no titles. Panels a and b are drawn in isometric projection: glass tiles carry the spins,
+% panels carry letters, no titles. Panels a to c are drawn in isometric projection: glass tiles carry the spins,
 % coloured baths below them take what the spins lose.
 \documentclass[tikz,border=0pt]{standalone}
 \usepackage{lmodern}
@@ -119,11 +119,13 @@
 % four columns 77.8 pt apart, the first as far from panel a as they are from each other; the last three
 % stand above the three columns of panel d
 % local
-\node[lab,text=local] at (218.0,83) {local};
+\node[lab,text=local] at (218.0,83) {independent};
 \cubes{218.0}{local}\drops{218.0}{local}\tile{218.0}{local}\spheres{local}
 \jumps{218.0}{$L_i=\sigma_i^-$}
-% one shared channel, equal phases
-\node[lab,text=shared] at (295.8,83) {shared};
+% one shared channel, equal phases; a bracket joins it with the next column as collective decay
+\node[lab,text=shared] at (295.8,83) {equal phases};
+\draw[ink3!70,line width=0.45pt] (266,91.5) -- (266,94) -- (405.4,94) -- (405.4,91.5);
+\node[lab,text=ink2] at (334.7,97.5) {collective decay};
 \slabbath{295.8}{shared}\drops{295.8}{shared}\tile{295.8}{shared}\spheres{shared}
 \jumps{295.8}{$L=\sum_i\sigma_i^-$}
 % the same channel with opposite phases: the darker spin decays with the reversed phase
@@ -143,80 +145,85 @@
 \jumps{451.4}{$L_i=\sigma_i^z$}
 \end{scope}
 
-%=================================================================== c  interference and the Zeno effect
+%=================================================================== c  bright and dark states
 \node[ttl] at (0,98) {c};
-% two spins sharing one channel: |+> and |-> above |00>
-\draw[lvl=local] (24,60) -- (52,60);
-\node[anchor=east,inner sep=2pt] at (22,60) {$|{+}\rangle$};
-\draw[lvl=shared] (84,60) -- (112,60);
-\node[anchor=west,inner sep=2pt] at (114,60) {$|{-}\rangle$};
-\draw[lvl=ink2] (54,14) -- (82,14);
-\node[anchor=west,inner sep=2pt] at (84,14) {$|00\rangle$};
-% the decay amplitudes of |10> and |01> add or cancel
-\foreach \x in {33,43}{\draw[-{Stealth[length=2.6pt,width=2.4pt]},local,line width=0.85pt] (\x,64) -- (\x,75);}
-\node[lab,text=local] at (38,79) {add};
-\draw[-{Stealth[length=2.6pt,width=2.4pt]},shared,line width=0.85pt] (93,64) -- (93,75);
-\draw[-{Stealth[length=2.6pt,width=2.4pt]},shared,line width=0.85pt] (103,75) -- (103,64);
-\node[lab,text=shared] at (98,79) {cancel};
-% decay of the bright state, none of the dark state
-\draw[decay=local] (40,57) -- (61,17.5);
-\node[lab,anchor=base east,text=local] at (44,33) {decays};
-\draw[ink3,dashed,line width=0.5pt] (96,57) -- (75,17.5);
-\draw[local,line width=1.3pt] (81.6,33.6) -- (88.9,40.9) (81.6,40.9) -- (88.9,33.6);
-\node[lab,anchor=base west,text=shared] at (93,33) {dark};
-\draw[mix] (55,60) -- (81,60);
-\node[lab,text=ink2] at (68,64) {$H$};
-% inset: survival of the dark state, two spins with coupling H = g and shared loss gamma (time in 1/g)
-\begin{scope}[shift={(140,12)}]
-  \draw[ink,line width=0.8pt] (0,60) -- (0,0) -- (96,0);
-  \node[lab,anchor=base east,text=ink2] at (96,-10) {time};
-  \node[lab,anchor=base west,text=ink2] at (-3,64) {population of $|{-}\rangle$};
-  \begin{scope}[x=96pt,y=58pt]
-    \draw[shared!32,line width=1.8pt,line cap=round] plot[smooth] coordinates {(0.000,1.0000) (0.025,0.8277) (0.050,0.5413) (0.075,0.3112) (0.100,0.1648) (0.125,0.0825) (0.150,0.0397) (0.175,0.0185) (0.200,0.0084) (0.225,0.0037) (0.250,0.0016) (0.300,0.0003) (0.400,0.0000) (0.600,0.0000) (0.800,0.0000) (1.000,0.0000)};
-    \draw[shared!62,line width=1.8pt,line cap=round] plot[smooth] coordinates {(0.000,1.0000) (0.025,0.9092) (0.050,0.8013) (0.075,0.7057) (0.100,0.6216) (0.125,0.5474) (0.150,0.4821) (0.175,0.4246) (0.200,0.3740) (0.250,0.2901) (0.300,0.2250) (0.350,0.1745) (0.400,0.1354) (0.450,0.1050) (0.500,0.0814) (0.600,0.0490) (0.700,0.0295) (0.800,0.0177) (0.900,0.0107) (1.000,0.0064)};
-    \draw[shared,line width=1.8pt,line cap=round] plot[smooth] coordinates {(0.000,1.0000) (0.050,0.9412) (0.100,0.8841) (0.150,0.8305) (0.200,0.7801) (0.250,0.7328) (0.300,0.6884) (0.350,0.6466) (0.400,0.6074) (0.450,0.5706) (0.500,0.5360) (0.600,0.4729) (0.700,0.4173) (0.800,0.3682) (0.900,0.3249) (1.000,0.2867)};
-  \end{scope}
-  \node[lab,anchor=base west,text=shared!45] at (13,6) {$2$};
-  \node[lab,anchor=base west,text=shared!70] at (32,18) {$8$};
-  \node[lab,anchor=base east,text=shared] at (96,29) {$\gamma=32$};
-  \node[anchor=north east,inner sep=0pt,align=right,text=shared] at (96,59) {stronger loss,\\slower leak};
-\end{scope}
+% two spins with one excitation on a glass tile above one shared channel, drawn as in panel b; the tile is centred at
+% x = #1 with its front corner at height #2, and its spins are named #3a (front) and #3b (back)
+\newcommand{\pairslab}[2]{%
+  \begin{scope}[shift={(#1pt-15.6pt,#2pt)},iso]\isobox{3}{2}{-24}{9}{22}{-19}{shared}\end{scope}}
+\newcommand{\pairtile}[3]{%
+  \begin{scope}[shift={(#1pt-15.6pt,#2pt)},iso]
+    \isobox{0}{0}{0}{12}{24}{2.5}{shared}
+    \coordinate (#3a) at (6,6,2.5); \coordinate (#3b) at (6,18,2.5);
+  \end{scope}}
+% bright: the excitation sits on both spins with the same sign, and their decays add
+\node[lab,text=local] at (58,80) {bright};
+\pairslab{58}{44}
+\draw[wavy=local] (52.8,37.3) -- (52.8,27.5);
+\draw[wavy=local] (63.2,43.3) -- (63.2,33.5);
+\pairtile{58}{44}{B}
+\ball{(Bb)}{shared}\ball{(Ba)}{shared}
+\node[lab,text=local] at ($(Ba)+(0,12)$) {$+$};
+\node[lab,text=local] at ($(Bb)+(0,12)$) {$+$};
+\node[lab,text=ink2] at (58,3) {$|10\rangle+|01\rangle$};
+% dark: opposite signs, the decays cancel and nothing reaches the channel
+\node[lab,text=shared] at (182,80) {dark};
+\pairslab{182}{44}
+\draw[wavy=ink3!35] (176.8,37.3) -- (176.8,27.5);
+\draw[wavy=ink3!35] (187.2,43.3) -- (187.2,33.5);
+\draw[local,line width=1.1pt] (178.6,29.2) -- (185.4,36) (178.6,36) -- (185.4,29.2);
+\pairtile{182}{44}{D}
+\ball{(Db)}{shared}\ball{(Da)}{shared}
+\node[lab,text=shared] at ($(Da)+(0,12)$) {$+$};
+\node[lab,text=shared] at ($(Db)+(0,12)$) {$-$};
+\node[lab,text=ink2] at (182,3) {$|10\rangle-|01\rangle$};
+% the Hamiltonian mixes the two, so the dark state leaks through the bright one, and strong loss slows this leak
+\draw[mix] (80,50) -- (160,50);
+\node[lab,text=ink2] at (120,54) {$H$};
+\node[lab,text=shared] at (120,36) {stronger loss,};
+\node[lab,text=shared] at (120,24) {slower leak};
 
 %=================================================================== d  two ways to forget
 \node[ttl] at (246,98) {d};
-\newcommand{\bloch}[1]{%
-  \fill[ink3!5] #1 circle (22pt);
-  \draw[ink3!70,line width=0.45pt] #1 circle (22pt);
-  \draw[ink3!40,line width=0.35pt] ($#1+(-22pt,0)$) -- ($#1+(22pt,0)$);
-  \draw[ink3!40,line width=0.35pt] ($#1+(0,-22pt)$) -- ($#1+(0,22pt)$);
-  \node[text=ink3,anchor=south west,inner sep=1pt] at ($#1+(0.5pt,22pt)$) {$Y$};
-  \node[text=ink3,anchor=south west,inner sep=1pt] at ($#1+(22pt,0.3pt)$) {$X$};}
+\newcommand{\dial}[1]{%
+  \fill[ink3!5] #1 circle (21pt);
+  \draw[ink3!60,line width=0.45pt] #1 circle (21pt);
+  \draw[ink3!22,line width=0.35pt] ($#1+(-21pt,0)$) -- ($#1+(21pt,0)$) ($#1+(0,-21pt)$) -- ($#1+(0,21pt)$);}
+% the record of one input is an arrow, dashed where it was written; a double arc marks the turn of one later input
 \tikzset{vec/.style={-{Stealth[length=2.6pt,width=2.4pt]},line width=0.55pt},
-         bold/.style={-{Stealth[length=3.2pt,width=3pt]},line width=1.05pt}}
-% leak: the stored arrow shrinks while the environment takes what is stored
-\bloch{(295.8,51.5)}
-\draw[vec,ink3!45,dashed] (295.8,51.5) -- ++(50:19pt);
-\draw[bold,ink2] (295.8,51.5) -- ++(50:9pt);
-\draw[decay=ink3] ($(295.8,51.5)+(-150:23pt)$) -- ++(-150:8pt);
-\draw[decay=ink3] ($(295.8,51.5)+(-30:23pt)$) -- ++(-30:8pt);
+         bold/.style={-{Stealth[length=3.2pt,width=3pt]},line width=1.05pt},
+         ghost/.style={-{Stealth[length=2.6pt,width=2.4pt]},ink3!55,line width=0.55pt,dash pattern=on 1.6pt off 1.1pt},
+         turn/.style={{Stealth[length=2.6pt,width=2.4pt]}-{Stealth[length=2.6pt,width=2.4pt]},line width=0.6pt}}
+% leak: the record shrinks while the environment takes it
 \node[head,text=env!55!black] at (295.8,88) {leak};
+\dial{(295.8,50)}
+\draw[ghost] (295.8,50) -- ++(35:18pt);
+\draw[bold,ink2] (295.8,50) -- ++(35:8pt);
+\draw[decay=ink3] ($(295.8,50)+(-150:22pt)$) -- ++(-150:8pt);
+\draw[decay=ink3] ($(295.8,50)+(-30:22pt)$) -- ++(-30:8pt);
 \node[lab,text=ink2] at (295.8,17.5) {shrinks:};
-\node[lab,text=ink2] at (295.8,4) {leaks away};
-% large turns: the direction spreads over the whole circle
-\bloch{(373.6,51.5)}
-\fill[strong!16] (373.6,51.5) circle (21.3pt);
-\foreach \a in {0,60,120,180,240,300}{\draw[vec,strong!45] (373.6,51.5) -- ++(\a:19pt);}
-\draw[bold,strong] (373.6,51.5) -- ++(60:19pt);
+\node[lab,text=ink2] at (295.8,4) {input fades};
+% large turns: later inputs scatter the record over the whole circle
 \node[head,text=strong] at (373.6,88) {large turns};
-\node[lab,text=ink2] at (373.6,17.5) {wraps around:};
-\node[lab,text=ink2] at (373.6,4) {input products};
-% small turns: the direction stays in a narrow fan
-\bloch{(451.4,51.5)}
-\fill[gentle!22] (451.4,51.5) -- ++(-22:21.3pt) arc[start angle=-22,end angle=22,radius=21.3pt] -- cycle;
-\foreach \a in {-16,-8,0,8,16}{\draw[vec,gentle!50] (451.4,51.5) -- ++(\a:19pt);}
-\draw[bold,gentle] (451.4,51.5) -- ++(8:19pt);
+\dial{(373.6,50)}
+\fill[strong!13] (373.6,50) circle (20.3pt);
+\foreach \a in {95,215,275,335}{\draw[vec,strong!38] (373.6,50) -- ++(\a:18pt);}
+\draw[ghost] (373.6,50) -- ++(35:18pt);
+\draw[bold,strong] (373.6,50) -- ++(155:18pt);
+\draw[turn,strong] ($(373.6,50)+(-35:24.5pt)$) arc[start angle=-35,end angle=105,radius=24.5pt];
+\node[lab,text=strong] at ($(373.6,50)+(26:32pt)$) {$\pm\theta$};
+\node[lab,text=ink2] at (373.6,17.5) {scatters:};
+\node[lab,text=ink2] at (373.6,4) {only products};
+% small turns: the record stays close to where it was written
 \node[head,text=gentle] at (451.4,88) {small turns};
-\node[lab,text=ink2] at (451.4,17.5) {stays small:};
-\node[lab,text=ink2] at (451.4,4) {single inputs};
+\dial{(451.4,50)}
+\fill[gentle!20] (451.4,50) -- ++(22:20.3pt) arc[start angle=22,end angle=48,radius=20.3pt] -- cycle;
+\foreach \a in {25,45}{\draw[vec,gentle!45] (451.4,50) -- ++(\a:18pt);}
+\draw[ghost] (451.4,50) -- ++(35:18pt);
+\draw[bold,gentle] (451.4,50) -- ++(41:18pt);
+\draw[turn,gentle] ($(451.4,50)+(27:24.5pt)$) arc[start angle=27,end angle=47,radius=24.5pt];
+\node[lab,text=gentle] at ($(451.4,50)+(56:30pt)$) {$\pm\theta$};
+\node[lab,text=ink2] at (451.4,17.5) {stays close:};
+\node[lab,text=ink2] at (451.4,4) {input readable};
 \end{tikzpicture}
 \end{document}

@@ -213,9 +213,9 @@ def fig2():
     c.set_xlabel(r"Loss rate $\gamma$")
     c.set_ylim(0, 78)                       # room above the limit for the three rows of the key
     c.set_yticks([0, 15, 30, 45])
-    c.set_ylabel(r"Memory $\sum_\tau C_\tau$")
+    c.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
 
-    # d: decay rates, bright and dark modes of a shared channel and the slowest mode of local loss
+    # d: decay rates, bright and dark modes of the equal-phase channel and the slowest mode of independent decay
     decay_rates(d)
 
     st.fit_row(fig, (a, b, c, d), (70, 70, 152, 80), joined=(b,))
@@ -228,9 +228,9 @@ def fig2():
              pad=(4.5, 26.0))
     shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
     st.inkey(c, [shape("separate"), shape("signed"),
-                 shape("shared"), (st.line_handle(st.OTHER, lw=st.LW_THIN), "other shapes"),
+                 shape("shared"), (st.line_handle(st.OTHER, lw=st.LW_THIN), "other channels"),
                  shape("dephasing"), (st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing")],
-             "upper left", ncol=2)
+             "upper left", ncol=2, pad=(3.5, 5.0), handle=8.0, gap=2.5, sep=4.0)
     st.save(fig, HERE / "fig2_clock.pdf")
 
 
@@ -290,7 +290,7 @@ def fig3():
     st.decades(b, "x", every=2)
     st.decades(b, "y", labels="power")
     b.set_xlim(0.15, 250)
-    b.set_ylim(5e-4, 1)                     # room under the curves for the key
+    b.set_ylim(2e-4, 1)                     # room under the curves for the key
     b.set_xlabel(r"Loss rate $\gamma$")
     b.set_ylabel(r"Write per input")
 
@@ -320,11 +320,12 @@ def fig3():
     st.inkey(a, [(st.marker_handle(st.INK2, marker=m, ms=2.9, mfc="white", mec=st.INK2, mew=0.8), label)
                  for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
              "upper right", ncol=2, handle=6.0, gap=2.5)
-    st.inkey(b, [(st.line_handle(st.FAMILY["shared"], marker="o"), "along"),
-                 (st.line_handle(st.FAMILY["signed"], marker="o"), "across"),
-                 (st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), r"$1/\gamma$")], "lower left")
+    st.inkey(b, [(st.line_handle(st.FAMILY["shared"], marker="o"), "aligned"),
+                 (st.line_handle(st.FAMILY["signed"], marker="o"), "not aligned"),
+                 (st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), r"$1/\gamma$")], "lower left",
+             pad=(3.0, 5.0))
     st.inkey(c, [(st.marker_handle(st.FAMILY["separate"], mfc=st.FAMILY["separate"], mec=st.FAMILY["separate"],
-                                   mew=0.9), "local"),
+                                   mew=0.9), "independent"),
                  (st.marker_handle(st.FAMILY["signed"], mfc=st.FAMILY["signed"], mec=st.FAMILY["signed"], mew=0.9),
                   "opposite phases"),
                  (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing"),
@@ -455,7 +456,7 @@ def five_law(ax):
     ax.set_xlim(4e-4, 80)
     ax.set_ylim(0.8, 45)
     ax.set_xlabel(r"$s\,t_{\mathrm{mem}}$")
-    ax.set_ylabel(r"Mean order")
+    ax.set_ylabel(r"Mean $D$")
 
 
 def five_shape(ax):
@@ -539,8 +540,8 @@ def budget_line(design, rule, budget):
 def fig_sampling():
     """What survives sampling (run B) and why (run C): two panels across one text column, as tall as those of Figs. 2
     and 3, with the keys of the line styles and the fit inside them and the key of the colours, which both panels
-    share and which is too wide for either, in one row under them."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW, keys=1)
+    share and which is too wide for either, in two rows under them."""
+    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW, keys=2)
     a = st.wide_place(fig, 0)
     b = st.wide_place(fig, 1)
 
@@ -556,7 +557,7 @@ def fig_sampling():
     a.set_ylim(0, 48)                       # room above the curves for the key
     a.set_yticks([0, 10, 20, 30, 40])
     a.set_xlabel(r"Loss rate $\gamma$")
-    a.set_ylabel(r"Memory $\sum_\tau C_\tau$")
+    a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
 
     # b: feature variance against the write onto the slow modes, all shapes at one clock and amplitude; the four that
     # carry the story in colour, the others in grey
@@ -580,7 +581,7 @@ def fig_sampling():
     st.decades(b, "y", labels="power", every=2)
     b.set_xlim(1.2e-3, 4)
     b.set_ylim(1e-8, 3e-3)
-    b.set_xlabel(r"Write on slow modes")
+    b.set_xlabel(r"Write strength")
     b.set_ylabel("Feature variance")
 
     # a is the wider panel: its key needs the room above the curves
@@ -593,9 +594,9 @@ def fig_sampling():
     st.inkey(b, [(st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), "fit")], "lower right")
     dot = lambda col: st.marker_handle(col, mfc=col, mec=col, mew=0.5)
     W, _ = st._pts(fig)
-    st.key(fig, W / 2, [(dot(st.FAMILY["separate"]), "local"), (dot(st.FAMILY["shared"]), "shared"),
-                        (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other shapes")],
-           ncol=4, center=True, handle=5.0, gap=2.5, sep=6.0)
+    st.key(fig, W / 2, [(dot(st.FAMILY["separate"]), "independent"), (dot(st.FAMILY["shared"]), "equal phases"),
+                        (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other channels")],
+           ncol=2, center=True, handle=5.0, gap=2.5, sep=6.0)
     st.save(fig, HERE / "fig4_sampling.pdf")
 
 

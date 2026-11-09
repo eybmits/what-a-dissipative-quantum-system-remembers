@@ -35,12 +35,12 @@ The raw records come from these scripts; each one documents its stages, and they
 
 | Script | Content |
 |---|---|
-| `experiments/run_dark_projection.py` | five-spin memory, spectra, decay rates and every decay rate of Fig. 2d, dark-state model, erasure, write along and across the phases, added local loss |
+| `experiments/run_dark_projection.py` | five-spin memory, spectra, decay rates and every decay rate of Fig. 2d, dark-state model, erasure, write of aligned and non-aligned input patterns, added independent decay |
 | `experiments/run_jump_families.py` | exchange, gain/loss and dephasing; protected operators |
 | `experiments/run_review_runs.py` | gentle writing, slow modes up to large loss, local dephasing, signal size |
-| `experiments/run_clock.py` | time to forget at four input amplitudes, finite sampling, budgets and crossings with the replayed inputs, write onto the slow modes, input on one spin |
+| `experiments/run_clock.py` | single-input recall time at four input amplitudes, finite sampling, budgets and crossings with the replayed inputs, write onto the slow modes, input on one spin |
 | `experiments/run_five_spin_orders.py` | exact order distribution of the five-spin capacity against the mixing law |
-| `experiments/run_leak_size.py` | leak coefficient of a shared channel at three to six spins |
+| `experiments/run_leak_size.py` | leak coefficient of the equal-phase channel at three to six spins |
 | `experiments/run_spin_orders.py` | three-spin order shares at a fixed amplitude and with gentle writing; prefactor scan |
 | `experiments/theory/order_law/reconstruct.py` | exact check of the mixing law (Fig. 5) |
 | `experiments/referee_checks/` | training-set, prefactor and principal-direction checks |
