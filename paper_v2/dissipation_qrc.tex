@@ -32,8 +32,8 @@
 \makeatletter
 \renewcommand{\@printtitle}{%
   \color{quantumviolet}%
-  \@printtitletextwithappropriatefontsize\par\vspace{0.25em}%
-  
+  % one line: the largest size at which the title fits the page width
+  \@titleatfontsize{\fontsize{17.6}{21}\selectfont}\par\vspace{0.25em}%
 }
 % The class stores each ORCID and links the author name.  Also display the
 % standard green ORCID mark, as in published Quantum articles.
@@ -112,7 +112,7 @@
 \hypersetup{pdftitle={The form of dissipation shapes what a quantum reservoir remembers},
  pdfsubject={Dissipation engineering, dark states and the memory of quantum reservoirs}}
 \begin{document}
-\title{The form of dissipation shapes\hfil\break what a quantum reservoir remembers}
+\title{The form of dissipation shapes what a quantum reservoir remembers}
 
 \author[qar,mobile]{Markus Baumann}
 \orcid{0009-0007-3575-1006}

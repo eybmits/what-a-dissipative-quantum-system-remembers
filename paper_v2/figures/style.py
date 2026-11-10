@@ -5,10 +5,10 @@ its panel need, panels that share an axis sit side by side, and the panels share
 are as large as the page allows; keys and colour scales sit inside the panels, in space the data leave free (inkey,
 inset_colour_key). The one-column figures of the appendix keep the older grid, in TeX points (Quantum class, 17 cm
 text width, two columns of 231.9 pt with 20 pt between them): each text column holds two panels of about 71 x 66 pt,
-each with a 40 pt gutter on its left, and their keys sit in a band under the panels. Panels carry no titles: a bold
-letter sits at the left edge of each panel's column, in a row above the axes, and x labels share one baseline within
-a row. All text is typeset by LaTeX in Latin Modern Roman at 10 pt, the size of the captions and the font of the
-text, with the mathematics of the text. One colour stands for one
+each with a 40 pt gutter on its left, and their keys sit in a band under the panels. A bold letter and a short title
+sit at the left edge of each panel's column, in a row above the axes, and x labels share one baseline within
+a row. All text is typeset by LaTeX in Latin Modern Sans, the font of the captions: axis labels in bold at 9 pt, tick
+labels at 8 pt, keys and notes inside the panels at 7.5 pt on rounded white frames. A light grid lies behind the data. One colour stands for one
 shape of the environment throughout: warm colours for shapes without a protected subspace, cool colours for shapes
 with one. Four shapes carry the story; where all eight share a panel, the other four are drawn in grey.
 """
@@ -26,7 +26,9 @@ from matplotlib import colors as mcolors
 from matplotlib import pyplot as plt
 from matplotlib import ticker
 from matplotlib.lines import Line2D
-from matplotlib.patches import Rectangle
+from matplotlib import patheffects
+from matplotlib import transforms as mtransforms
+from matplotlib.patches import FancyBboxPatch, Rectangle
 
 if shutil.which("latex") is None:
     os.environ["PATH"] = "/Library/TeX/texbin:" + os.environ["PATH"]
@@ -41,7 +43,7 @@ TOP, TOP_PLAIN, GAP, BOTTOM = 13.0, 8.0, 44.0, 29.0
 RISE = 5.0                          # baseline of the panel letters above the axes
 # keys sit in a band under the panels: first baseline below the top of the band, distance between baselines, length
 # of a handle, space between handle and text, space between columns
-KEY_TOP, KEY_ROW, HANDLE, HANDLE_PAD, KEY_SEP = 10.0, 12.0, 11.0, 3.5, 7.0
+KEY_TOP, KEY_ROW, HANDLE, HANDLE_PAD, KEY_SEP = 8.0, 9.6, 10.0, 3.0, 6.0
 
 # the same colours as figures/fig1_concept.tex
 INK, INK2, INK3, RULE, SHADE = "#1a1a1a", "#3a3a3a", "#6f6f6f", "#d9d9d9", "#f2f2f2"
@@ -61,7 +63,12 @@ NAME = {
 }
 STRONG, GENTLE, ERASED = "#9c6644", "#2d6a4f", "#8c8c8c"
 # one set of sizes for every figure: data lines, lines in the background, guide lines, markers, text
-LW, LW_THIN, LW_GUIDE, MS, TXT = 1.2, 0.9, 0.7, 3.2, 10.0
+LW, LW_THIN, LW_GUIDE, MS, TXT = 1.3, 0.9, 0.7, 3.4, 9.0
+TICK_TXT = 8.0                               # tick labels
+KEY_TXT = 7.5                                # keys and notes inside the panels are set smaller than the axes
+GRID = "#e9e9e9"                             # light grid behind the data
+KEY_FRAME = "#8a8a8a"                        # frame of a key
+REGION = "#f0f0f2"                           # the region of strong loss, a neutral grey behind the data
 # the four channels that carry the argument, and the grey of the others; channels without protected operators dashed,
 # dephasing dotted, channels with dark states solid
 MAIN = ("separate", "dephasing", "shared", "signed")
@@ -75,16 +82,20 @@ RECALL = mcolors.LinearSegmentedColormap.from_list(
 
 mpl.rcParams.update({
     "text.usetex": True,
-    "text.latex.preamble": r"\usepackage{lmodern}\usepackage{amsmath}"
+    # Latin Modern Sans, the font of the captions, for text and mathematics
+    "text.latex.preamble": r"\usepackage{lmodern}\usepackage{amsmath}\usepackage{sansmath}"
+                           r"\renewcommand{\familydefault}{\sfdefault}\sansmath"
                            # matplotlib drops glyph 0 of the TeX symbol font (the minus) when it
                            # subsets Type 1 fonts; take the minus from the text font instead
                            r"\DeclareMathSymbol{-}{\mathbin}{operators}{123}",
-    "font.family": "serif",
+    "font.family": "sans-serif",
     "font.size": TXT, "axes.labelsize": TXT, "axes.titlesize": TXT,
-    "xtick.labelsize": TXT, "ytick.labelsize": TXT, "legend.fontsize": TXT, "legend.title_fontsize": TXT,
+    "xtick.labelsize": TICK_TXT, "ytick.labelsize": TICK_TXT, "legend.fontsize": KEY_TXT,
+    "legend.title_fontsize": KEY_TXT,
     "text.color": INK, "axes.labelcolor": INK, "axes.edgecolor": INK, "xtick.color": INK, "ytick.color": INK,
-    "axes.linewidth": 0.6, "axes.grid": False, "axes.axisbelow": True,
-    "xtick.direction": "in", "ytick.direction": "in", "xtick.top": True, "ytick.right": True,
+    "axes.linewidth": 0.6, "axes.grid": True, "axes.axisbelow": True, "axes.grid.which": "major",
+    "grid.color": GRID, "grid.linewidth": 0.5, "grid.linestyle": "-",
+    "xtick.direction": "in", "ytick.direction": "in", "xtick.top": False, "ytick.right": False,
     "xtick.major.size": 2.8, "ytick.major.size": 2.8, "xtick.minor.size": 1.5, "ytick.minor.size": 1.5,
     "xtick.major.width": 0.6, "ytick.major.width": 0.6, "xtick.minor.width": 0.45, "ytick.minor.width": 0.45,
     "xtick.major.pad": 3.0, "ytick.major.pad": 3.0, "axes.labelpad": 3.0,
@@ -102,9 +113,19 @@ def tone(c, f):
     return mcolors.to_hex(rgb + (1 - rgb) * f if f >= 0 else rgb * (1 + f))
 
 
+def embolden(fig):
+    """Axis labels in bold, with their mathematics at normal weight."""
+    for ax in fig.axes:
+        for label in (ax.xaxis.label, ax.yaxis.label):
+            text = label.get_text()
+            if text and not text.startswith(r"\textbf{"):
+                label.set_text(rf"\textbf{{{text}}}")
+
+
 def align(fig, columns=(), rows=()):
     """Put the y labels of each group of axes (a column) and the x labels of each group (a row) at one distance
     from the axes: the distance the widest or deepest tick labels of the group need, plus the label pad."""
+    embolden(fig)
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
     pad = mpl.rcParams["axes.labelpad"] * fig.dpi / 72
@@ -173,14 +194,15 @@ def wide_place(fig, col, span=1, row=0):
     return fig.add_axes([x0 / W, (y1 - hp) / Hf, (x1 - x0) / W, hp / Hf])
 
 
-def letter(ax, name, col=None):
+def letter(ax, name, title=None, col=None):
     """Bold letter at the left edge of the panel's column (the grid column `col`, or the column fit_row gave the
-    panel), in a row above the axes."""
+    panel), in a row above the axes, followed by the title of the panel."""
     fig = ax.figure
     W, Hf = fig.get_size_inches() / PT
     y = ax.get_position().y1 * Hf + RISE
     x = ax.gutter_x if col is None else grid_x0(col) - G
-    fig.text(x / W, y / Hf, rf"\textbf{{{name}}}", ha="left", va="baseline", fontsize=TXT)
+    text = rf"\textbf{{{name}}}" + (rf"\hspace{{0.55em}}{{\fontsize{{{TXT}}}{{11}}\selectfont {title}}}" if title else "")
+    fig.text(x / W, y / Hf, text, ha="left", va="baseline", fontsize=10.0)
 
 
 def _shown_labels(axis):
@@ -197,6 +219,7 @@ def fit_row(fig, axes, weights, joined=(), margin=2.0, gap=6.0):
     panel before it lets stick out on the right) plus `margin` points; a panel in `joined` shares the y axis of the
     panel before it and sits `gap` points from it; the panels share the rest of the width in proportion to
     `weights`. Sets ax.gutter_x, the left edge of each panel's column, for its letter."""
+    embolden(fig)
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
     W, Hf = _pts(fig)
@@ -231,7 +254,7 @@ def column_figure(keys=0, height=None):
 # A key is drawn by hand in the band under the panels, so that every row has the same height and every handle sits
 # at the middle of the lower-case letters: entries are (handle, label), a handle draws itself between two x positions
 # at one height, all in points.
-MID = 2.6                                   # height of a handle above the baseline of its label
+MID = 2.1                                   # height of a handle above the baseline of its label
 
 
 def _pts(fig):
@@ -251,7 +274,7 @@ def line_handle(color, ls="-", lw=None, marker=None, ms=None, mfc="white", band=
         if band or under is not None:
             fig.add_artist(Rectangle((x0 / W, (y - 3.0) / Hf), (x1 - x0) / W, 6.0 / Hf, transform=fig.transFigure,
                                      color=color if under is None else under, alpha=band if under is None else 1.0,
-                                     lw=0))
+                                     lw=0, zorder=1.8))
         _line(fig, [x0, x1], [y, y], color=color, ls=ls, lw=LW if lw is None else lw, solid_capstyle="butt",
               dash_capstyle="butt")
         if marker:
@@ -283,7 +306,7 @@ def key_baseline(fig, row):
     return fig.below - KEY_TOP - row * KEY_ROW
 
 
-ASC, DESC = 7.0, 2.0                        # height of a 10 pt label above and below its baseline
+ASC, DESC = 5.6, 1.6                        # height of a key label above and below its baseline
 
 
 def key(fig, x, entries, ncol=1, row=0, right=False, y=None, handle=HANDLE, gap=HANDLE_PAD, sep=KEY_SEP,
@@ -298,7 +321,7 @@ def key(fig, x, entries, ncol=1, row=0, right=False, y=None, handle=HANDLE, gap=
     texts = []
     for i, (draw, label) in enumerate(entries):
         r = row + i // ncol
-        texts.append(fig.text(0, base(r) / Hf, label, ha="left", va="baseline", fontsize=TXT))
+        texts.append(fig.text(0, base(r) / Hf, label, ha="left", va="baseline", fontsize=KEY_TXT))
     fig.canvas.draw()
     rend = fig.canvas.get_renderer()
     widths = [t.get_window_extent(rend).width / fig.dpi / PT for t in texts]
@@ -318,10 +341,21 @@ def key(fig, x, entries, ncol=1, row=0, right=False, y=None, handle=HANDLE, gap=
     return x0[-1] + handle + gap + colw[-1]
 
 
-def inkey(ax, entries, loc="upper left", ncol=1, pad=(4.5, 5.0), at=None, **kw):
+def frame(fig, n, pad=2.6):
+    """A rounded white frame behind the last `n` key entries drawn on the figure."""
+    boxes = [b for _, b in fig.key_boxes[-n:]]
+    x0, y0 = min(b[0] for b in boxes) - pad, min(b[1] for b in boxes) - pad + 0.6
+    x1, y1 = max(b[2] for b in boxes) + pad, max(b[3] for b in boxes) + pad - 0.6
+    points = mtransforms.Affine2D().scale(PT) + fig.dpi_scale_trans
+    fig.add_artist(FancyBboxPatch((x0 + 1.5, y0 + 1.5), x1 - x0 - 3.0, y1 - y0 - 3.0, transform=points,
+                                  boxstyle="round,pad=1.5,rounding_size=2.2", facecolor="white", alpha=0.93,
+                                  edgecolor=KEY_FRAME, linewidth=0.5, zorder=1.5))
+
+
+def inkey(ax, entries, loc="upper left", ncol=1, pad=(6.0, 6.5), at=None, box=True, **kw):
     """A key inside a panel, in the corner `loc` ('upper left', 'upper right', 'lower left' or 'lower right'), `pad`
-    points from the frame (across, up or down), or with that corner at `at` (axes fraction); further keywords go to
-    key."""
+    points from the frame (across, up or down), or with that corner at `at` (axes fraction), on a rounded white
+    frame unless box=False (then frame(fig, n) can put one frame behind several keys); further keywords go to key."""
     fig = ax.figure
     W, Hf = _pts(fig)
     p = ax.get_position()
@@ -333,7 +367,10 @@ def inkey(ax, entries, loc="upper left", ncol=1, pad=(4.5, 5.0), at=None, **kw):
     else:
         cx, cy = (p.x0 + at[0] * p.width) * W, (p.y0 + at[1] * p.height) * Hf
     y = cy - ASC if vert == "upper" else cy + DESC + (rows - 1) * KEY_ROW
-    return key(fig, cx, entries, ncol=ncol, y=y, right=horiz == "right", **kw)
+    end = key(fig, cx, entries, ncol=ncol, y=y, right=horiz == "right", **kw)
+    if box:
+        frame(fig, len(entries))
+    return end
 
 
 def colour_key(fig, im, x, x1, title, ticks, row=0):
@@ -362,7 +399,7 @@ def inset_colour_key(ax, im, title, ticks, length=36.0, pad=(4.5, 5.0), stacked=
     y = p.y1 * Hf - pad[1] - ASC                       # baseline of the title; the bar centred on its lower case
     bx1 = p.x1 * W - pad[0] - 3.0                       # room for half the last tick label
     bx0 = bx1 - length
-    t = fig.text(0, y / Hf, title, ha="left", va="baseline", fontsize=TXT)
+    t = fig.text(0, y / Hf, title, ha="left", va="baseline", fontsize=KEY_TXT)
     fig.canvas.draw()
     tw = t.get_window_extent(fig.canvas.get_renderer()).width / fig.dpi / PT
     if stacked:
@@ -376,7 +413,7 @@ def inset_colour_key(ax, im, title, ticks, length=36.0, pad=(4.5, 5.0), stacked=
         cbar.set_ticks(ticks)
         cbar.ax.xaxis.set_major_formatter(ticker.FormatStrFormatter("%g"))
         cbar.outline.set_linewidth(0.6)
-        cax.tick_params(length=2.0, width=0.6, direction="out", pad=1.6, top=False, labelsize=TXT, color=INK)
+        cax.tick_params(length=2.0, width=0.6, direction="out", pad=1.6, top=False, labelsize=KEY_TXT, color=INK)
         fig.key_boxes.append((title, (min(tx0, bx0 - 7.0), by - 11.3, p.x1 * W - pad[0], y + ASC)))
         return cax
     t.set_x((bx0 - 4.0 - tw) / W)
@@ -386,7 +423,7 @@ def inset_colour_key(ax, im, title, ticks, length=36.0, pad=(4.5, 5.0), stacked=
     cbar.set_ticks(ticks)
     cbar.ax.xaxis.set_major_formatter(ticker.FormatStrFormatter("%g"))
     cbar.outline.set_linewidth(0.6)
-    cax.tick_params(length=2.0, width=0.6, direction="out", pad=1.6, top=False, labelsize=TXT, color=INK)
+    cax.tick_params(length=2.0, width=0.6, direction="out", pad=1.6, top=False, labelsize=KEY_TXT, color=INK)
     fig.key_boxes.append((title, (bx0 - 4.0 - tw, y - 11.0, bx1 + 3.0, y + ASC)))
     return cax
 
@@ -428,9 +465,40 @@ def band(ax, x, rows, color, label=None, lw=None, alpha=0.15, marker=None, ls="-
     lo, hi = np.nanpercentile(rows, 16, axis=0), np.nanpercentile(rows, 84, axis=0)
     ax.fill_between(x, lo, hi, color=color, alpha=alpha, lw=0)
     # markers stay whole at the frame; the data of a marked line lie inside the axes
-    ax.plot(x, mean, color=color, lw=LW if lw is None else lw, label=label, marker=marker, mfc="white", mec=color,
-            ls=ls, clip_on=marker is None, **kw)
+    lw = LW if lw is None else lw
+    ax.plot(x, mean, color=color, lw=lw, label=label, marker=marker, mfc="white", mec=color,
+            ls=ls, clip_on=marker is None, path_effects=halo(lw), **kw)
     return mean
+
+
+def halo(lw=None, width=1.3):
+    """A white outline under a line, so that it stands clear of the lines and bands it crosses."""
+    return [patheffects.Stroke(linewidth=(LW if lw is None else lw) + width, foreground="white", alpha=0.85),
+            patheffects.Normal()]
+
+
+def loss_regions(ax, drop=None, labels=("weak loss", "strong loss"), split=1.0, at=None):
+    """Shade the loss rates above `split`, the scale of the couplings, in a neutral grey and name the two regions in
+    bold on either side of the boundary: `drop` points under the height `at` (data), or without names if drop is
+    None."""
+    lo, hi = ax.get_xlim()
+    ax.axvspan(split, hi, color=REGION, lw=0, zorder=0)
+    if drop is None:
+        return
+    for text, side, ha in ((labels[0], -1, "right"), (labels[1], 1, "left")):
+        ax.annotate(rf"\textbf{{{text}}}", xy=(split, at), xycoords="data", xytext=(4.0 * side, -drop),
+                    textcoords="offset points", ha=ha, va="baseline", color=INK3, fontsize=KEY_TXT)
+
+
+def along(ax, text, p0, p1, at, offset=-4.5, color=None):
+    """A label set along the straight guide through the data points p0 and p1, centred at the data point `at` and
+    `offset` points off the guide (negative: under it). Call once the axes have their final position."""
+    a, b = ax.transData.transform([p0, p1])
+    angle = np.degrees(np.arctan2(b[1] - a[1], b[0] - a[0]))
+    rad = np.radians(angle)
+    ax.annotate(text, xy=at, xycoords="data", xytext=(-offset * np.sin(rad), offset * np.cos(rad)),
+                textcoords="offset points", rotation=angle, rotation_mode="anchor", ha="center",
+                va="top" if offset < 0 else "bottom", color=INK3 if color is None else color, fontsize=KEY_TXT)
 
 
 def save(fig, path):

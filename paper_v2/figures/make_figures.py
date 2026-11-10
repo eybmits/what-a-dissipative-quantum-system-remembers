@@ -76,7 +76,7 @@ def recall_band(ax, rows, color, lw=None, alpha=0.18):
     """Recall of several reservoirs: mean line and 16th-84th percentile band in the colour of the line."""
     x, m, lo, hi = curve_band(rows)
     ax.fill_between(x, lo, hi, color=color, alpha=alpha, lw=0)
-    ax.plot(x, m, color=color, lw=st.LW if lw is None else lw)
+    ax.plot(x, m, color=color, lw=st.LW if lw is None else lw, path_effects=st.halo(lw))
 
 
 def recall_map(ax, fam):
@@ -109,6 +109,7 @@ def recall_map(ax, fam):
     st.log_on_linear(ax, "x", g[0], g[-1], "plain")
     st.log_on_linear(ax, "y", 0, top, "plain")
     ax.tick_params(which="both", direction="out", top=False, right=False)
+    ax.grid(False)
     ax.set_xlim(g[0], g[-1])
     ax.set_ylim(0, top)
     # ticks on the top edge: the computed loss rates, between which the map interpolates
@@ -165,15 +166,15 @@ def decay_rates(ax):
     ax.set_xlabel(r"Loss rate $\gamma$")
     ax.set_ylabel(r"Decay rate")
     # the two bands named in the empty space above and below them
-    ax.text(0.14, 150, "bright", color=st.tone(st.FAMILY["shared"], 0.35), fontsize=st.TXT, va="baseline")
-    ax.text(0.14, 8e-4, "dark", color=st.FAMILY["shared"], fontsize=st.TXT, va="baseline")
+    ax.text(0.14, 180, r"\textbf{bright}", color=st.tone(st.FAMILY["shared"], 0.35), fontsize=st.KEY_TXT, va="baseline")
+    ax.text(0.14, 7e-4, r"\textbf{dark}", color=st.FAMILY["shared"], fontsize=st.KEY_TXT, va="baseline")
 
 
 def fig2():
     """The shape sets the direction of the clock: recall at weak and at strong loss, memory against loss and the decay
     rates in one row. The two recall maps share their delay axis and carry the colour scale in an empty corner; the
     memory panel is the widest and carries the key of the shapes above the limit set by the features."""
-    fig = st.wide_figure(1, hp=st.HP_ROW)
+    fig = st.wide_figure(1, hp=118.0)
     a, b, c, d = (st.wide_place(fig, k) for k in range(4))
 
     # a, b: recall against loss rate and delay, local loss and one shared channel; dashed: delay below which half of
@@ -205,27 +206,29 @@ def fig2():
         st.band(c, gx, np.c_[rows, one], st.FAMILY["separate"], ls=SCALED, marker="o", ms=st.MS, alpha=0.12)
     c.axhline(45, color=st.INK3, lw=st.LW_GUIDE, ls=FEATURES)
     # the limit named under its line, where the data leave room; the key of the shapes sits above it
-    c.annotate("45 features", xy=(0.25, 45), xycoords="data", xytext=(0, -10.5),
-               textcoords="offset points", ha="left", va="baseline", color=st.INK3, fontsize=st.TXT)
+    c.annotate("45 features", xy=(0.25, 45), xycoords="data", xytext=(0, -8.5),
+               textcoords="offset points", ha="left", va="baseline", color=st.INK3, fontsize=st.KEY_TXT)
     c.set_xscale("log")
     st.decades(c, "x", every=2)
     c.set_xlim(1 / 40, 400)
     c.set_xlabel(r"Loss rate $\gamma$")
-    c.set_ylim(0, 78)                       # room above the limit for the three rows of the key
+    c.set_ylim(0, 66)                       # room above the limit for the three rows of the key
     c.set_yticks([0, 15, 30, 45])
     c.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
+    st.loss_regions(c, drop=18.5, at=45)
 
     # d: decay rates, bright and dark modes of the equal-phase channel and the slowest mode of independent decay
     decay_rates(d)
 
     st.fit_row(fig, (a, b, c, d), (70, 70, 152, 80), joined=(b,))
-    for ax, name in zip((a, b, c, d), "abcd"):
-        st.letter(ax, name)
+    for ax, name, title in zip((a, b, c, d), "abcd", ("Independent decay", "Equal phases", "Memory capacity",
+                                                      "Bright and dark modes")):
+        st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c, d)])
     st.inset_colour_key(a, im, r"$C_\tau$", [0, 0.5, 1])
     # under the colour scale, in the empty top of a: the white dashed line of both maps
     st.inkey(a, [(st.line_handle("white", ls=(0, (3, 1.5)), under=st.RECALL(0.6)), "median")], "upper right",
-             pad=(4.5, 26.0))
+             pad=(4.5, 24.0), box=False)
     shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
     st.inkey(c, [shape("separate"), shape("signed"),
                  shape("shared"), (st.line_handle(st.OTHER, lw=st.LW_THIN), "other channels"),
@@ -265,7 +268,7 @@ def fig3():
     a.set_xscale("log")
     st.decades(a, "x", labels="power", every=2)
     a.set_xlim(0.7, 1.4e4)
-    a.set_ylim(0, 62)                       # room above the points for the key
+    a.set_ylim(0, 56)                       # room above the points for the key
     a.set_yticks([0, 15, 30, 45])
     a.set_xlabel(r"Lifetime $t_{\mathrm{mem}}$")
     a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
@@ -295,8 +298,12 @@ def fig3():
     # d: one qubit in the limit of slow relaxation
     k = np.geomspace(0.01, 100, 400)
     size, single, order = qubit(k)
-    d.plot(k, size / size.max(), color=st.GENTLE)
-    d.plot(k, single, color=st.INK2, ls=dashed)
+    d.fill_between(k, 0, size / size.max(), color=st.GENTLE, alpha=0.10, lw=0)
+    d.plot(k, size / size.max(), color=st.GENTLE, path_effects=st.halo())
+    d.plot(k, single, color=st.INK2, ls=dashed, path_effects=st.halo())
+    best = 2 / np.sqrt(3)
+    d.plot([best], [1.0], "o", ms=st.MS, mfc="white", mec=st.GENTLE, mew=0.9, zorder=4)
+    d.plot([best], [qubit(best)[1]], "o", ms=st.MS, mfc="white", mec=st.INK2, mew=0.9, zorder=4)
     # the largest signal, up to the curve; the key sits above the curves
     d.plot([2 / np.sqrt(3)] * 2, [0, 1], color=st.GENTLE, lw=st.LW_GUIDE, ls=(0, (1, 1.6)))
     d.set_xscale("log")
@@ -308,8 +315,9 @@ def fig3():
     d.set_ylabel(r"Signal, share")
 
     st.fit_row(fig, (a, b, c, d), (80, 76, 118, 78))
-    for ax, name in zip((a, b, c, d), "abcd"):
-        st.letter(ax, name)
+    for ax, name, title in zip((a, b, c, d), "abcd", ("Memory against lifetime", "Writing into dark states",
+                                                      "Mixing law", "One qubit")):
+        st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c, d)])
     st.inkey(a, [(st.marker_handle(st.INK3, mfc=st.INK3, mec=st.INK3, mew=0.9), "full amplitude"),
                  (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing")], "upper left")
@@ -321,8 +329,8 @@ def fig3():
                                    mew=0.9), "independent"),
                  (st.marker_handle(st.FAMILY["signed"], mfc=st.FAMILY["signed"], mec=st.FAMILY["signed"], mew=0.9),
                   "opposite phases"),
-                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing"),
-                 (st.line_handle(st.INK3, ls=(0, (4, 2)), lw=st.LW_GUIDE), "mixing law")], "upper left")
+                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing")], "upper left")
+    st.along(c, "mixing law", (1, 1), (10, 10), (2.0, 2.0))
     st.inkey(d, [(st.line_handle(st.GENTLE), "signal"),
                  (st.line_handle(st.INK2, ls=dashed), "single inputs")], "upper right")
     st.save(fig, HERE / "fig3_price.pdf")
@@ -332,7 +340,7 @@ def fig3():
 def fig_darkmodel():
     """The dark-state model and the erasure test, two panels across one column that share the recall
     axis, as tall as the panels of Figs. 2 and 3, each with its key in the room above the curves."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=86.0)
+    fig = st.wide_figure(1, width=st.COLUMN, hp=80.0)
     a, b = st.wide_place(fig, 0), st.wide_place(fig, 1)
 
     # a: lines are the full reservoir, circles the dark-state model
@@ -350,23 +358,22 @@ def fig_darkmodel():
     rot = st.tone(st.FAMILY["shared"], 0.5)
     for field, col in (("removed", st.ERASED), ("rotated", rot), ("intact", st.FAMILY["shared"])):
         recall_band(b, curves[field], col, alpha=0.14)
-    recall_axes(b, 100)
+    recall_axes(b, 300)
     for ax in (a, b):
-        ax.set_ylim(0, 1.7)                 # room above the curves for the keys, three rows in b
+        ax.set_ylim(0, 1.15)                # the keys sit right of the curves, which end before the longest delays
     b.set_ylabel("")
     b.tick_params(axis="y", which="both", labelleft=False)
 
     # a is the wider panel: its key is the wider one
-    st.fit_row(fig, (a, b), (11, 9), joined=(b,))
-    for ax, name in zip((a, b), "ab"):
-        st.letter(ax, name)
+    st.fit_row(fig, (a, b), (1, 1), joined=(b,))
+    for ax, name, title in zip((a, b), "ab", ("Dark-state model", "Erasure test")):
+        st.letter(ax, name, title)
     st.align(fig, rows=[(a, b)])
-    st.inkey(a, [(st.line_handle(light), r"$\gamma=4$"), (st.line_handle(st.FAMILY["shared"]), r"$\gamma=64$")],
-             "upper right", ncol=2)
-    st.inkey(a, [(st.marker_handle(st.INK2, mfc="white", mec=st.INK2, mew=0.9), "dark-state model")],
-             "upper right", pad=(4.5, 5.0 + st.KEY_ROW))
-    st.inkey(b, [(st.line_handle(st.FAMILY["shared"]), "intact"), (st.line_handle(rot), "copy erased"),
-                 (st.line_handle(st.ERASED), "dark erased")], "upper right")
+    st.inkey(a, [(st.line_handle(light), r"$\gamma=4$"), (st.line_handle(st.FAMILY["shared"]), r"$\gamma=64$"),
+                 (st.marker_handle(st.INK2, mfc="white", mec=st.INK2, mew=0.9), "model")],
+             "upper right", pad=(5.0, 5.5), handle=8.0, gap=2.5)
+    st.inkey(b, [(st.line_handle(st.FAMILY["shared"]), "intact"), (st.line_handle(rot), "copy"),
+                 (st.line_handle(st.ERASED), "dark")], "upper right", pad=(5.0, 5.5), handle=8.0, gap=2.5)
     st.save(fig, HERE / "figD_dark.pdf")
 
 
@@ -462,9 +469,8 @@ REPLAY_LINES = ((("separate", "gentle_weak", 0.03125), "-", "o"), (("separate", 
 def fig_sampling():
     """What survives sampling and why: memory against the number of preparations, and feature variance and the
     recovered fraction of the capacity against the write strength at a matched decay-only lifetime, three panels
-    across the page; the key of the colours, which all panels share, and the key of the line styles of a sit in
-    two rows under them."""
-    fig = st.wide_figure(1, hp=82.0, keys=2)
+    across the page; the key of the line styles sits in a and the key of the colours, which all panels share, in b."""
+    fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c = (st.wide_place(fig, k) for k in range(3))
 
     # a: memory against the preparations per setting and step, features from the replay of the last tau_90 inputs:
@@ -478,7 +484,7 @@ def fig_sampling():
     a.set_xscale("log")
     st.decades(a, "x", labels="power", every=2)
     a.set_xlim(7e2, 5e8)
-    a.set_ylim(0, 34)
+    a.set_ylim(0, 45)                       # room above the curves for the key
     a.set_yticks([0, 10, 20, 30])
     a.set_xlabel(r"Preparations $n$")
     a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
@@ -507,20 +513,27 @@ def fig_sampling():
     st.decades(c, "y", labels="plain")
     c.set_ylim(2e-3, 2)
     c.set_ylabel("Recovered fraction")
+    from scipy import stats
+    shown = [f for f in families() if f in P and f != "dephasing"]
+    rho = stats.spearmanr(np.concatenate([P[f]["write_slow"] for f in shown]),
+                          np.concatenate([np.array(P[f]["shots_1000000"]) / np.array(P[f]["exact"]) for f in shown]))[0]
+    c.annotate(rf"rank correlation {rho:.2f}", xy=(1, 0), xycoords="axes fraction", xytext=(-6, 7),
+               textcoords="offset points", ha="right", va="baseline", color=st.INK3, fontsize=st.KEY_TXT)
 
     st.fit_row(fig, (a, b, c), (10, 9, 9))
-    for ax, name in zip((a, b, c), "abc"):
-        st.letter(ax, name)
+    for ax, name, title in zip((a, b, c), "abc", ("Finite measurements", "Signal size", "Recovered capacity")):
+        st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c)])
+    st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
+                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper left", ncol=2,
+             box=False)
+    st.inkey(a, [(st.line_handle(st.FAMILY["separate"], ls=STRONG_LOSS, lw=st.LW_THIN), r"independent, $\gamma=64$")],
+             "upper left", pad=(6.0, 6.5 + st.KEY_ROW), box=False)
+    st.frame(fig, 3)
     dot = lambda col: st.marker_handle(col, mfc=col, mec=col, mew=0.5)
-    W, _ = st._pts(fig)
-    st.key(fig, W / 2, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
-                        (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude"),
-                        (st.line_handle(st.FAMILY["separate"], ls=STRONG_LOSS, lw=st.LW_THIN),
-                         r"independent at $\gamma=64$")], ncol=3, row=1, center=True, sep=10.0)
-    st.key(fig, W / 2, [(dot(st.FAMILY["separate"]), "independent"), (dot(st.FAMILY["shared"]), "equal phases"),
-                        (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other channels")],
-           ncol=4, center=True, handle=5.0, gap=2.5, sep=10.0)
+    st.inkey(b, [(dot(st.FAMILY["separate"]), "independent"), (dot(st.FAMILY["shared"]), "equal phases"),
+                 (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other channels")], "upper left",
+             handle=5.0, gap=2.5)
     st.save(fig, HERE / "fig4_sampling.pdf")
 
 
@@ -529,7 +542,7 @@ def fig_checks():
     against gamma/eta^2 (independent decay) and gamma eta^2 (opposite phases), one marker per amplitude. b: memory at a
     fixed budget of preparations times replayed steps per output step against the loss rate. The key of the line
     styles of b sits above its curves; the keys of the colours and of the markers of a sit in rows under the panels."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=78.0, keys=2)
+    fig = st.wide_figure(1, width=st.COLUMN, hp=112.0)
     a, b = st.wide_place(fig, 0), st.wide_place(fig, 1)
     ck = SNAP["clock"]
     marks = ("o", "s", "^", "D")
@@ -550,9 +563,10 @@ def fig_checks():
     st.decades(a, "x", labels="power", every=2)
     st.decades(a, "y", labels="power", every=2)
     a.set_xlim(2e-3, 5e3)
-    a.set_ylim(1e-3, 3e3)
-    a.set_xlabel(r"$\gamma/\eta^2$ or $\gamma\eta^2$")
-    a.set_ylabel(r"$\eta^2\,t_{\mathrm f}$")
+    a.set_ylim(1e-3, 1e7)                   # room above the points for the keys
+    a.set_yticks([1e-2, 1e0, 1e2])
+    a.set_xlabel(r"Loss $\gamma/\eta^2$ or $\gamma\eta^2$")
+    a.set_ylabel(r"Recall time $\eta^2\,t_{\mathrm f}$")
 
 
     for (design, rule), ls, f in BUDGET_LINES:
@@ -563,25 +577,24 @@ def fig_checks():
     b.set_xscale("log")
     st.decades(b, "x", every=2)
     b.set_xlim(1 / 90, 360)
-    b.set_ylim(0, 58)                       # room above the curves for the key
+    b.set_ylim(0, 60)                       # room above the curves for the key
     b.set_yticks([0, 10, 20, 30, 40])
     b.set_xlabel(r"Loss rate $\gamma$")
     b.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
+    st.loss_regions(b, drop=0.0, at=36.5, labels=("weak", "strong"))
 
     st.fit_row(fig, (a, b), (1, 1))
-    for ax, name in zip((a, b), "ab"):
-        st.letter(ax, name)
+    for ax, name, title in zip((a, b), "ab", ("Recall-time collapse", "Fixed budget")):
+        st.letter(ax, name, title)
     st.align(fig, rows=[(a, b)])
-    st.inkey(b, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
-                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper right", pad=(3.0, 4.0),
-             handle=9.0, gap=2.5)
     dot = lambda f: (st.marker_handle(st.FAMILY[f], mfc=st.FAMILY[f], mec=st.FAMILY[f], mew=0.5), st.NAME[f])
-    W, _ = st._pts(fig)
-    st.key(fig, W / 2, [dot("separate"), dot("shared"), dot("signed")], ncol=3, center=True, handle=5.0, gap=2.5,
-           sep=8.0)
-    st.key(fig, W / 2, [(st.marker_handle(st.INK2, marker=m, ms=2.9, mfc="white", mec=st.INK2, mew=0.8), label)
-                        for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
-           ncol=4, row=1, center=True, handle=5.0, gap=2.5, sep=10.0)
+    st.inkey(a, [dot("separate"), dot("signed")], "upper left", handle=5.0, gap=2.5, box=False)
+    st.inkey(a, [(st.marker_handle(st.INK2, marker=m, ms=2.9, mfc="white", mec=st.INK2, mew=0.8), label)
+                 for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
+             "upper left", ncol=2, pad=(6.0, 6.5 + 2 * st.KEY_ROW), handle=5.0, gap=2.5, sep=8.0, box=False)
+    st.frame(fig, 6)
+    st.inkey(b, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
+                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude"), dot("shared")], "upper right")
     st.save(fig, HERE / "figE_checks.pdf")
 
 
@@ -595,7 +608,7 @@ def fig_sizes():
     at gamma = 1. A line stops where its recall reaches past the 300 delays summed. Two panels across one column, each
     with its number of spins above the dashed line at its number of features; the key that the panels share sits
     under them."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=86.0, keys=3)
+    fig = st.wide_figure(1, width=st.COLUMN, hp=112.0)
     axes = [st.wide_place(fig, 0), st.wide_place(fig, 1)]
     for ax, n in zip(axes, ("4", "6")):
         rec = SNAP["sizes"][n]
@@ -613,25 +626,22 @@ def fig_sizes():
             st.band(ax, x, rows, st.FAMILY[fam], ls=SCALED, marker="o", ms=st.MS, alpha=0.12)
         feats = rec["features"]
         ax.axhline(feats, color=st.INK3, lw=st.LW_GUIDE, ls=FEATURES)
-        ax.annotate(rf"$N={n}$", xy=(1 / 30, feats), xycoords="data", xytext=(0, 3.5), textcoords="offset points",
-                    ha="left", va="baseline", color=st.INK3, fontsize=st.TXT)
         ax.set_xscale("log")
         st.decades(ax, "x", every=2)
         ax.set_xlim(1 / 40, 400)
-        ax.set_ylim(0, 1.25 * feats)        # room above the limit for the number of spins
+        ax.set_ylim(0, 1.47 * feats)        # room above the limit for the keys
         ax.set_yticks(np.linspace(0, feats, 4))
         ax.set_xlabel(r"Loss rate $\gamma$")
+        st.loss_regions(ax, drop=9.5, at=feats, labels=("weak", "strong"))
     axes[0].set_ylabel(r"Capacity $\sum_\tau C_\tau$")
     st.fit_row(fig, axes, (1, 1))
-    for ax, name in zip(axes, "ab"):
-        st.letter(ax, name)
+    for ax, name, title in zip(axes, "ab", ("Four spins", "Six spins")):
+        st.letter(ax, name, title)
     st.align(fig, rows=[tuple(axes)])
     shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
-    W, _ = st._pts(fig)
-    st.key(fig, W / 2, [shape("separate"), shape("shared"), shape("signed"),
-                        (st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing"),
-                        (st.line_handle(st.INK3, ls=FEATURES, lw=st.LW_GUIDE), "number of features")],
-           ncol=2, center=True, sep=10.0)
+    st.inkey(axes[0], [shape("separate"), shape("shared"), shape("signed")], "upper left")
+    st.inkey(axes[1], [(st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing"),
+                       (st.line_handle(st.INK3, ls=FEATURES, lw=st.LW_GUIDE), "all features")], "upper left")
     st.save(fig, HERE / "figE_sizes.pdf")
 
 
