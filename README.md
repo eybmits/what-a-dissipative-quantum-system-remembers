@@ -40,11 +40,11 @@ The raw records come from these scripts; each one documents its stages, and they
 | `experiments/run_review_runs.py` | gentle writing, slow modes up to large loss, local dephasing, signal size |
 | `experiments/run_clock.py` | single-input recall time at four input amplitudes, finite sampling, budgets and crossings with the replayed inputs, write onto the slow modes, input on one spin |
 | `experiments/run_five_spin_orders.py` | exact order distribution of the five-spin capacity against the mixing law |
-| `experiments/run_sizes.py` | memory against the loss rate at three, four and six spins (Fig. 7) |
+| `experiments/run_sizes.py` | memory against the loss rate at three, four and six spins (Fig. 6) |
 | `experiments/run_amplitude_map.py` | capacity over loss rate and input amplitude, exact and sampled; `--analyse` prints the numbers of Appendix E.4 |
 | `experiments/run_leak_size.py` | leak coefficient of the equal-phase channel at three to six spins |
 | `experiments/run_spin_orders.py` | three-spin order shares at a fixed amplitude and with gentle writing; prefactor scan |
-| `experiments/theory/order_law/reconstruct.py` | exact check of the mixing law (Fig. 6) |
+| `experiments/theory/order_law/reconstruct.py` | exact check of the mixing law for reset reservoirs (Appendix B.6) |
 | `experiments/referee_checks/` | training-set, prefactor and principal-direction checks |
 
 The scripts share an independent Pauli-basis simulator and shot sampler

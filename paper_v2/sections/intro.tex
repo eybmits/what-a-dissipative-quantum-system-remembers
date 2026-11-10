@@ -23,8 +23,8 @@ accessible while new information continues to arrive.
 The environment shapes how these traces fade. A system can lose energy or information to its surroundings through
 processes collectively described as
 dissipation~\cite{ChenNurdin2019,Chen2020,Sannia2024,Ricci2026,Domingo2023,Goetting2025,Mujal2023,Franceschetto2026,KobayashiFeedback2024,Cindrak2024,Sannia2026Memory,Paparelle2026}.
-Previous work has shown that tuning the dissipation rate can improve memory, sometimes yielding the best performance at
-an intermediate loss rate~\cite{Sannia2024,Goetting2025}. Input, interactions, and dissipation can also be optimized
+Previous work has shown that tuning the dissipation rate improves memory, in some reservoirs with the best performance
+at an intermediate loss rate~\cite{Sannia2024,Goetting2025}. Input, interactions, and dissipation can also be optimized
 together~\cite{MartinezPenaPRL2021,Baumann2026}. The rate specifies how strongly the environment acts, but the way it
 acts is a separate design choice. Engineering this interaction can prepare and protect selected quantum
 states~\cite{Poyatos1996,Verstraete2009,Pastawski2011,Harrington2022}. For a system processing an ongoing input stream,
@@ -36,10 +36,10 @@ undergo collective decay. In certain joint states, the different emission paths 
 through that shared route. These protected states are called dark
 states~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. Internal dynamics can still move the system into states that
 do decay. If this decay is sufficiently rapid, however, it suppresses those transitions, a phenomenon known as the
-dissipative quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}. Stronger loss can
-therefore slow the escape of information from the protected states (Fig.~\ref{fig:concept}c).
+dissipative quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}. Stronger loss
+therefore slows the escape of information from the protected states (Fig.~\ref{fig:concept}c).
 
-Information that survives can nevertheless become difficult to use. Each new input changes the same state that stores
+Survival alone does not make information usable. Each new input changes the same state that stores
 the past. A signal that initially records one input therefore comes to depend on combinations of several inputs, such
 as their product. This mixing is useful for tasks that require relationships between inputs, but it reduces the capacity
 available for recalling individual inputs~\cite{Dambre2012,Inubushi2017,Cindrak2026}. Reading the memory has a cost as
@@ -50,8 +50,9 @@ explored input strength~\cite{Jaeger2007Leaky}, and investigated how noise and p
 information processing~\cite{Kubota2023,Fry2023,Cheamsawat2025,Akshay2026}. Closest to our work,
 Ref.~\cite{Sannia2024} tunes the dissipation rate of the reservoir we study, Ref.~\cite{Cindrak2026} finds one
 trade-off between memory and nonlinearity across reservoir schemes, and Ref.~\cite{Akshay2026} reads the output of a
-reservoir from a decoherence-free subspace to classify quantum states. How protection, continued input, and measurement
-together determine the part of the past that remains recoverable is open.
+reservoir from a decoherence-free subspace to classify quantum states. The Zeno protection of dark states and the
+benefit of a weak input for linear memory are established. How protection, continued input, and measurement together
+determine the part of the past that remains recoverable is open.
 
 Here we show that the form of the dissipation sets three separate properties of a memory: how long a record survives,
 whether an input can be written into it, and how strong a signal it leaves to measure (Fig.~\ref{fig:concept}). We
@@ -62,9 +63,9 @@ by their inputs: a stored signal combines on average $s\,t_{\mathrm{mem}}$ input
 input times the memory lifetime $t_{\mathrm{mem}}$ (Sec.~\ref{sec:mixing}). A longer memory must therefore be written
 more gently, which we call gentle writing. Third, the phases with which the spins couple to a collective channel decide
 whether an input reaches the protected memory at all (Sec.~\ref{sec:writing}). Fourth, the state that the dissipation
-leaves behind sets the size of the signal that measurements must resolve: at strong loss only a collective channel
-with suitable phases keeps a readable memory, and at weak loss independent decay recovers the most
-(Sec.~\ref{sec:price}).
+leaves behind sets the size of the signal that measurements must resolve: at strong loss a collective channel with
+non-aligned phases recovers the most memory at every measurement budget, and where the loss can be made weak,
+independent decay recovers more still (Sec.~\ref{sec:price}).
 
 Together, these results connect the physical survival of information to what a readout can recover from it. The
 protection relies on quantum interference, while the mixing law holds for every reservoir that meets its conditions,

@@ -26,8 +26,9 @@ budget_replay the budget points with the features of that replay: memory at budg
               output step replays its last tau_90 inputs from |00000> (Fig. 4a and the capacity table).
 replay_shots, pattern_replay_shots
               memory against preparations per setting and step, 10^3 to 10^8.5, with the features of that replay, at
-              the crossings of Sec. 3.4 (local loss at 1/32, opposite phases at 64; gentle and full amplitude), with
-              the input on all spins and on spin 1 only.
+              the crossings of Sec. 3.4 (local loss at 1/32, opposite phases at 64; gentle and full amplitude) and
+              at strong loss with the full amplitude (equal phases and local loss at 64), with the input on all spins
+              and on spin 1 only.
 
 Run with:  python experiments/run_clock.py STAGE [--seeds 4] [--workers 7]   (resumes; four reservoirs by default)
 """
@@ -278,7 +279,8 @@ def budget_replay_case(task):
 
 REPLAY_SHOTS = tuple(int(round(10 ** e)) for e in np.arange(3.0, 8.75, 0.5))
 REPLAY_LINES = (("separate", 0.03125, "gentle_weak"), ("separate", 0.03125, "fixed"),
-                ("signed", 64.0, "gentle_strong"), ("signed", 64.0, "fixed"))
+                ("signed", 64.0, "gentle_strong"), ("signed", 64.0, "fixed"),
+                ("shared", 64.0, "fixed"), ("separate", 64.0, "fixed"))
 
 
 def replay_shots_case(task, pattern="uniform"):

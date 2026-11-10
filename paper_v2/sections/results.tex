@@ -34,18 +34,17 @@ A linear readout of 45 features, the single-spin and two-spin expectation values
 from $\tau$ steps back. Its recall $C_\tau$, between 0 and 1, is the squared correlation between the estimate and the
 input on held-out data. The linear memory capacity $\sum_\tau C_\tau$ adds up the recall over all delays. One unit is
 one past input recalled perfectly, and the ceiling is 45, the number of features. The memory lifetime
-$t_{\mathrm{mem}}$ says how long the variance of a stored signal survives, and the single-input recall time
-$t_{\mathrm f}$ how long one input stays linearly readable on its own (Appendices~\ref{sec:methods-slow} and~\ref{sec:order}). Sections~\ref{sec:clock}
+$t_{\mathrm{mem}}$ says how long the variance of a stored signal survives (Appendix~\ref{sec:order}). Sections~\ref{sec:clock}
 to~\ref{sec:writing} use exact expectation values, as if every measurement were repeated infinitely often, and
 Sec.~\ref{sec:price} counts measurements. The capacities are numerical results for five spins with all-to-all
 couplings, while the equal-coupling identity, the slowing of the dark modes, the alignment rule and the mixing law
 below hold for any number of spins and any Hamiltonian. How the signal scales with the number of spins is open, and
-larger reservoirs can need exponentially many measurements~\cite{Sannia2025Concentration}.
+reservoirs whose signals concentrate need exponentially many measurements~\cite{Sannia2025Concentration}.
 
 We compare decay channels at equal total coupling $\Tr K=\sum_k\Tr L_k^\dagger L_k$ and hold the Hamiltonian fixed
 to isolate the effect of the dissipative structure. The generator of Eq.~\eqref{eq:lindblad} has $4^N$ modes,
 patterns of change in the state that each decay at their own rate. Equal total coupling fixes their mean rate for
-every Hamiltonian, but not the slow modes, which keep a record longest and can become slower or faster
+every Hamiltonian, but not the slow modes, which keep a record longest and become slower or faster with the channel
 (Appendix~\ref{sec:methods-shapes}). Table~\ref{tab:families} lists the eight channels we studied.
 
 Four of them carry the argument (Fig.~\ref{fig:concept}b). With independent decay every spin loses its excitation on
@@ -102,9 +101,12 @@ Two tests show that the dark states hold the memory (Appendix~\ref{app:num-lifet
 alone, with no fitted parameter, reproduces the recall of the full reservoir at strong loss
 (Fig.~\ref{fig:darkmodel}a). Replacing the protected components of the state by their time averages after every step,
 which removes their dependence on the inputs, destroys all memory beyond a few steps, while the same operation on a
-randomly rotated set of equal size leaves most of it (Fig.~\ref{fig:darkmodel}b). Residual local noise caps this
-lifetime: for the equal-phase channel, it requires a ratio of collective to local loss rates that grows
-quadratically with the target recall time (Appendix~\ref{app:num-noise}).
+randomly rotated set of equal size leaves most of it (Fig.~\ref{fig:darkmodel}b). Residual local loss caps this
+lifetime. For the equal-phase channel, recalling inputs over $T$ steps requires a ratio of collective to local loss
+rates of at least $4.2\,T^2$ (Appendix~\ref{app:num-noise}): a ratio of $10^2$ protects 5 steps and $10^4$ protects 49.
+For superconducting qubits coupled to a waveguide, a four-qubit dark state outlives the decay of a single qubit into
+the waveguide by more than two orders of magnitude~\cite{Zanner2022}, and qubit arrays reach a cooperativity of
+172~\cite{Mirhosseini2019}.
 
 Dark states thus protect stored information against decay. With the opposite-phase channel, however, the dark states
 are just as protected, yet the capacity returns only to its weak-loss level (Fig.~\ref{fig:clock}c). The reason is
@@ -133,9 +135,10 @@ the memory lifetime:
 
 \begin{keybox}
 \begin{theorem}[Mixing law, made precise in Appendix~\ref{app:law}]\label{thm:law}
-Let a reservoir be reset with probability $p$ per step, so that $t_{\mathrm{mem}}\sim1/(2p)$ as $p\to0$, and otherwise turned by
-input-dependent unitaries that mix the stored state evenly over all directions, so that the stored covariance has a
-single slow direction, and write a signal (conditions in Appendix~\ref{app:law}). Pick a stored contribution with probability equal to its share
+Let a reservoir be reset with probability $p$ per step, so that $t_{\mathrm{mem}}\sim1/(2p)$ as $p\to0$, and otherwise
+turned by an input-dependent rotation. Let the average rotation shrink every state, let the rotations leave no stored
+covariance unchanged on average except the isotropic one, and let one input change the stationary state (conditions
+(1) to (3) of Appendix~\ref{app:law}). Pick a stored contribution with probability equal to its share
 of the capacity, and let $D$ be the number of distinct inputs it depends on. As $p\to0$, $D/t_{\mathrm{mem}}$ becomes
 exponentially distributed with mean $s$, and
 \begin{equation*}
@@ -147,8 +150,8 @@ exponentially distributed with mean $s$, and
 \centering
 \includegraphics[width=\textwidth]{figures/fig3_price.pdf}
 \caption{\textbf{New inputs mix stored information, and gentle writing limits the mixing.}
-\textbf{a}~The time over which one input stays readable falls on one curve per channel when rescaled as decay plus
-mixing predicts.
+\textbf{a}~At the full input amplitude the capacity, summed over all delays, peaks and then falls as the memory
+grows. Gentle writing holds it at 40 units.
 \textbf{b}~An input aligned with the equal-phase channel writes ever less into the dark states as the loss grows,
 while a non-aligned input keeps writing.
 \textbf{c}~The number of inputs mixed into a stored signal follows the mixing law, and gentle writing keeps it near
@@ -161,20 +164,34 @@ carry 80\% of the capacity.}
 
 The reason is a race: in each step a fraction $s$ of the stored signal picks up one more input, while a fraction
 $1/t_{\mathrm{mem}}$ of it is lost, so the number of inputs follows a geometric distribution, which becomes exponential
-for long memories. The same covariance condition extends the law to physical channels without a reset, with the slow decay in place
-of the reset (Appendix~\ref{app:physical}), while several slow covariance directions keep distinct mixing scales
-(Appendix~\ref{app:slowdir}). Nothing in the law is quantum: classical state-affine reservoirs, whose state is updated
-by an input-dependent linear map plus an offset~\cite{GrigoryevaOrtegaSAS2018}, obey it under the same conditions. Dissipation enters through its two factors, the memory lifetime and the disturbance per input. Their product
-$s\,t_{\mathrm{mem}}$ is the size of the trade-off between memory and nonlinearity~\cite{Cindrak2026}.
+for long memories.
 
-Exact covariance calculations, Eq.~\eqref{eq:recursion}, support the law in the five-spin reservoir
-(Fig.~\ref{fig:mixing}c). For five spins we check the law itself and not its conditions: the recursion gives the
-distribution of $D$ exactly, and it follows the law. At the full input amplitude one input disturbs the stored state
-only slightly, $s\approx0.02$, and the
-mean of $D$ grows with the memory lifetime as $s\,t_{\mathrm{mem}}$ plus an offset of one to two inputs, as
-Theorem~\ref{thm:law} allows (Appendix~\ref{app:num-capacity}). At a fixed input strength, a longer memory is
-therefore a more mixed one. Individual inputs remain readable only if the disturbance per input shrinks as the memory
-lifetime grows. Two controls shrink it: the phases of the decay channel and the amplitude of the input.
+Three kinds of evidence support the law. It is proved for the reset model, in any dimension, and nothing in the proof
+is quantum: classical state-affine reservoirs, whose state is updated by an input-dependent linear map plus an
+offset~\cite{GrigoryevaOrtegaSAS2018}, obey it under the same conditions. The proof carries over to physical channels
+without a reset, with the slow decay in place of the reset, when a single direction of the stored covariance is slow
+(Appendix~\ref{app:physical}), while several slow directions keep distinct mixing scales (Appendix~\ref{app:slowdir}).
+For three spins, interval arithmetic certifies these conditions (Appendix~\ref{app:spins}). For five spins the order
+recursion, Eq.~\eqref{eq:recursion}, gives the distribution of $D$ exactly, and we compare it with the law
+(Fig.~\ref{fig:mixing}c).
+
+At the full input amplitude one input disturbs the stored state only slightly, $s\approx0.02$. At short memories the
+mean of $D$ is 1.7 to 1.9, because the fast response of the reservoir combines the latest inputs within a few steps.
+As the memory grows, the accumulated mixing takes over and the mean of $D$ follows $s\,t_{\mathrm{mem}}$ to within
+2.2 inputs, up to 23 inputs at the longest memory. The distribution of $D$ approaches the exponential law at the same
+time: at $s\,t_{\mathrm{mem}}\approx20$ it deviates from it by at most 0.07 with the opposite-phase channel and 0.14
+with independent decay (Appendix~\ref{app:law}). Dissipation enters the law through its two factors, the
+memory lifetime and the disturbance per input, and their product is the size of the trade-off between memory and
+nonlinearity~\cite{Cindrak2026}.
+
+The law has a direct consequence. At a fixed input strength, lengthening the memory beyond
+$s\,t_{\mathrm{mem}}\approx0.3$ costs recall (Fig.~\ref{fig:mixing}a). At the full amplitude the linear memory
+capacity, summed over all delays, peaks at 16 units with the opposite-phase channel, where $s\,t_{\mathrm{mem}}=0.3$,
+and falls to 2 units while the lifetime grows from 20 to 750 steps. With independent decay it peaks at 15 units, where
+$s\,t_{\mathrm{mem}}=0.2$, and falls to 4. The stored signal is still there, but it has moved into products of
+inputs: with the opposite-phase channel the share of the capacity carried by single inputs falls from 0.37 to 0.05
+(Appendix~\ref{app:num-capacity}). Individual inputs remain readable only if the disturbance per input shrinks as the
+memory lifetime grows. Two controls shrink it: the phases of the decay channel and the amplitude of the input.
 
 \subsection{Controlling the disturbance: channel phases and input amplitude}
 \label{sec:writing}
@@ -192,20 +209,29 @@ dark states and disturbs them at every loss rate. This is the generic case: only
 of the dark states, and a phase error opens a direct coupling within the dark subspace
 (Appendix~\ref{app:num-mixing}).
 
-The second control is the input amplitude $\eta$. Because the disturbance $s$ grows as the square of the turn, keeping
-$s\,t_{\mathrm{mem}}$ fixed requires an input amplitude proportional to $1/\sqrt{t_{\mathrm{mem}}}$. We call an input
-weakened in this way gentle writing. It is the joint limit in which the disturbance falls with the leak, which
-Theorem~\ref{thm:law} does not cover. Exact results cover it: the mean of $D$ stays finite, near one for five spins
-(Fig.~\ref{fig:mixing}c), in closed form for one qubit and with certified bounds for three spins
-(Appendices~\ref{app:qubit} and~\ref{app:spins}). In the five-spin reservoir the amplitude falls as
+The second control is the input amplitude $\eta$. That a weak input favours linear memory is
+known~\cite{Jaeger2007Leaky,Inubushi2017,Cindrak2026}: it removes the products that the fast response forms within a
+few steps. The mixing law adds what a long memory requires. Because the disturbance $s$ grows as the square of the
+turn, the accumulated mixing $s\,t_{\mathrm{mem}}$ stays fixed only if the amplitude falls as
+$1/\sqrt{t_{\mathrm{mem}}}$. We call an input weakened in this way gentle writing. Theorem~\ref{thm:law} proves that
+it is necessary: at a fixed input the share of single inputs vanishes as the memory grows. That it is sufficient is
+exact in three systems. One qubit has a closed form, three spins have certified bounds (Appendices~\ref{app:qubit}
+and~\ref{app:spins}), and for five spins the recursion shows that single inputs keep between 0.82 and 0.90 of the
+capacity while the lifetime grows from 20 to 6600 steps (Appendix~\ref{app:num-capacity}). The capacity then rises to
+40 units and stays there (Fig.~\ref{fig:mixing}a).
+
+In the five-spin reservoir the amplitude falls as
 $1/\sqrt\gamma$ for the opposite-phase channel, whose lifetime grows with the loss, and as $\sqrt\gamma$ for independent
-decay, whose lifetime grows as the loss weakens (Fig.~\ref{fig:clock}c, circles). With exact readout the linear memory
-capacity rises from about 15 to 35 units for both channels (Table~\ref{tab:memory}). Since the capacities of all orders
-add up to the 45 features~\cite{Dambre2012}, the gain moves capacity from combinations of inputs to individual inputs.
-Gentle writing therefore serves recall. A task that needs products of inputs calls for a larger disturbance, and
-$s\,t_{\mathrm{mem}}$ says how many inputs a stored signal then combines. A
-long memory therefore needs no dark states: weak independent decay with gentle writing reaches one too. What dark
-states add is a memory that stays long under strong dissipation and grows with the loss.
+decay, whose lifetime grows as the loss weakens (Fig.~\ref{fig:clock}c, circles). This holds $s\,t_{\mathrm{mem}}$ at
+0.01. Within the 300 delays that Fig.~\ref{fig:clock}c sums, the linear memory capacity rises from about 15 to 35
+units for both channels (Table~\ref{tab:memory}). Both effects of a weak input contribute: with the opposite-phase
+channel the accumulated mixing accounts for 43\% of the inputs that gentle writing removes from the mean of $D$ at a
+lifetime of 20 steps, for 84\% at 200 steps and for 99\% at 750. Since the capacities of all orders add up to the 45
+features~\cite{Dambre2012}, the gain moves capacity from combinations of inputs to individual inputs. Gentle writing
+therefore serves recall. A task that needs products of inputs calls for a larger disturbance, and
+$s\,t_{\mathrm{mem}}$ says how many inputs a stored signal then combines. A long memory therefore needs no dark
+states: weak independent decay with gentle writing reaches one too. What dark states add is a memory that stays long
+under strong dissipation and grows with the loss.
 
 This amplitude is a ceiling and not an optimum. The ceiling limits the number of inputs mixed, not the capacity of an
 exact readout: on a map of loss rates and amplitudes the capacity keeps rising as the input weakens, up to 43 of the
@@ -215,20 +241,14 @@ $s\,t_{\mathrm{mem}}\lesssim1$. One qubit shows what a weak input gives up (Fig.
 Appendix~\ref{app:qubit}). Its stored signal is largest when the squared turn per input, accumulated over one relaxation
 time, is of order one, and it vanishes in proportion to this number for weaker inputs.
 
-The single-input recall time shows the balance of decay and mixing. Its rate adds the decay of the stored signal and a
-mixing rate that grows as $\eta^2$ (Appendix~\ref{sec:methods-slow}). The decay grows as $\gamma$ with
-independent decay and falls as $1/\gamma$ with the opposite-phase channel, so $\eta^2t_{\mathrm f}$ should depend on
-loss and input only through $\gamma/\eta^2$ and through $\gamma\eta^2$, respectively. Both collapses hold for four
-input amplitudes (Fig.~\ref{fig:mixing}a).
-
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig4_sampling.pdf}
 \caption{\textbf{Measurement limits recoverable memory.}
-\textbf{a}~Capacity recovered at a fixed budget of $10^9$ reservoir steps per output step, with the inputs replayed
-from a fixed state.
+\textbf{a}~Capacity recovered against the number of preparations per setting and step, with replayed inputs:
+independent decay at weak loss ($\gamma=1/32$) and the two collective channels at strong loss ($\gamma=64$).
 \textbf{b}~The signal grows with the write strength of the stationary state.
-\textbf{c}~Channels with a small write strength recover almost nothing from $10^6$ preparations per setting and step.
+\textbf{c}~So does the fraction of the exact capacity that $10^6$ preparations recover.
 Points in b and c are single reservoirs at a matched decay-only lifetime, with the full input history.}
 \label{fig:sampling}
 \end{figure*}
@@ -254,28 +274,35 @@ $\rho_*$ through the commutator with its Hamiltonian, and only the part of this 
 remembered. We call its size the write strength. It is a linear response of the stationary state to the input field,
 in the spirit of the link between memory and optical absorption of Ref.~\cite{Goetting2025}. When all channels are
 compared at one decay-only lifetime, the feature variance of the seven channels that write follows the write strength
-over four orders of magnitude (Fig.~\ref{fig:sampling}b), and the capacity recovered from $10^6$ preparations per
-setting and step separates the channels in the same way (Fig.~\ref{fig:sampling}c, Appendix~\ref{app:num-measurement}).
-Collective decay with equal phases leaves a polarized state that the uniform input moves only through bright states.
-It has the largest exact capacity of all channels, 35 units, and recovers 0.3. Reversing the coupling phase of two
-spins lets the input move the state directly (Sec.~\ref{sec:writing}), and the opposite-phase channel recovers 15
-units. Independent decay recovers 17. The exact capacity therefore does not predict the recoverable one, and the write
-strength does.
+over four orders of magnitude (Fig.~\ref{fig:sampling}b). So does the fraction of the exact capacity that $10^6$
+preparations per setting and step recover (Fig.~\ref{fig:sampling}c): over all 56 reservoirs the rank correlation
+between the two is 0.96. Collective decay with equal phases leaves a polarized state that the uniform input moves only
+through bright states. It has the largest exact capacity of all channels, 35 units, and recovers 1\% of it. Reversing
+the coupling phase of two spins lets the input move the state directly (Sec.~\ref{sec:writing}), and the
+opposite-phase channel recovers 60\% of its 25 units. Independent decay recovers 73\% of 24
+(Appendix~\ref{app:num-measurement}). The exact capacity therefore does not tell what measurements recover. The write
+strength tells which fraction of it they do.
 
-The form matters most where the loss is strong. At $\gamma=64$ and the full amplitude, $10^6$ preparations per
-setting and step recover 0.2 units with independent decay, the floor of no recall, 1.0 with the equal-phase channel
-and 11.5 with the opposite-phase channel (Table~\ref{tab:memory}). A collective channel with non-aligned phases is
-therefore the right choice when strong loss is given, as for emitters that radiate into a common
-mode~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. When the loss can be made a thousand times weaker, independent
-decay stores as long and recovers more.
+The form matters most where the loss is strong (Fig.~\ref{fig:sampling}a). At $\gamma=64$ and the full amplitude,
+$10^4$ preparations per setting and step recover 8 units with the opposite-phase channel and 0.2 units, the floor of
+no recall, with the equal-phase channel and with independent decay. With $10^6$ preparations the three recover 10, 2.3
+and 0.2 units (Table~\ref{tab:memory}). A collective channel with non-aligned phases is therefore
+the right choice when strong loss is given, as for emitters that radiate into a common
+mode~\cite{Dicke1954,AsenjoGarcia2017,Facchinetti2016}. When the loss can be made two thousand times weaker,
+independent decay recovers more: 11 units from $10^4$ preparations at $\gamma=1/32$.
 
-A measurement also costs time. Each preparation replays a finite window of inputs, which grows with the memory
-lifetime, before it is measured~\cite{Cindrak2024}. When this replay is counted in the budget
-(Appendix~\ref{sec:methods-sampling}), weak independent decay with gentle writing recovers the most memory
-(Fig.~\ref{fig:sampling}a). At a budget of $10^9$ reservoir steps per output step it keeps 34 units, nearly all of its
-exact capacity, against 21 for the opposite-phase channel, whose signal is about three times fainter. Gentle writing
-pays once each setting is prepared about $2\times10^4$ times per step with independent decay and $10^5$ times with the
-opposite-phase channel (Appendix~\ref{app:num-measurement}).
+A short memory needs few preparations. With $10^3$ per setting and step, the opposite-phase channel at strong loss
+recovers 5 units and weak independent decay 8. Gentle writing pays at larger numbers: its capacity overtakes that of
+the full amplitude at $2\times10^4$ preparations with independent decay and at $10^5$ with the opposite-phase channel,
+and reaches 31 and 26 units at $3\times10^8$.
+
+Every preparation replays the recent inputs before it is measured~\cite{Cindrak2024}, and the replayed window grows
+with the memory lifetime. When every replayed step is counted (Appendix~\ref{sec:methods-sampling}), a budget of
+$10^9$ reservoir steps per output step gives the three forms of dissipation the same memory at the full amplitude: 13
+units with independent decay at $\gamma=1/8$, 13 with equal phases at $\gamma=1$ and 12 with opposite phases at
+$\gamma=16$ (Appendix~\ref{app:num-measurement}). A non-aligned collective channel thus holds at a hundredfold stronger
+loss what independent decay holds at weak loss. With gentle writing, weak independent decay recovers the most, 34
+units against 21.
 
 With measurements a best amplitude exists. With $10^6$ to $10^8$ preparations per setting and step it falls with the
 decay-only lifetime, with fitted exponents between $-0.40$ and $-0.46$, close to the $-1/2$ of the ceiling

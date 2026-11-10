@@ -1,12 +1,12 @@
 \section{Methods}
 \label{sec:methods}
 This appendix specifies the five-spin simulations and defines the quantities that the main text uses.
-Table~\ref{tab:times} lists the four time scales, all counted in input steps.
+Table~\ref{tab:times} lists the quantities and terms of the text.
 
 \begin{table}[t]
-\caption{\label{tab:times}The four time scales of the text, in input steps of length $\Delta t$.}
+\caption{\label{tab:times}Quantities and terms of the text. Times are in input steps of length $\Delta t$.}
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lp{0.84\columnwidth}@{}}
+\begin{tabular}{@{}lp{0.70\columnwidth}@{}}
 \toprule
 $t_{\mathrm{mem}}$ & memory lifetime: how long the variance of a stored signal survives, whatever inputs it combines
   (Appendix~\ref{sec:order})\\
@@ -14,8 +14,13 @@ $t_{\mathrm f}$ & single-input recall time: how long one input stays linearly re
   (Appendix~\ref{sec:methods-slow})\\
 $t_{\mathrm{leak}}$ & decay-only lifetime: the recall time with the input held at its mean value
   (Appendix~\ref{sec:methods-sampling})\\
-$\tau_{90}$ & replayed range: the first $\tau_{90}$ delays hold 90\% of the exact recall
-  (Appendix~\ref{sec:methods-sampling})\\
+$\tau_{90}$ & replayed range: the first $\tau_{90}$ delays hold 90\% of the exact recall\\
+$D$ & number of distinct past inputs that a stored contribution depends on\\
+$s$ & disturbance per input: the part of a stored signal that one input turns differently from the average input\\
+aligned & an input field whose strength on each spin follows the phases of the collective channel\\
+gentle writing & an input amplitude that falls as $1/\sqrt{t_{\mathrm{mem}}}$\\
+write strength & how strongly an input changes the slow modes of the stationary state\\
+recoverable & the capacity that survives sampling with $n$ preparations per setting and step\\
 \bottomrule
 \end{tabular}
 \end{table}

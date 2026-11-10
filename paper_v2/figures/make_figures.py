@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Figures 2-4, the dark-state figure and the appendix figures (mixing law, other sizes) from
+"""Figures 2-5 and the appendix figures (other sizes, supporting results) from
 paper_v2/data/snapshot.json (written by export_snapshot.py). Recall curves are drawn smoothed over neighbouring delays
 (smooth, curve); every number in the text uses the unsmoothed recall.
 
@@ -244,37 +244,31 @@ def qubit(k):
 
 
 def fig3():
-    """The price of a long memory and how the input pays it: the collapse of the time to forget, the write along and
-    across the phases, the five-spin order against the mixing law and the qubit, in one row; the keys sit inside the
-    panels (a names its markers, its colours are those of c)."""
+    """The price of a long memory and how the input pays it: the recall against the memory lifetime, the write along
+    and across the phases, the five-spin order against the mixing law and the qubit, in one row; the keys sit inside
+    the panels (a names its markers, its colours are those of c)."""
     fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c, d = (st.wide_place(fig, k) for k in range(4))
     dashed = (0, (3, 1.5))
 
-    # a: the collapse. eta^2 t_f against gamma/eta^2 (local loss) and gamma eta^2 (opposite phases), one marker per
-    # amplitude
-    ck = SNAP["clock"]
-    marks = ("o", "s", "^", "D")
-    for fam, sign in (("separate", -1), ("signed", 1)):
-        amps = sorted(ck[fam], key=float, reverse=True)
-        for i, amp in enumerate(amps):
-            a_ = float(amp)
-            rec = ck[fam][amp]
-            g = np.array(rec["gamma"])
-            m = np.nanmean(stack(rec["forget"]), axis=0)
-            col = st.tone(st.FAMILY[fam], 0.15 * i)
-            x, y = g * a_ ** (2 * sign), a_ * a_ * m
-            inside = (x >= 2e-3) & (x <= 5e3) & (y >= 1e-3) & (y <= 1e3)
-            a.plot(x[inside], y[inside], ls="none", marker=marks[i], ms=2.9, mfc="white", mec=col, mew=0.8,
+    # a: linear recall summed over all delays against the memory lifetime, from exact moments: at the full amplitude
+    # (filled) it peaks and then falls as the memory grows, with gentle writing (open) it stays
+    for fam in ("separate", "signed"):
+        col = st.FAMILY[fam]
+        for full in (True, False):
+            sel = sorted(five_rows(fam, full), key=lambda r: np.mean(r["t_mem"]))
+            x = np.array([np.mean(r["t_mem"]) for r in sel])
+            y = np.array([np.mean(r["memory"]) for r in sel])
+            a.plot(x, y, color=col, lw=st.LW_THIN, zorder=1)
+            a.plot(x, y, "o", ms=st.MS, mfc=col if full else "white", mec=col, mew=0.9, ls="none", zorder=2,
                    clip_on=False)
     a.set_xscale("log")
-    a.set_yscale("log")
     st.decades(a, "x", labels="power", every=2)
-    st.decades(a, "y", labels="power", every=2)
-    a.set_xlim(2e-3, 5e3)
-    a.set_ylim(1e-3, 1e4)                   # room above the points for the key of the amplitudes
-    a.set_xlabel(r"$\gamma/\eta^2$ or $\gamma\eta^2$")
-    a.set_ylabel(r"$\eta^2\,t_{\mathrm f}$")
+    a.set_xlim(0.7, 1.4e4)
+    a.set_ylim(0, 62)                       # room above the points for the key
+    a.set_yticks([0, 15, 30, 45])
+    a.set_xlabel(r"Lifetime $t_{\mathrm{mem}}$")
+    a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
 
     # b: write per input into the dark states of the equal-phase channel, for the input along the phases (uniform)
     # and across them (cosine pattern); dotted: 1/gamma
@@ -317,9 +311,8 @@ def fig3():
     for ax, name in zip((a, b, c, d), "abcd"):
         st.letter(ax, name)
     st.align(fig, rows=[(a, b, c, d)])
-    st.inkey(a, [(st.marker_handle(st.INK2, marker=m, ms=2.9, mfc="white", mec=st.INK2, mew=0.8), label)
-                 for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
-             "upper right", ncol=2, handle=6.0, gap=2.5)
+    st.inkey(a, [(st.marker_handle(st.INK3, mfc=st.INK3, mec=st.INK3, mew=0.9), "full amplitude"),
+                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing")], "upper left")
     st.inkey(b, [(st.line_handle(st.FAMILY["shared"], marker="o"), "aligned"),
                  (st.line_handle(st.FAMILY["signed"], marker="o"), "not aligned"),
                  (st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), r"$1/\gamma$")], "lower left",
@@ -436,41 +429,10 @@ def five_shape(ax):
     ax.set_ylabel(r"Capacity beyond $K$")
 
 
-# ----------------------------------------------------------------------------------------------- Figure A1
-def fig_law():
-    """One reservoir at three reset probabilities against the mixing law exp(-K/(s t_mem)) = exp(-beta p K): lines
-    the exact moments, circles the law; one key names the reset probabilities, the key left of it lines and circles."""
-    fig, a = st.column_figure(height=56.0)
-    law = SNAP["law"]
-    entries = []
-    for p, f in (("0.003", 0.0), ("0.01", 0.28), ("0.03", 0.55)):
-        y = np.array(law["one"][p])
-        K = np.arange(len(y))
-        col = st.tone(st.INK, f)
-        a.plot(K, y, color=col)
-        step = max(1, int(round(0.3 / (law["beta"][p] * float(p)))))
-        Ks = K[::step]
-        Ks = Ks[Ks <= 300]
-        a.plot(Ks, np.exp(-law["beta"][p] * float(p) * Ks), "o", ms=st.MS, mfc="white", mec=col, clip_on=False)
-        entries.append((st.line_handle(col, marker="o"), rf"$p={float(p) * 100:g}\%$"))
-    a.set_xlim(0, 300)
-    a.set_ylim(0, 1.2)                      # room above the curves for the keys
-    a.set_yticks([0, 0.5, 1])
-    a.set_xlabel(r"Inputs mixed, $K$")
-    a.set_ylabel(r"Share beyond $K$")
-    st.align(fig, rows=[(a,)])
-    st.inkey(a, entries, "upper right")
-    left = min(box[0] for _, box in fig.key_boxes[-len(entries):])
-    W, Hf = st._pts(fig)
-    st.key(fig, left - st.KEY_SEP, [(st.line_handle(st.INK2), "exact"),
-                                    (st.marker_handle(st.INK2, mfc="white", mec=st.INK2, mew=0.8), "mixing law")],
-           y=a.get_position().y1 * Hf - 5.0 - st.ASC, right=True)
-    st.save(fig, HERE / "figA_law.pdf")
-
-
 # --------------------------------------------------------------------------------------- Figure 4: sampling
 BUDGET = 1e9          # preparations times replayed steps per output step
 FIXED = (0, (3.2, 1.4))                 # the full input amplitude
+STRONG_LOSS = (0, (1.0, 1.4))           # independent decay at the strong loss rate of the collective channels
 BUDGET_LINES = ((("separate", "gentle_weak"), "-", 0.0), (("separate", "fixed"), FIXED, 0.45),
                 (("signed", "gentle_strong"), "-", 0.0), (("signed", "fixed"), FIXED, 0.45),
                 (("shared", "fixed"), FIXED, 0.0))
@@ -492,48 +454,47 @@ def budget_line(design, rule, budget):
     return np.array([r["gamma"] for r in recs]), np.array([at_budget(r, budget) for r in recs]).T
 
 
+REPLAY_LINES = ((("separate", "gentle_weak", 0.03125), "-", "o"), (("separate", "fixed", 0.03125), FIXED, None),
+                (("signed", "gentle_strong", 64.0), "-", "o"), (("signed", "fixed", 64.0), FIXED, None),
+                (("shared", "fixed", 64.0), FIXED, None), (("separate", "fixed", 64.0), STRONG_LOSS, None))
+
+
 def fig_sampling():
-    """What survives sampling and why: memory at a fixed budget against the loss rate, and feature variance and
-    memory at 10^6 preparations against the write strength at a matched decay-only lifetime, three panels across the
-    page; the keys of the line styles sit inside the panels and the key of the colours, which all panels share, in a
-    row under them."""
-    fig = st.wide_figure(1, hp=88.0, keys=1)
+    """What survives sampling and why: memory against the number of preparations, and feature variance and the
+    recovered fraction of the capacity against the write strength at a matched decay-only lifetime, three panels
+    across the page; the key of the colours, which all panels share, and the key of the line styles of a sit in
+    two rows under them."""
+    fig = st.wide_figure(1, hp=82.0, keys=2)
     a, b, c = (st.wide_place(fig, k) for k in range(3))
 
-    # a: memory at a fixed budget of preparations times replayed steps per output step, against the loss rate
-    for (design, rule), ls, f in BUDGET_LINES:
-        g, rows = budget_line(design, rule, BUDGET)
-        col = st.tone(st.FAMILY[design], f)
-        st.band(a, g, rows, col, ls=ls, marker="o" if rule != "fixed" else None, ms=st.MS,
-                lw=st.LW if rule != "fixed" else st.LW_THIN, alpha=0.15)
+    # a: memory against the preparations per setting and step, features from the replay of the last tau_90 inputs:
+    # independent decay at weak loss (gamma = 1/32) and, at strong loss (gamma = 64), the two collective channels and
+    # independent decay
+    lines = {(r["design"], r["rule"], r["gamma"]): r for r in SNAP["replay_shots"]["uniform"]}
+    for key, ls, marker in REPLAY_LINES:
+        rec = lines[key]
+        st.band(a, np.array(rec["shots"], float), np.array(rec["memory"]), st.FAMILY[key[0]], ls=ls, marker=marker,
+                ms=st.MS, lw=st.LW if marker else st.LW_THIN, alpha=0.15)
     a.set_xscale("log")
-    st.decades(a, "x", every=2)
-    a.set_xlim(1 / 90, 360)
-    a.set_ylim(0, 48)                       # room above the curves for the key
-    a.set_yticks([0, 10, 20, 30, 40])
-    a.set_xlabel(r"Loss rate $\gamma$")
+    st.decades(a, "x", labels="power", every=2)
+    a.set_xlim(7e2, 5e8)
+    a.set_ylim(0, 34)
+    a.set_yticks([0, 10, 20, 30])
+    a.set_xlabel(r"Preparations $n$")
     a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
 
-    # b, c: feature variance and memory at 10^6 preparations per setting and step against the write onto the slow
-    # modes, every reservoir of every channel that writes at one decay-only lifetime and amplitude; the four channels
-    # that carry the story in colour, the others in grey
+    # b, c: feature variance, and the fraction of the exact capacity that 10^6 preparations per setting and step
+    # recover, against the write onto the slow modes: every reservoir of every channel that writes, at one decay-only
+    # lifetime and amplitude; the four channels that carry the story in colour, the others in grey
     P = SNAP["polarization"]
     for fam in sorted(families(), key=lambda f: f in st.MAIN):
         if fam not in P or fam == "dephasing":
             continue
         w = np.array(P[fam]["write_slow"])
         col = st.FAMILY[fam] if fam in st.MAIN else st.OTHER
-        for ax, field in ((b, "var_mean"), (c, "shots_1000000")):
-            ax.plot(w, np.array(P[fam][field]), "o", ms=st.MS, mfc=col, mec="white", mew=0.5, ls="none")
-    # power-law fits within the channels without and with dark states (weak and strong loss at the matched lifetime)
-    for group in (("separate", "exchange", "gainloss"), ("pair", "signed", "groups", "shared")):
-        w = np.concatenate([P[f]["write_slow"] for f in group])
-        v = np.concatenate([P[f]["var_mean"] for f in group])
-        k, c0 = np.polyfit(np.log10(w), np.log10(v), 1)
-        ww = np.geomspace(w.min() / 1.5, w.max() * 1.5, 10)
-        b.plot(ww, 10 ** c0 * ww ** k, color=st.INK3, lw=st.LW_GUIDE, ls=(0, (1, 1.6)), zorder=0)
-    # the sum over 300 delays of a readout without any recall, about 300/1600 units
-    c.axhline(300 / 1600, color=st.INK3, lw=st.LW_GUIDE, ls=FEATURES, zorder=0)
+        b.plot(w, np.array(P[fam]["var_mean"]), "o", ms=st.MS, mfc=col, mec="white", mew=0.5, ls="none")
+        c.plot(w, np.array(P[fam]["shots_1000000"]) / np.array(P[fam]["exact"]), "o", ms=st.MS, mfc=col, mec="white",
+               mew=0.5, ls="none")
     for ax in (b, c):
         ax.set_xscale("log")
         ax.set_yscale("log")
@@ -544,23 +505,84 @@ def fig_sampling():
     b.set_ylim(1e-8, 3e-3)
     b.set_ylabel("Feature variance")
     st.decades(c, "y", labels="plain")
-    c.set_ylim(0.1, 60)
-    c.set_ylabel(r"Capacity at $10^6$")
+    c.set_ylim(2e-3, 2)
+    c.set_ylabel("Recovered fraction")
 
     st.fit_row(fig, (a, b, c), (10, 9, 9))
     for ax, name in zip((a, b, c), "abc"):
         st.letter(ax, name)
     st.align(fig, rows=[(a, b, c)])
-    st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
-                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper right")
-    st.inkey(b, [(st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), "fit")], "lower right")
-    st.inkey(c, [(st.line_handle(st.INK3, ls=FEATURES, lw=st.LW_GUIDE), "no recall")], "upper left")
     dot = lambda col: st.marker_handle(col, mfc=col, mec=col, mew=0.5)
     W, _ = st._pts(fig)
+    st.key(fig, W / 2, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
+                        (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude"),
+                        (st.line_handle(st.FAMILY["separate"], ls=STRONG_LOSS, lw=st.LW_THIN),
+                         r"independent at $\gamma=64$")], ncol=3, row=1, center=True, sep=10.0)
     st.key(fig, W / 2, [(dot(st.FAMILY["separate"]), "independent"), (dot(st.FAMILY["shared"]), "equal phases"),
                         (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other channels")],
            ncol=4, center=True, handle=5.0, gap=2.5, sep=10.0)
     st.save(fig, HERE / "fig4_sampling.pdf")
+
+
+def fig_checks():
+    """Appendix E: two supporting results across one column. a: the collapse of the single-input recall time, eta^2 t_f
+    against gamma/eta^2 (independent decay) and gamma eta^2 (opposite phases), one marker per amplitude. b: memory at a
+    fixed budget of preparations times replayed steps per output step against the loss rate. The key of the line
+    styles of b sits above its curves; the keys of the colours and of the markers of a sit in rows under the panels."""
+    fig = st.wide_figure(1, width=st.COLUMN, hp=78.0, keys=2)
+    a, b = st.wide_place(fig, 0), st.wide_place(fig, 1)
+    ck = SNAP["clock"]
+    marks = ("o", "s", "^", "D")
+    for fam, sign in (("separate", -1), ("signed", 1)):
+        amps = sorted(ck[fam], key=float, reverse=True)
+        for i, amp in enumerate(amps):
+            a_ = float(amp)
+            rec = ck[fam][amp]
+            g = np.array(rec["gamma"])
+            m = np.nanmean(stack(rec["forget"]), axis=0)
+            col = st.tone(st.FAMILY[fam], 0.15 * i)
+            x, y = g * a_ ** (2 * sign), a_ * a_ * m
+            inside = (x >= 2e-3) & (x <= 5e3) & (y >= 1e-3) & (y <= 1e3)
+            a.plot(x[inside], y[inside], ls="none", marker=marks[i], ms=2.9, mfc="white", mec=col, mew=0.8,
+                   clip_on=False)
+    a.set_xscale("log")
+    a.set_yscale("log")
+    st.decades(a, "x", labels="power", every=2)
+    st.decades(a, "y", labels="power", every=2)
+    a.set_xlim(2e-3, 5e3)
+    a.set_ylim(1e-3, 3e3)
+    a.set_xlabel(r"$\gamma/\eta^2$ or $\gamma\eta^2$")
+    a.set_ylabel(r"$\eta^2\,t_{\mathrm f}$")
+
+
+    for (design, rule), ls, f in BUDGET_LINES:
+        g, rows = budget_line(design, rule, BUDGET)
+        col = st.tone(st.FAMILY[design], f)
+        st.band(b, g, rows, col, ls=ls, marker="o" if rule != "fixed" else None, ms=st.MS,
+                lw=st.LW if rule != "fixed" else st.LW_THIN, alpha=0.15)
+    b.set_xscale("log")
+    st.decades(b, "x", every=2)
+    b.set_xlim(1 / 90, 360)
+    b.set_ylim(0, 58)                       # room above the curves for the key
+    b.set_yticks([0, 10, 20, 30, 40])
+    b.set_xlabel(r"Loss rate $\gamma$")
+    b.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
+
+    st.fit_row(fig, (a, b), (1, 1))
+    for ax, name in zip((a, b), "ab"):
+        st.letter(ax, name)
+    st.align(fig, rows=[(a, b)])
+    st.inkey(b, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
+                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper right", pad=(3.0, 4.0),
+             handle=9.0, gap=2.5)
+    dot = lambda f: (st.marker_handle(st.FAMILY[f], mfc=st.FAMILY[f], mec=st.FAMILY[f], mew=0.5), st.NAME[f])
+    W, _ = st._pts(fig)
+    st.key(fig, W / 2, [dot("separate"), dot("shared"), dot("signed")], ncol=3, center=True, handle=5.0, gap=2.5,
+           sep=8.0)
+    st.key(fig, W / 2, [(st.marker_handle(st.INK2, marker=m, ms=2.9, mfc="white", mec=st.INK2, mew=0.8), label)
+                        for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
+           ncol=4, row=1, center=True, handle=5.0, gap=2.5, sep=10.0)
+    st.save(fig, HERE / "figE_checks.pdf")
 
 
 # ------------------------------------------------------------------------------- Appendix: other sizes
@@ -618,5 +640,5 @@ if __name__ == "__main__":
     fig3()
     fig_sampling()
     fig_darkmodel()
-    fig_law()
     fig_sizes()
+    fig_checks()
