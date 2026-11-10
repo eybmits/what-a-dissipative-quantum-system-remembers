@@ -16,14 +16,14 @@ budget        memory at a fixed budget of preparations times replayed steps: mem
 polarization  all eight shapes at a matched clock and input amplitude: feature variance and memory against
               the stationary state's response to the input, -i[H_in, rho*], on the slow modes.
 budget_low    the lines compared in the text at 10^3 to 10^4.5 preparations per setting and step (own random stream).
-replay        the budget points of Table 2 with the replay that the budget charges: every output step replays its
+replay        the budget points of the capacity table with the replay that the budget charges: every output step replays its
               last tau_90 inputs from |00000>, and the features come from that state; memory at 10^9 preparations
               times replayed steps, next to the same estimate from the state with the full history.
 washout       exact memory of local loss with gentle writing at the weakest loss rates, after the usual washout and
               after five times it (same recorded inputs).
 budget_replay the budget points with the features of that replay: memory at budgets of 10^8, 10^9 and 10^10
               preparations times replayed steps, n = B / (3 tau_90) preparations per setting and step, when every
-              output step replays its last tau_90 inputs from |00000> (Fig. 4a, Table 2).
+              output step replays its last tau_90 inputs from |00000> (Fig. 4a and the capacity table).
 replay_shots, pattern_replay_shots
               memory against preparations per setting and step, 10^3 to 10^8.5, with the features of that replay, at
               the crossings of Sec. 3.4 (local loss at 1/32, opposite phases at 64; gentle and full amplitude), with

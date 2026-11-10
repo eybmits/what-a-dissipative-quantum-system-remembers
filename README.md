@@ -1,12 +1,12 @@
-# What a dissipative quantum system remembers
+# The form of dissipation shapes what a quantum reservoir remembers
 
 Manuscript source, code and data for the paper by Markus Baumann, Itamar Fink, Johannes Wittmann,
 Claudia Linnhoff-Popien and Jonas Stein, [arXiv:2608.14181](https://arxiv.org/abs/2608.14181) (version 2).
 
 - [Read the paper](paper_v2/dissipation_qrc.pdf); its LaTeX source is in `paper_v2/`
 - Data behind every figure: `paper_v2/data/snapshot.json`; raw records: `paper_v2/data/raw_results.tar.gz`
-- Interval certificates of the three-spin limits (Appendix D): `paper_v2/certificates/spin_certificates.zip`,
-  also attached to the PDF; its `README.txt` explains how to run them
+- Three-spin limits (Appendix D): derivation in `paper_v2/certificates/three_spin_limits.pdf`, interval
+  certificates in `paper_v2/certificates/spin_certificates.zip`; its `README.txt` explains how to run them
 
 Sections 3.1 to 3.3 of the paper use exact expectation values; Sec. 3.4 counts measurements, replaying the
 inputs that the memory holds from a fixed state. Five-spin runs use eight fixed seeds unless the paper states
@@ -40,9 +40,11 @@ The raw records come from these scripts; each one documents its stages, and they
 | `experiments/run_review_runs.py` | gentle writing, slow modes up to large loss, local dephasing, signal size |
 | `experiments/run_clock.py` | single-input recall time at four input amplitudes, finite sampling, budgets and crossings with the replayed inputs, write onto the slow modes, input on one spin |
 | `experiments/run_five_spin_orders.py` | exact order distribution of the five-spin capacity against the mixing law |
+| `experiments/run_sizes.py` | memory against the loss rate at three, four and six spins (Fig. 7) |
+| `experiments/run_amplitude_map.py` | capacity over loss rate and input amplitude, exact and sampled; `--analyse` prints the numbers of Appendix E.4 |
 | `experiments/run_leak_size.py` | leak coefficient of the equal-phase channel at three to six spins |
 | `experiments/run_spin_orders.py` | three-spin order shares at a fixed amplitude and with gentle writing; prefactor scan |
-| `experiments/theory/order_law/reconstruct.py` | exact check of the mixing law (Fig. 5) |
+| `experiments/theory/order_law/reconstruct.py` | exact check of the mixing law (Fig. 6) |
 | `experiments/referee_checks/` | training-set, prefactor and principal-direction checks |
 
 The scripts share an independent Pauli-basis simulator and shot sampler
@@ -54,7 +56,7 @@ The scripts share an independent Pauli-basis simulator and shot sampler
 
 ```bibtex
 @misc{Baumann2026,
-  title         = {What a dissipative quantum system remembers},
+  title         = {The form of dissipation shapes what a quantum reservoir remembers},
   author        = {Baumann, Markus and Fink, Itamar and Wittmann, Johannes and Linnhoff-Popien, Claudia and Stein, Jonas},
   year          = {2026},
   eprint        = {2608.14181},

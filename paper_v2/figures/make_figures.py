@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Figures 2-4 and the appendix Figures A1, C1 and D1 from paper_v2/data/snapshot.json (written by export_snapshot.py).
-Recall curves are drawn smoothed over neighbouring delays (smooth, curve); every number in the text uses the
-unsmoothed recall.
+"""Figures 2-4, the dark-state figure and the appendix figures (mixing law, other sizes) from
+paper_v2/data/snapshot.json (written by export_snapshot.py). Recall curves are drawn smoothed over neighbouring delays
+(smooth, curve); every number in the text uses the unsmoothed recall.
 
-Figures 2 and 3 span the page with one row of four panels, as large as the page allows, with their keys and colour
-scale inside the panels, in space the data leave free; Figure 4 and the appendix figures span one text column, with
-their keys inside the panels too, except the colour key of Figure 4, which both its panels share, in a row under
-them. Every colour, marker and line style is named in its own figure. Aligned spines, letters and axis labels, no
-titles, one set of sizes for lines and markers, all text at the 10 pt of the captions, and no text on the data.
+Figures across the page hold one row of panels, as large as the page allows, with their keys and colour scale inside
+the panels, in space the data leave free; a key that several panels share sits in a row under them. The one-column
+figures carry their keys inside the panels too. Every colour, marker and line style is named in its own figure.
+Aligned spines, letters and axis labels, no titles, one set of sizes for lines and markers, all text at the 10 pt of
+the captions, and no text on the data.
 """
 from __future__ import annotations
 
@@ -335,56 +335,11 @@ def fig3():
     st.save(fig, HERE / "fig3_price.pdf")
 
 
-# --------------------------------------------------------------------------------- Appendix figures C and D
-def order_map(ax, drive):
-    """Share of the memory carried by products of k inputs, per unit ln k, against the loss rate."""
-    rec = SNAP["spin"][drive]
-    g = np.log10(rec["gamma"])
-    grid = np.array(rec["order_grid"])
-    dens = np.array(rec["order_density"]).T                  # (order bins, gamma)
-    centres = np.log10(np.sqrt(grid[:-1] * grid[1:]))
-    top = np.log10(4096)
-    gx = np.linspace(g[0], g[-1], 160)
-    oy = np.linspace(0, top, 150)
-    on_order = np.array([np.interp(oy, centres, dens[:, j], left=dens[0, j], right=0) for j in range(len(g))])
-    image = np.array([np.interp(gx, g, on_order[:, i]) for i in range(len(oy))])
-    im = ax.imshow(image, origin="lower", aspect="auto", cmap=st.RECALL, vmin=0, vmax=0.9,
-                   extent=(g[0], g[-1], 0, top), interpolation="bilinear", rasterized=True)
-    mean = np.array(rec["heat_mean_order"])[0]
-    ax.plot(g, np.log10(mean), color="white", lw=st.LW, ls=(0, (3, 1.5)))
-    st.log_on_linear(ax, "x", g[0], g[-1], "power", every=2)
-    st.log_on_linear(ax, "y", 0, top, "plain")
-    ax.tick_params(which="both", direction="out", top=False, right=False)
-    ax.set_xlabel(r"Loss rate $\gamma$")
-    ax.set_ylabel(r"Inputs mixed, $k$")
-    return im
-
-
-def fig_spins():
-    """Appendix C: order of the three-spin memory at a fixed amplitude and with gentle writing, two maps across one
-    column that share the order axis, as tall as the panels of Figs. 2 and 3; the colour scale sits in the empty top
-    of b."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW)
-    a, b = st.wide_place(fig, 0), st.wide_place(fig, 1)
-    im = order_map(a, "strong")
-    order_map(b, "gentle")
-    b.set_ylabel("")
-    b.tick_params(axis="y", which="both", labelleft=False)
-    st.fit_row(fig, (a, b), (1, 1), joined=(b,))
-    for ax, name in zip((a, b), "ab"):
-        st.letter(ax, name)
-    st.align(fig, rows=[(a, b)])
-    st.inset_colour_key(b, im, r"Share per $\ln k$", [0, 0.4, 0.8], stacked=True)
-    # under the colour scale, in the empty top of b: the white dashed line of both maps
-    st.inkey(b, [(st.line_handle("white", ls=(0, (3, 1.5)), under=st.RECALL(0.6)), "mean")], "upper right",
-             pad=(4.5, 35.0))
-    st.save(fig, HERE / "figC_spins.pdf")
-
-
+# ------------------------------------------------------------------------------- the dark-state figure
 def fig_darkmodel():
-    """Appendix D: the dark-state model and the erasure test, two panels across one column that share the recall
+    """The dark-state model and the erasure test, two panels across one column that share the recall
     axis, as tall as the panels of Figs. 2 and 3, each with its key in the room above the curves."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW)
+    fig = st.wide_figure(1, width=st.COLUMN, hp=86.0)
     a, b = st.wide_place(fig, 0), st.wide_place(fig, 1)
 
     # a: lines are the full reservoir, circles the dark-state model
@@ -538,12 +493,12 @@ def budget_line(design, rule, budget):
 
 
 def fig_sampling():
-    """What survives sampling (run B) and why (run C): two panels across one text column, as tall as those of Figs. 2
-    and 3, with the keys of the line styles and the fit inside them and the key of the colours, which both panels
-    share and which is too wide for either, in two rows under them."""
-    fig = st.wide_figure(1, width=st.COLUMN, hp=st.HP_ROW, keys=2)
-    a = st.wide_place(fig, 0)
-    b = st.wide_place(fig, 1)
+    """What survives sampling and why: memory at a fixed budget against the loss rate, and feature variance and
+    memory at 10^6 preparations against the write strength at a matched decay-only lifetime, three panels across the
+    page; the keys of the line styles sit inside the panels and the key of the colours, which all panels share, in a
+    row under them."""
+    fig = st.wide_figure(1, hp=88.0, keys=1)
+    a, b, c = (st.wide_place(fig, k) for k in range(3))
 
     # a: memory at a fixed budget of preparations times replayed steps per output step, against the loss rate
     for (design, rule), ls, f in BUDGET_LINES:
@@ -559,51 +514,109 @@ def fig_sampling():
     a.set_xlabel(r"Loss rate $\gamma$")
     a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
 
-    # b: feature variance against the write onto the slow modes, all shapes at one clock and amplitude; the four that
-    # carry the story in colour, the others in grey
+    # b, c: feature variance and memory at 10^6 preparations per setting and step against the write onto the slow
+    # modes, every reservoir of every channel that writes at one decay-only lifetime and amplitude; the four channels
+    # that carry the story in colour, the others in grey
     P = SNAP["polarization"]
     for fam in sorted(families(), key=lambda f: f in st.MAIN):
         if fam not in P or fam == "dephasing":
             continue
-        w, v = np.array(P[fam]["write_slow"]), np.array(P[fam]["var_mean"])
+        w = np.array(P[fam]["write_slow"])
         col = st.FAMILY[fam] if fam in st.MAIN else st.OTHER
-        b.plot(w, v, "o", ms=st.MS, mfc=col, mec="white", mew=0.5, ls="none")
-    # power-law fits within the shapes without and with dark states (weak and strong loss at the matched clock)
+        for ax, field in ((b, "var_mean"), (c, "shots_1000000")):
+            ax.plot(w, np.array(P[fam][field]), "o", ms=st.MS, mfc=col, mec="white", mew=0.5, ls="none")
+    # power-law fits within the channels without and with dark states (weak and strong loss at the matched lifetime)
     for group in (("separate", "exchange", "gainloss"), ("pair", "signed", "groups", "shared")):
         w = np.concatenate([P[f]["write_slow"] for f in group])
         v = np.concatenate([P[f]["var_mean"] for f in group])
         k, c0 = np.polyfit(np.log10(w), np.log10(v), 1)
         ww = np.geomspace(w.min() / 1.5, w.max() * 1.5, 10)
         b.plot(ww, 10 ** c0 * ww ** k, color=st.INK3, lw=st.LW_GUIDE, ls=(0, (1, 1.6)), zorder=0)
-    b.set_xscale("log")
-    b.set_yscale("log")
-    st.decades(b, "x", labels="power", every=2)
+    # the sum over 300 delays of a readout without any recall, about 300/1600 units
+    c.axhline(300 / 1600, color=st.INK3, lw=st.LW_GUIDE, ls=FEATURES, zorder=0)
+    for ax in (b, c):
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        st.decades(ax, "x", labels="power", every=2)
+        ax.set_xlim(1.2e-3, 4)
+        ax.set_xlabel(r"Write strength")
     st.decades(b, "y", labels="power", every=2)
-    b.set_xlim(1.2e-3, 4)
     b.set_ylim(1e-8, 3e-3)
-    b.set_xlabel(r"Write strength")
     b.set_ylabel("Feature variance")
+    st.decades(c, "y", labels="plain")
+    c.set_ylim(0.1, 60)
+    c.set_ylabel(r"Capacity at $10^6$")
 
-    # a is the wider panel: its key needs the room above the curves
-    st.fit_row(fig, (a, b), (9, 7))
-    for ax, name in zip((a, b), "ab"):
+    st.fit_row(fig, (a, b, c), (10, 9, 9))
+    for ax, name in zip((a, b, c), "abc"):
         st.letter(ax, name)
-    st.align(fig, rows=[(a, b)])
+    st.align(fig, rows=[(a, b, c)])
     st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
                  (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper right")
     st.inkey(b, [(st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), "fit")], "lower right")
+    st.inkey(c, [(st.line_handle(st.INK3, ls=FEATURES, lw=st.LW_GUIDE), "no recall")], "upper left")
     dot = lambda col: st.marker_handle(col, mfc=col, mec=col, mew=0.5)
     W, _ = st._pts(fig)
     st.key(fig, W / 2, [(dot(st.FAMILY["separate"]), "independent"), (dot(st.FAMILY["shared"]), "equal phases"),
                         (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other channels")],
-           ncol=2, center=True, handle=5.0, gap=2.5, sep=6.0)
+           ncol=4, center=True, handle=5.0, gap=2.5, sep=10.0)
     st.save(fig, HERE / "fig4_sampling.pdf")
+
+
+# ------------------------------------------------------------------------------- Appendix: other sizes
+TAIL = 3 * 20 / 1600      # recall summed over the last twenty delays: three times what a readout without recall gives
+
+
+def fig_sizes():
+    """The memory curves of Fig. 2c at four and six spins: independent decay, equal phases and opposite phases at the
+    full amplitude, and gentle writing for independent decay and opposite phases, which starts from the full amplitude
+    at gamma = 1. A line stops where its recall reaches past the 300 delays summed. Two panels across one column, each
+    with its number of spins above the dashed line at its number of features; the key that the panels share sits
+    under them."""
+    fig = st.wide_figure(1, width=st.COLUMN, hp=86.0, keys=3)
+    axes = [st.wide_place(fig, 0), st.wide_place(fig, 1)]
+    for ax, n in zip(axes, ("4", "6")):
+        rec = SNAP["sizes"][n]
+        lines = {(l["design"], l["rule"]): l for l in rec["lines"]}
+        for (fam, rule), line in lines.items():
+            x, rows, tail = np.array(line["gamma"]), np.array(line["capacity"]), np.array(line["tail"])
+            inside = np.cumsum(tail > TAIL) == 0
+            x, rows = x[inside], rows[:, inside]
+            if rule == "fixed":
+                st.band(ax, x, rows, st.FAMILY[fam], ls=st.DASH[fam])
+                continue
+            full = lines[(fam, "fixed")]
+            one = np.array(full["capacity"])[:rows.shape[0], full["gamma"].index(1.0)]
+            x, rows = (np.r_[x, 1.0], np.c_[rows, one]) if fam == "separate" else (np.r_[1.0, x], np.c_[one, rows])
+            st.band(ax, x, rows, st.FAMILY[fam], ls=SCALED, marker="o", ms=st.MS, alpha=0.12)
+        feats = rec["features"]
+        ax.axhline(feats, color=st.INK3, lw=st.LW_GUIDE, ls=FEATURES)
+        ax.annotate(rf"$N={n}$", xy=(1 / 30, feats), xycoords="data", xytext=(0, 3.5), textcoords="offset points",
+                    ha="left", va="baseline", color=st.INK3, fontsize=st.TXT)
+        ax.set_xscale("log")
+        st.decades(ax, "x", every=2)
+        ax.set_xlim(1 / 40, 400)
+        ax.set_ylim(0, 1.25 * feats)        # room above the limit for the number of spins
+        ax.set_yticks(np.linspace(0, feats, 4))
+        ax.set_xlabel(r"Loss rate $\gamma$")
+    axes[0].set_ylabel(r"Capacity $\sum_\tau C_\tau$")
+    st.fit_row(fig, axes, (1, 1))
+    for ax, name in zip(axes, "ab"):
+        st.letter(ax, name)
+    st.align(fig, rows=[tuple(axes)])
+    shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
+    W, _ = st._pts(fig)
+    st.key(fig, W / 2, [shape("separate"), shape("shared"), shape("signed"),
+                        (st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing"),
+                        (st.line_handle(st.INK3, ls=FEATURES, lw=st.LW_GUIDE), "number of features")],
+           ncol=2, center=True, sep=10.0)
+    st.save(fig, HERE / "figE_sizes.pdf")
 
 
 if __name__ == "__main__":
     fig2()
     fig3()
     fig_sampling()
-    fig_spins()
     fig_darkmodel()
     fig_law()
+    fig_sizes()

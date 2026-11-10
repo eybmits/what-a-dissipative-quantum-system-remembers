@@ -4,18 +4,11 @@
 \centering
 \includegraphics[width=\textwidth]{figures/fig1_concept.pdf}
 \caption{\textbf{Engineering how a quantum reservoir leaks.}
-\textbf{a}~A stream of inputs drives interacting spins, and a trained linear readout recalls past inputs from the spins'
-expectation values.
-\textbf{b}~Four forms of dissipation with the same total coupling. Each spin decays on its own (independent), all spins
-decay through one shared channel (collective decay with equal phases), the darker spins couple to that channel with
-the opposite sign (opposite phases), or the spins lose only their phase (dephasing).
-\textbf{c}~Two spins share one channel and one excitation. If the excitation sits on both spins with the same sign,
-their decays add and the state decays fast (bright). With opposite signs they cancel, and the state cannot decay
-(dark). When the two spins differ, their own dynamics ($H$) drives them out of the dark state, but strong loss acts
-like a measurement repeated so often that they hardly leave it: the quantum Zeno effect.
-\textbf{d}~Two ways to forget the record of one input, drawn as an arrow, dashed where it was written. It shrinks as it
-leaks away, or later inputs turn it at random. Large turns scatter it until only products of inputs remain, while
-small turns keep the input readable on its own.}
+\textbf{a}~Inputs drive interacting spins, and a trained linear readout recalls past inputs.
+\textbf{b}~Four forms of dissipation with the same total coupling. The darker spins couple with the opposite sign.
+\textbf{c}~Two spins on one channel: their decays add (bright) or cancel (dark), and strong loss holds them in the
+dark state, the quantum Zeno effect.
+\textbf{d}~A record fades because it leaks away or because later inputs turn it at random.}
 \label{fig:concept}
 \end{figure*}
 
@@ -29,7 +22,7 @@ accessible while new information continues to arrive.
 
 The environment shapes how these traces fade. A system can lose energy or information to its surroundings through
 processes collectively described as
-dissipation~\cite{ChenNurdin2019,Chen2020,Sannia2024,Ricci2026,Goetting2025,Mujal2023,Franceschetto2026,KobayashiFeedback2024,Cindrak2024,Sannia2026Memory,Paparelle2026}.
+dissipation~\cite{ChenNurdin2019,Chen2020,Sannia2024,Ricci2026,Domingo2023,Goetting2025,Mujal2023,Franceschetto2026,KobayashiFeedback2024,Cindrak2024,Sannia2026Memory,Paparelle2026}.
 Previous work has shown that tuning the dissipation rate can improve memory, sometimes yielding the best performance at
 an intermediate loss rate~\cite{Sannia2024,Goetting2025}. Input, interactions, and dissipation can also be optimized
 together~\cite{MartinezPenaPRL2021,Baumann2026}. The rate specifies how strongly the environment acts, but the way it
@@ -47,40 +40,34 @@ dissipative quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth201
 therefore slow the escape of information from the protected states (Fig.~\ref{fig:concept}c).
 
 Information that survives can nevertheless become difficult to use. Each new input changes the same state that stores
-the past. A signal that initially records one input may therefore come to depend on combinations of several inputs, such
+the past. A signal that initially records one input therefore comes to depend on combinations of several inputs, such
 as their product. This mixing is useful for tasks that require relationships between inputs, but it reduces the capacity
-available for recalling individual inputs~\cite{Dambre2012,Inubushi2017,Cindrak2026}. The lifetime of stored information
-and the time over which an individual input remains readable are therefore different quantities. Previous work has
-established memory limits in classical reservoirs~\cite{JaegerESP2001,White2004,Ganguli2008}, explored input
-strength~\cite{Jaeger2007Leaky}, and investigated how noise and protected states affect quantum information
-processing~\cite{Kubota2023,Fry2023,Cheamsawat2025,Akshay2026}. The question is how protection, continued input, and
-measurement together determine the part of the past that remains recoverable.
+available for recalling individual inputs~\cite{Dambre2012,Inubushi2017,Cindrak2026}. Reading the memory has a cost as
+well: resolving a weak quantum signal requires repeated preparation and
+measurement~\cite{Mujal2023,Cindrak2024,Hu2023}, so a long-lived record is hard to retrieve if its signal is faint.
+Previous work has established memory limits in classical reservoirs~\cite{JaegerESP2001,White2004,Ganguli2008},
+explored input strength~\cite{Jaeger2007Leaky}, and investigated how noise and protected states affect quantum
+information processing~\cite{Kubota2023,Fry2023,Cheamsawat2025,Akshay2026}. Closest to our work,
+Ref.~\cite{Sannia2024} tunes the dissipation rate of the reservoir we study, Ref.~\cite{Cindrak2026} finds one
+trade-off between memory and nonlinearity across reservoir schemes, and Ref.~\cite{Akshay2026} reads the output of a
+reservoir from a decoherence-free subspace to classify quantum states. How protection, continued input, and measurement
+together determine the part of the past that remains recoverable is open.
 
-Here we establish this connection in dissipative spin reservoirs (Fig.~\ref{fig:concept}). We compare decay processes at
-the same total coupling strength to the environment, keeping the internal interactions fixed. Increasing independent
-decay shortens memory, whereas collective decay supports a regime in which stronger loss prolongs it. We further show
-that the way the spins participate in the shared decay process determines how readily an input can change the protected
-part of the state. The environment thus controls both how information survives and how new information can be written.
+Here we show that the form of the dissipation sets three separate properties of a memory: how long a record survives,
+whether an input can be written into it, and how strong a signal it leaves to measure (Fig.~\ref{fig:concept}). We
+report four results. First, at equal total coupling the form of the dissipation decides whether stronger loss shortens
+or prolongs the memory: independent decay shortens it, and collective decay prolongs it through dark states
+(Sec.~\ref{sec:clock}). Second, we prove a law for the mixing of inputs, for reservoirs that leak slowly and are mixed
+by their inputs: a stored signal combines on average $s\,t_{\mathrm{mem}}$ inputs, the disturbance $s$ caused by each
+input times the memory lifetime $t_{\mathrm{mem}}$ (Sec.~\ref{sec:mixing}). A longer memory must therefore be written
+more gently, which we call gentle writing. Third, the phases with which the spins couple to a collective channel decide
+whether an input reaches the protected memory at all (Sec.~\ref{sec:writing}). Fourth, the state that the dissipation
+leaves behind sets the size of the signal that measurements must resolve: at strong loss only a collective channel
+with suitable phases keeps a readable memory, and at weak loss independent decay recovers the most
+(Sec.~\ref{sec:price}).
 
-We then prove a law for the accumulation of input mixing. Under explicit mixing assumptions and for long memories, the
-law relates the number of distinct inputs combined in the stored record to the memory lifetime and the disturbance
-caused by each new input. It motivates a practical principle: reduce how strongly each input changes the system as
-memory grows. We call this gentle writing. In our spin reservoirs, it more than doubles the capacity to recall
-individual past inputs when measured quantities are known without statistical error. The improvement reallocates
-existing capacity from combinations of inputs towards individual inputs; the total capacity available to the readout
-remains unchanged.
-
-Finally, we include the resources required to recover the stored information. Resolving a weak quantum signal requires
-repeated preparation and measurement to distinguish it from statistical
-fluctuations~\cite{Mujal2023,Cindrak2024,Hu2023}. A long-lived record can therefore be difficult to retrieve if its
-signal is too faint. At a fixed measurement budget, weak independent decay with gentle writing recovers the most memory
-in our comparison. The protected memories can persist just as long, but their weaker signals require more measurements.
-The available resources consequently change which environmental interaction and input strength are most useful.
-
-Together, these results establish a quantitative connection between the physical survival of information and its
-usefulness during continued computation. They show how dissipation can be structured to preserve a memory that remains
-writable, how input strength should be matched to its lifetime, and how measurement resources constrain what can be
-recovered. The protection mechanism relies on quantum interference, while the mixing law also applies to classical
-reservoirs under the same assumptions. The resulting design principle extends beyond a particular decay process: the
-environment, the input, and the readout must be coordinated around the information that remains accessible. This makes
+Together, these results connect the physical survival of information to what a readout can recover from it. The
+protection relies on quantum interference, while the mixing law holds for every reservoir that meets its conditions,
+classical ones included, and gives the size of the trade-off between memory and nonlinearity. The form of the
+dissipation, the strength of the input and the measurement budget thereby become joint design parameters. This makes
 recoverable memory a quantitative target for engineering physical systems that process information over time.

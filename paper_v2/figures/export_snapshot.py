@@ -9,6 +9,7 @@ Sources (exact expectation values, except for the finite-sampling test of the fi
   results/order_law/                                              random-unitary reset reservoirs
   results/review_runs/{extend,scaled,spectrum,dephasing,variance}.jsonl   runs added for the reviews
   results/clock/*.jsonl                                           clock, sampling, budget and replay runs (run_clock.py)
+  results/sizes/memory.jsonl                                      memory against loss at three, four and six spins
   results/measurement_full_v3/measurement_full_aggregate.json     finite sampling of the first version
 """
 from __future__ import annotations
@@ -198,7 +199,7 @@ def _points(rows, fields, extra=()):
 
 
 def replay_block():
-    """Table 2 budget points at 10^9: memory from the state with the full history and from the replay of the last
+    """Budget points at 10^9: memory from the state with the full history and from the replay of the last
     tau_90 inputs from |00000>, at the same preparations per setting and step."""
     path = RES / "clock" / "replay.jsonl"
     return _points(jsonl(path), ("tau90", "shots", "exact", "replay_exact", "full_state", "replay")) \
@@ -228,6 +229,29 @@ def replay_shots_block():
             out[label] = _points(jsonl(path), ("tau90", "exact", "replay_exact", "signal_replay", "memory"),
                                  extra=("shots",))
     return out or None
+
+
+def sizes_block():
+    """Memory against the loss rate at three, four and six spins (run_sizes.py): capacity of every reservoir along
+    each line, and the mean recall summed over the last twenty delays, which shows where the memory reaches past the
+    delays summed."""
+    path = RES / "sizes" / "memory.jsonl"
+    if not path.exists():
+        return None
+    rows = jsonl(path)
+    out = {}
+    for n in sorted({r["spins"] for r in rows}):
+        lines = []
+        for design, rule in sorted({(r["design"], r["rule"]) for r in rows if r["spins"] == n}):
+            sel = [r for r in rows if (r["spins"], r["design"], r["rule"]) == (n, design, rule)]
+            gammas = sorted({r["gamma"] for r in sel})
+            seeds = sorted({r["seed"] for r in sel})
+            by = {(r["seed"], r["gamma"]): r for r in sel}
+            lines.append({"design": design, "rule": rule, "gamma": gammas, "seeds": len(seeds),
+                          "capacity": [[round(by[(s, g)]["capacity"], 4) for g in gammas] for s in seeds],
+                          "tail": [round(float(np.mean([by[(s, g)]["tail"] for s in seeds])), 4) for g in gammas]})
+        out[str(n)] = {"features": sel[0]["features"], "lines": lines}
+    return out
 
 
 def five_orders_block():
@@ -479,7 +503,7 @@ def main():
                        ("prefactor", prefactor_block()), ("budget_low", budget_low_block()),
                        ("five_orders", five_orders_block()), ("replay", replay_block()),
                        ("washout", washout_block()), ("budget_replay", budget_replay_block()),
-                       ("replay_shots", replay_shots_block())):
+                       ("replay_shots", replay_shots_block()), ("sizes", sizes_block())):
         if block is not None:
             snap[key] = block
     OUT.parent.mkdir(parents=True, exist_ok=True)

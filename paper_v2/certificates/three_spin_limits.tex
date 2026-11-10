@@ -1,0 +1,125 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{microtype}
+\usepackage[colorlinks,allcolors=black]{hyperref}
+\pdfinfoomitdate=1 \pdftrailerid{} \pdfsuppressptexinfo=15
+\title{Three spins at strong loss:\\derivation of the certified limits}
+\author{\normalsize Companion note to Appendix D of\\
+\normalsize ``The form of dissipation shapes what a quantum reservoir remembers''\\
+\normalsize by M.~Baumann, I.~Fink, J.~Wittmann, C.~Linnhoff-Popien and J.~Stein\\
+\normalsize (arXiv:2608.14181)}
+\date{}
+\begin{document}
+\maketitle
+\noindent This note writes out the derivation that Appendix D of the paper summarises. It uses the notation of the
+paper: the dissipator $\mathcal D$ at unit loss rate, the mean covariance step $\mathcal B$ and the full covariance
+step $\mathcal T$ of its Appendix A.4, and the mixing law without a reset of its Appendix B.5. The interval programs in
+\texttt{spin\_certificates.zip}, next to this note, check every strict inequality used below.
+
+\paragraph{Statement.}
+Take three spins with a collective channel of opposite phases, Eq.~\eqref{eq:H3}, four Hamiltonians H1--H4 with
+couplings drawn from fixed seeds, and every Hamiltonian whose three couplings lie in a small box around theirs. As
+the loss rate $\gamma$ grows:
+\begin{itemize}
+\item At a fixed input amplitude, the order of the memory of $X_1$, divided by $\gamma$, becomes exponentially
+  distributed, and the signal in $X_1$ falls as $1/\gamma$ (boxes of half-width 1/32).
+\item With the amplitude scaled as $8/\sqrt\gamma$, single past inputs keep a finite share of the capacity of $X_1$,
+  and the range of delays that holds 90\% of their recall grows in proportion to $\gamma$ (boxes of half-width 1/512).
+\end{itemize}
+
+\paragraph{Idea.}
+At strong loss, one step of the full master equation is a rotation of the three dark states, up to corrections of
+order $\epsilon=1/\gamma$. At a fixed amplitude the two signs of the input rotate the dark states differently. The
+stored covariance then has a single slow direction, and the mixing law without a reset applies. With gentle writing
+both signs give almost the same rotation. The signal is written on the scale of the leak and collects in six slow
+directions, which we follow explicitly. Both arguments end in finitely many strict inequalities, which a computer
+checks with rigorous error bounds.
+
+\paragraph{Model and computations.}
+The three spins evolve under
+\begin{equation}
+  H_\eta(u)=\sum_{i<j}J_{ij}X_iX_j+\tfrac12\sum_iZ_i+\tfrac{3+\eta u}{4}\sum_iX_i
+  \label{eq:H3}
+\end{equation}
+with one jump $\sqrt\gamma\,(\sigma_1^--\sigma_2^--\sigma_3^-)$, steps of $\Delta t=1/2$ and signs $u=\pm1$, at
+$\eta=1$ (fixed amplitude) or $\eta=8/\sqrt\gamma$ (gentle writing): the field of gentle writing
+(Sec.~2 of the paper) with signs in place of uniform inputs, with the same mean and the same largest change
+$\eta/4$. The couplings of the four Hamiltonians H1--H4
+are drawn from fixed seeds. For each loss rate we exponentiate the full generator for both signs, solve the
+stationary moment equations and evaluate the order recursion of the paper (its Appendix A.4) for $X_1$ until 99.99\% of its memory is accounted
+for. The range $\tau_{90}$ is the smallest delay beyond which less than a tenth of the recall of single inputs
+remains. For the four Hamiltonians the certified rate of the exponential law at a fixed amplitude lies between 61
+and 133. With gentle writing at $\gamma=2^{16}$, single inputs keep between 8\% and 81\% of the capacity of $X_1$,
+and the range of their recall lies between $0.18\gamma$ and $0.50\gamma$. The certificates list all values.
+
+\paragraph{One step at strong loss.}
+The jump $\sqrt\gamma\,(\sigma_1^--\sigma_2^--\sigma_3^-)$ leaves three dark states: the state with no excitation
+and the two single-excitation states with amplitudes $(0,1,-1)/\sqrt2$ and $(2,1,1)/\sqrt6$, which are orthogonal to
+the phases of the channel. It empties every other state, so at unit loss rate only the nine operators on the dark
+states do not decay. Let $R$ embed these nine coordinates into the full operator space and $R^\flat$ project back
+along the decaying operators. Expanding one step in $\epsilon$ gives
+\begin{equation}
+  E_u=R\,e^{\Delta t\,R^\flat\mathcal H_uR}R^\flat+\epsilon Z_u+O(\epsilon^2),
+  \label{eq:slowstep}
+\end{equation}
+where $\mathcal H_u$ is the commutator with the Hamiltonian of input $u$. The first term rotates the dark states. The
+correction $Z_u$ collects the brief excursions into bright states: one at the start of the step, one at its end, and
+the leak of the strong-loss generator (Appendix A.3 of the paper) in between.
+
+\paragraph{Fixed amplitude.}
+At $\eta=1$ the dark rotations $O_u$ of the two signs differ, and the computer checks the conditions of the mixing law
+without a reset (Appendix B.5 of the paper) on the eight traceless dark coordinates. The average rotation forgets. The identity is the only covariance that the random rotations leave unchanged. Three constants from the first-order terms of
+Eq.~\eqref{eq:slowstep} are positive: the strength with which an input writes, the rate $\kappa$ at which the slow
+covariance leaks, and the mixing fraction $s_0=1-\|\mathbb EO_u\|_F^2/8$. The law then gives an exponential
+distribution of the order divided by $\gamma$, with rate $\kappa/s_0$, and the variance of
+$X_1$ falls as $\epsilon$. A change $r$ of the couplings moves each dark rotation by at most $3r$, which lets the
+checks cover the boxes of half-width 1/32.
+
+\paragraph{Gentle writing.}
+At $\eta=8\sqrt\epsilon$ both signs give the same leading rotation $E$, generated by the static part of the dark
+Hamiltonian. The input enters at order $\sqrt\epsilon$ and the leak at order $\epsilon$. Expanding the step to this order
+gives the mean step $E+\epsilon E_1$ and the input-dependent part $u\sqrt\epsilon\,\Delta_1$.
+
+\emph{Where the signal goes.} The dark energy levels are the eigenstates of the static dark Hamiltonian. For each
+pair of them, the real and imaginary parts of their coherence span a plane, and $E$ turns each of these three planes by
+its own angle, set by an energy gap. The six phase factors of these turns differ from each other and from one.
+So $E$ leaves only the populations unchanged, and on them $E_1$ generates a slow population dynamics with a unique stationary state
+$m_*$. An input therefore writes $\pm\sqrt\epsilon\,v$ with $v=\Delta_1m_*$, which lies in the coherence planes: a new
+input first turns a population into a coherence.
+
+\emph{Limits.} The covariances that $E$ leaves unchanged form a six-dimensional space: the three covariances of the
+two population coordinates and one isotropic covariance in each coherence plane. Over $1/\epsilon$ steps a covariance
+in this space changes under two generators, both certified stable. $K_B$, from the mean step $\mathcal B$, lets a
+stored signal decay, and $K_T$, from the full covariance step $\mathcal T$, also adds the random signs of later
+inputs, which turn it into products. With $P_6$ the projection onto the six directions and $a$ the coordinates of
+$X_1$, the share of single past inputs tends to $a^{\mathsf T}W_*a/a^{\mathsf T}\Sigma_*a$ with
+$W_*=-K_B^{-1}P_6(vv^{\mathsf T})$ and $\Sigma_*=-K_T^{-1}P_6(vv^{\mathsf T})$. After $t/\epsilon$ steps the remaining
+single-input recall is the fraction $a^{\mathsf T}e^{tK_B}W_*a/a^{\mathsf T}W_*a$, which crosses 0.1 once, and the
+crossing is the range divided by $\gamma$. The certificates show $a^{\mathsf T}W_*a>0$, and since
+$\Sigma_*\succeq W_*$ the share is positive. In the boxes of half-width 1/512 the six angles stay separated and both
+generators stay stable, so the limits stay positive.
+
+\paragraph{Why coherence carries the memory.}
+Returning bright population to the dark subspace after every step leaves the leading terms of the scaled step
+unchanged, so it keeps the same limits. Dephasing in the dark energy basis, by contrast, removes the coherence planes
+into which $v$ writes. Restricted to populations, the two signs then differ only at order $\epsilon^{3/2}$, because the
+response of a population at order $\sqrt\epsilon$ is a coherence, while the populations still follow the slow
+population dynamics. A new input thus writes a vector of size $\epsilon^{3/2}$, the slow dynamics sum its square over
+$1/\epsilon$ steps, and the stored signal is of order $\epsilon^2$: the collapse as $1/\gamma^2$ stated in
+Sec.~3.3 of the paper. Numerically, applying the loss-only projector $\mathcal P=\lim_{t\to\infty}e^{t\mathcal D}$ after every step, with or without
+dephasing in the energy basis of the projected Hamiltonian, the variance of $X_1$ stays between $10^{-4}$ and
+$2\times10^{-3}$ from $\gamma=2^8$ to $2^{18}$ when the coherences are kept and falls as $\gamma^{-2}$, by six orders
+of magnitude, when they are erased. At a fixed input amplitude it falls as $1/\gamma$.
+
+\paragraph{What the computer checks.}
+The archive \texttt{spin\_certificates.zip} contains the generators, the exact
+couplings and the interval programs. They enclose every quantity above in intervals with rigorous rounding (ball arithmetic of Arb, python-flint
+0.9.0) and check each strict inequality of this note at 256 bits, and at 192 bits they reproduce the archived
+enclosures. A second program, sharing no routine with
+them, builds the full finite-rate maps and extrapolates to infinite loss. It agrees with
+the certified rates and limiting recalls to better than one part in a million.
+\end{document}

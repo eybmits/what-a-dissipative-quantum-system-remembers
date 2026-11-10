@@ -1,6 +1,24 @@
 \section{Methods}
 \label{sec:methods}
 This appendix specifies the five-spin simulations and defines the quantities that the main text uses.
+Table~\ref{tab:times} lists the four time scales, all counted in input steps.
+
+\begin{table}[t]
+\caption{\label{tab:times}The four time scales of the text, in input steps of length $\Delta t$.}
+\centering\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lp{0.84\columnwidth}@{}}
+\toprule
+$t_{\mathrm{mem}}$ & memory lifetime: how long the variance of a stored signal survives, whatever inputs it combines
+  (Appendix~\ref{sec:order})\\
+$t_{\mathrm f}$ & single-input recall time: how long one input stays linearly readable on its own
+  (Appendix~\ref{sec:methods-slow})\\
+$t_{\mathrm{leak}}$ & decay-only lifetime: the recall time with the input held at its mean value
+  (Appendix~\ref{sec:methods-sampling})\\
+$\tau_{90}$ & replayed range: the first $\tau_{90}$ delays hold 90\% of the exact recall
+  (Appendix~\ref{sec:methods-sampling})\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Reservoir, readout and capacity}
 \label{sec:methods-reservoir}
@@ -8,8 +26,7 @@ The Hamiltonian of Eq.~\eqref{eq:H} uses $h=1/2$ and couplings $J_{ij}$ drawn un
 transverse field runs from $h$ to $2h$. Each input $u$ is drawn uniformly from $[0,1]$ and held for a step of length
 $\Delta t=1/2$. We integrate Eq.~\eqref{eq:lindblad} in the 1024-dimensional basis of Pauli operators and evaluate the
 step map $E(u)=e^{\Delta t\mathcal L(u)}$ by Chebyshev interpolation in $u$ at ten nodes. Each reservoir draws its
-couplings and its input stream from one seed, every channel uses the same eight seeds, and runs with the input on one
-spin use the first four. After a washout of $\max(800,60\gamma)$ steps, at least four times the single-input recall
+couplings and its input stream from one seed, and every channel uses the same eight seeds. After a washout of $\max(800,60\gamma)$ steps, at least four times the single-input recall
 time, we record the 45 features, the expectation values of $X_i$, $Y_i$, $Z_i$ and of $X_iX_j$, $Y_iY_j$, $Z_iZ_j$, for
 2000 training, 400 validation and 1600 test inputs. The readout is a least-squares fit with an intercept on the
 training and validation inputs, and $C_\tau$ is the squared correlation of its estimate with $u_{t-\tau}$ on the test
@@ -57,8 +74,10 @@ The input-averaged step $\bar E=\mathbb E_uE(u)$ is computed by six-point Gauss-
 $\lambda_j$ give decay rates $\kappa_j=-\ln|\lambda_j|/\Delta t$. If the dissipator protects $n$ operators, the slow
 modes are the $n-1$ slowest decaying ones besides the stationary state, and the single-input recall time is
 $t_{\mathrm f}=1/(\Delta t\,\bar\kappa)$, with $\bar\kappa$ their mean rate. Without protected operators we use the
-slowest mode. The averaged step carries the part of a stored signal that still depends on a single input, so its mean
-rate adds decay and mixing exactly (Appendix~\ref{app:num-mixing}). Figure~\ref{fig:clock}d shows instead the decay
+slowest mode. The averaged step carries the part of a stored signal that still depends on a single input. Its mean
+rate adds decay and mixing to second order in the amplitude, $\bar\kappa=\bar\kappa_0+c\,\eta^2+O(\eta^4)$, because
+the inputs are distributed symmetrically about their mean and the term of $\bar E$ linear in $\eta$ vanishes.
+Appendix~\ref{app:num-mixing} tests this sum numerically. Figure~\ref{fig:clock}d shows instead the decay
 rates $-\operatorname{Re}\lambda$ of the generator at the mean input, $u=1/2$. With a collective channel we call the
 $n-1$ slowest of them dark and all faster ones bright.
 
@@ -116,5 +135,5 @@ chosen from fourteen values between 0 and $10^4$ on the validation inputs. In Se
 come from the replay: each output step replays its last $\tau_{90}$ inputs from $|00000\rangle$, where the first
 $\tau_{90}$ delays hold 90\% of the exact recall. We count the budget $B$ in reservoir steps, preparations times replayed steps summed over the three settings, per
 output step, so that $n=B/(3\tau_{90})$, and we also run $n=10^3$ to $10^{8.5}$ in half decades.
-Only Fig.~\ref{fig:sampling}b uses the state with the full history. Its matched decay-only lifetime is the leak time $t_{\mathrm{leak}}=1/(\Delta t\,\bar\kappa_0)$ of 32 input steps, where $\bar\kappa_0$ is the mean decay rate of the slow
+Only Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} use the state with the full history. Its matched decay-only lifetime is the leak time $t_{\mathrm{leak}}=1/(\Delta t\,\bar\kappa_0)$ of 32 input steps, where $\bar\kappa_0$ is the mean decay rate of the slow
 modes of the generator at the mean input, without the mixing by the inputs (Appendix~\ref{app:num-measurement}).

@@ -109,12 +109,10 @@
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\floatpagefraction}{0.5}
 
-\hypersetup{pdftitle={What a dissipative quantum system remembers},
+\hypersetup{pdftitle={The form of dissipation shapes what a quantum reservoir remembers},
  pdfsubject={Dissipation engineering, dark states and the memory of quantum reservoirs}}
 \begin{document}
-\input{sections/certificate_attachment}
-
-\title{What a dissipative quantum system remembers}
+\title{The form of dissipation shapes\hfil\break what a quantum reservoir remembers}
 
 \author[qar,mobile]{Markus Baumann}
 \orcid{0009-0007-3575-1006}
@@ -134,6 +132,8 @@ Ludwig-Maximilians-Universit\"at M\"unchen, Munich, Germany}
 
 \input{sections/abstract}
 \maketitle
+% the class copies \title, line break included, into the PDF title: set it again
+\hypersetup{pdftitle={The form of dissipation shapes what a quantum reservoir remembers}}
 % Ragged columns, without the section penalty that would otherwise push each heading to a new column.
 \raggedbottom
 \makeatletter\@secpenalty=0\makeatother
@@ -144,19 +144,19 @@ Ludwig-Maximilians-Universit\"at M\"unchen, Munich, Germany}
 
 % Back matter after the conclusion, before the appendices.
 \acknowledgments{The authors thank the Quantum Applications and Research Laboratory and the Mobile and
-Distributed Systems Group at Ludwig-Maximilians-Universit\"at M\"unchen for institutional support. OpenAI Codex and
-Claude Code (Anthropic) assisted with manuscript preparation, checks of derivations and references, and simulation,
-verification and plotting code. The authors reviewed the outputs and take responsibility for the final content.}
+Distributed Systems Group at Ludwig-Maximilians-Universit\"at M\"unchen for institutional support.}
 
 \Needspace{6\baselineskip}
 \section*{Data availability}
-The code, the data behind every figure and the interval certificates of the three-spin limits are available at
-\url{https://github.com/eybmits/what-a-dissipative-quantum-system-remembers}, and the certificates are also attached to this PDF.
+The code, the data behind every figure, and the derivation and certificates of the three-spin limits are at
+\url{https://github.com/eybmits/what-a-dissipative-quantum-system-remembers}.
 
 \Needspace{6\baselineskip}
 \section*{Author contributions}
 M.B. contributed to conception, methodology, software, analysis, visualization and writing, I.F. and J.W. to
-methodology, interpretation and editing, and C.L.-P. and J.S. to supervision and conceptual development.
+methodology, interpretation and editing, and C.L.-P. and J.S. to supervision and conceptual development. OpenAI Codex
+and Claude Code (Anthropic) assisted with manuscript preparation, checks of derivations and references, and simulation,
+verification and plotting code. The authors reviewed the outputs and take responsibility for the final content.
 
 \appendix
 % Appendix equations are numbered (A1), (A2), ..., restarting in each appendix.

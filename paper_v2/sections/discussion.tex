@@ -6,18 +6,29 @@ shortens memory as loss grows, whereas strong collective decay can prolong it by
 through the quantum Zeno effect. The environment therefore provides a physical means of designing the memory of a
 driven quantum system.
 
-Longer storage also leaves more time for subsequent inputs to mix with the stored information. Our mixing law makes this accumulation quantitative. It identifies a practical principle:
-new information should be written more gently as memory grows, so that earlier inputs remain individually
-recoverable. In the spin reservoirs studied, this strategy more than doubles the capacity to recall past inputs with
-exact readout.
+Longer storage also leaves more time for subsequent inputs to mix with the stored information. Our mixing law makes this accumulation quantitative. It sets a ceiling on the input strength:
+the longer the memory, the more gently new information must be written, so that earlier inputs remain individually
+recoverable. In the spin reservoirs studied, weakening the input raises the capacity to recall past inputs from about
+15 to 35 units with exact readout, where no input is too weak.
 
 Measurement adds a further requirement: the stored information must produce a signal strong enough to resolve.
-Dark-state memories can remain protected for long times while becoming difficult to read. At a fixed measurement
-budget, weak independent decay recovers the most memory in our comparison because its signals are stronger. The
-resources needed to retrieve information are therefore part of the design of the memory itself.
+Dark-state memories can remain protected for long times while becoming difficult to read. At strong loss a collective
+channel with non-aligned phases keeps a readable memory where independent decay keeps none. Where the loss can be made
+weak, independent decay recovers the most because its signals are stronger. The resources needed to retrieve information are therefore
+part of the design of the memory itself.
 
-Together, these results connect the protection of information stored in quantum dynamics to the practical demands of
-processing a continuous stream of inputs. They establish a quantitative design principle: match the memory lifetime to the
-disturbance caused by new inputs, and match the stored signal to the available measurement resources. Engineering the
-environment, the input, and the readout together provides a route from long-lived quantum dynamics to memory that
-remains useful during continued computation.
+Engineering the environment, the input, and the readout together thus provides a route from long-lived quantum
+dynamics to memory that a readout can recover. Four rules summarize this design:
+
+\begin{keybox}
+\begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=0pt]
+\item Collective decay can protect a memory. Stronger loss then makes it last longer, as long as local noise stays
+  weak.
+\item The input must be able to reach the protected memory. An input aligned with the decay channel hardly writes
+  into it.
+\item The longer a memory lasts, the more gently each input must be written. Otherwise new inputs mix with the old
+  ones.
+\item What can be read out depends on how strong a signal the inputs leave, so the measurement budget decides which
+  design is best.
+\end{enumerate}
+\end{keybox}

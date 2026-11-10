@@ -113,7 +113,8 @@ readout. Finally, $\sum_kkG_k=(1-\mathcal F)^{-1}\Sigma=\Sigma/(\beta p)+O(p)$ g
 $\mathbb ED=s\,t_{\mathrm{mem}}+O(1)$.
 
 \paragraph{Two technical points.}
-The eigenvalue one of $\mathcal F_0$ is simple: a fixed point of $\mathcal F_0$ satisfies $\mathcal T_0X=X$ and is
+On symmetric matrices, where covariances live, the eigenvalue one of $\mathcal F_0$ is simple: a fixed point
+satisfies $\mathcal T_0X=X$ and is
 therefore a multiple of the identity, and $\ell(1)>0$ rules out a Jordan chain. For $p>0$ every eigenvalue of
 $\mathcal F$ lies inside the unit circle, by a Perron--Frobenius argument: $\mathcal F$ maps positive matrices to
 positive matrices, and so does $(1-\mathcal F)^{-1}=1+(1-\mathcal T)^{-1}\mathcal K$. The eigenvalues of
@@ -181,8 +182,7 @@ B_0^j\mathcal K_0Q)\le s\le1$ for every $j$. If $s$ vanished, the series $\mathc
 K_0$ would give $\ell(\mathcal F_0Q)=0$, which contradicts $\mathcal F_0Q=Q$ and $\ell(Q)=1$.
 
 \emph{The spin reservoirs.} For three spins the certificates of Appendix~\ref{app:spins} check these conditions. For
-five spins we check the law instead of the conditions: Eq.~\eqref{eq:recursion} gives the order distribution exactly,
-and it follows the law (below).
+five spins we check the law itself (Sec.~\ref{sec:mixing} and below).
 
 \subsection{Numerical check}
 Figure~\ref{fig:law} compares the law with exact moments. Beyond the reservoir shown, we tested 24 reservoirs and
@@ -195,8 +195,8 @@ $e^{-K/(s\,t_{\mathrm{mem}})}$ of the capacity to within 0.14.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/figA_law.pdf}
-\caption{\textbf{The mixing law.} Share of the capacity carried by products of more than $K$ inputs, for one qubit
-that is reset with a small probability $p$ in each step: exact, and from the mixing law of Theorem~\ref{thm:law}.}
+\caption{\textbf{The mixing law.} Share of the capacity in products of more than $K$ inputs, for one qubit that is
+reset with probability $p$ per step.}
 \label{fig:law}
 \end{figure}
 
@@ -258,9 +258,9 @@ of the density matrix reproduces all these expressions.
 \section{Three spins at strong loss}
 \label{app:spins}
 \begin{keybox}
-\textbf{What we prove.} Take three spins with a collective channel of opposite phases, Eq.~\eqref{eq:H3}, the four
-Hamiltonians H1--H4 of Table~\ref{tab:spins}, and every Hamiltonian whose three couplings lie in a small box around
-theirs. As $\gamma$ grows:
+\textbf{What is certified.} Take three spins with a collective channel of opposite phases, Eq.~\eqref{eq:H3}, four
+Hamiltonians H1--H4 with couplings drawn from fixed seeds, and every Hamiltonian whose three couplings lie in a small
+box around theirs. As $\gamma$ grows:
 \begin{itemize}[leftmargin=*,itemsep=2pt,topsep=4pt]
 \item At a fixed input amplitude, the order of the memory of $X_1$, divided by $\gamma$, becomes exponentially
   distributed, and the signal in $X_1$ falls as $1/\gamma$ (boxes of half-width 1/32).
@@ -269,128 +269,45 @@ theirs. As $\gamma$ grows:
 \end{itemize}
 \end{keybox}
 
-\paragraph{Idea.}
-At strong loss, one step of the full master equation is a rotation of the three dark states, up to corrections of
-order $\epsilon=1/\gamma$. At a fixed amplitude the two signs of the input rotate the dark states differently. The
-stored covariance then has a single slow direction, and the mixing law without a reset applies
-(Appendix~\ref{app:physical}). With gentle writing both signs give almost the same rotation. The signal is
-written on the scale of the leak and collects in six slow directions, which we follow explicitly. Both arguments end
-in finitely many strict inequalities, which a computer checks with rigorous error bounds.
-
-\paragraph{Model and computations.}
+\paragraph{Model.}
 The three spins evolve under
 \begin{equation}
   H_\eta(u)=\sum_{i<j}J_{ij}X_iX_j+\tfrac12\sum_iZ_i+\tfrac{3+\eta u}{4}\sum_iX_i
   \label{eq:H3}
 \end{equation}
 with one jump $\sqrt\gamma\,(\sigma_1^--\sigma_2^--\sigma_3^-)$, steps of $\Delta t=1/2$ and signs $u=\pm1$, at
-$\eta=1$ (fixed amplitude) or $\eta=8/\sqrt\gamma$ (gentle writing): the field of gentle writing
-(Sec.~\ref{sec:shapes}) with signs in place of uniform inputs, with the same mean and the same largest change
-$\eta/4$. The couplings of the four Hamiltonians H1--H4
-are drawn from fixed seeds. For each loss rate we exponentiate the full generator for both signs, solve the
-stationary moment equations and evaluate Eq.~\eqref{eq:recursion} for $X_1$ until 99.99\% of its memory is accounted
-for. The range $\tau_{90}$ is the smallest delay beyond which less than a tenth of the recall of single inputs
-remains.
+$\eta=1$ (fixed amplitude) or $\eta=8/\sqrt\gamma$ (gentle writing). This is the field of Sec.~\ref{sec:shapes} with
+signs in place of uniform inputs. The jump leaves three dark states: the state with no excitation and two states with
+one excitation. For the four Hamiltonians the certified rate of the exponential law at a fixed amplitude lies between
+61 and 133. With gentle writing at $\gamma=2^{16}$, single inputs keep between 8\% and 81\% of the capacity of
+$X_1$, and the range of their recall lies between $0.18\gamma$ and $0.50\gamma$.
 
-\paragraph{Both regimes.}
-Figure~\ref{fig:spins} shows the two regimes of the box for H3. Gentler writing trades signal for readability, as for
-the qubit: at $\eta_0=8$ single inputs keep between
-8\% and 81\% of the capacity of $X_1$ for the four Hamiltonians (Table~\ref{tab:spins}), and for H3 this share rises to
-67\% at $\eta_0=2$, with a signal 25 times smaller.
-
-\begin{table}[t]
-\caption{\label{tab:spins}Strong-loss limits for $X_1$ in the four three-spin reservoirs. Fixed amplitude: rate of
-the exponential law of the order divided by $\gamma$ (certified). Gentle writing: share of single past inputs and
-range of their recall divided by $\gamma$, evaluated at $\gamma=2^{16}$.}
-\centering\footnotesize
-\begin{tabular}{lccc}
-\toprule
- & rate & single-input share & range$/\gamma$\\\midrule
-H1 & 78.6 & 0.81 & 0.50\\
-H2 & 91.7 & 0.29 & 0.18\\
-H3 & 61.4 & 0.08 & 0.24\\
-H4 & 132.5 & 0.14 & 0.50\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{One step at strong loss.}
-The jump $\sqrt\gamma\,(\sigma_1^--\sigma_2^--\sigma_3^-)$ leaves three dark states: the state with no excitation
-and the two single-excitation states with amplitudes $(0,1,-1)/\sqrt2$ and $(2,1,1)/\sqrt6$, which are orthogonal to
-the phases of the channel. It empties every other state, so at unit loss rate only the nine operators on the dark
-states do not decay. Let $R$ embed these nine coordinates into the full operator space and $R^\flat$ project back
-along the decaying operators. Expanding one step in $\epsilon$ gives
-\begin{equation}
-  E_u=R\,e^{\Delta t\,R^\flat\mathcal H_uR}R^\flat+\epsilon Z_u+O(\epsilon^2),
-  \label{eq:slowstep}
-\end{equation}
-where $\mathcal H_u$ is the commutator with the Hamiltonian of input $u$. The first term rotates the dark states. The
-correction $Z_u$ collects the brief excursions into bright states: one at the start of the step, one at its end, and
-the leak of Eq.~\eqref{eq:reduced} in between.
-
-\paragraph{Fixed amplitude.}
-At $\eta=1$ the dark rotations $O_u$ of the two signs differ, and the computer checks the conditions of the mixing law
-without a reset on the eight traceless dark coordinates. The average rotation forgets. The identity is the only covariance that the random rotations leave unchanged. Three constants from the first-order terms of
-Eq.~\eqref{eq:slowstep} are positive: the strength with which an input writes, the rate $\kappa$ at which the slow
-covariance leaks, and the mixing fraction $s_0=1-\|\mathbb EO_u\|_F^2/8$. The law then gives an exponential
-distribution of the order divided by $\gamma$, with rate $\kappa/s_0$ (Table~\ref{tab:spins}), and the variance of
-$X_1$ falls as $\epsilon$. A change $r$ of the couplings moves each dark rotation by at most $3r$, which lets the
-checks cover the boxes of half-width 1/32.
-
-\paragraph{Gentle writing.}
-At $\eta=8\sqrt\epsilon$ both signs give the same leading rotation $E$, generated by the static part of the dark
-Hamiltonian. The input enters at order $\sqrt\epsilon$ and the leak at order $\epsilon$. Expanding the step to this order
-gives the mean step $E+\epsilon E_1$ and the input-dependent part $u\sqrt\epsilon\,\Delta_1$.
-
-\emph{Where the signal goes.} The dark energy levels are the eigenstates of the static dark Hamiltonian. For each
-pair of them, the real and imaginary parts of their coherence span a plane, and $E$ turns each of these three planes by
-its own angle, set by an energy gap. The six phase factors of these turns differ from each other and from one.
-So $E$ leaves only the populations unchanged, and on them $E_1$ generates a slow population dynamics with a unique stationary state
-$m_*$. An input therefore writes $\pm\sqrt\epsilon\,v$ with $v=\Delta_1m_*$, which lies in the coherence planes: a new
-input first turns a population into a coherence.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/figC_spins.pdf}
-\caption{\textbf{Three spins, both regimes.} Share of the capacity of $X_1$ per logarithmic interval of $k$, the
-number of inputs combined (colour), against the loss rate, for the opposite-phase channel (Hamiltonian H3). At a
-fixed input strength the number of inputs mixed grows with the loss (a), while with gentle writing it stays small (b).}
-\label{fig:spins}
-\end{figure}
-
-\emph{Six slow directions.} The covariances that $E$ leaves unchanged form a six-dimensional space: the three
-covariances of the two population coordinates and one isotropic covariance in each coherence plane. Over $1/\epsilon$
-steps a covariance in this space changes under two generators, both certified stable: $K_B$ and $K_T$, the
-first-order terms in $\epsilon$ of the mean and the full covariance step, $\mathcal B$ and $\mathcal T$, restricted to
-the six directions. $K_B$ lets a stored signal decay, and $K_T$ adds the random signs of later inputs, which turn a
-stored signal into products. With $P_6$ the projection onto the six directions, the single-input part of the stored covariance and the
-full covariance approach $W_*=-K_B^{-1}P_6(vv^{\mathsf T})$ and $\Sigma_*=-K_T^{-1}P_6(vv^{\mathsf T})$.
-
-\emph{Limits.} With $a$ the coordinates of $X_1$, the share of single past inputs in the memory of $X_1$ tends to
-$a^{\mathsf T}W_*a/a^{\mathsf T}\Sigma_*a$. After $t/\epsilon$ steps the remaining single-input recall is the fraction
-$a^{\mathsf T}e^{tK_B}W_*a/a^{\mathsf T}W_*a$, which crosses 0.1 once, and the crossing is the range divided by $\gamma$.
-The certificates show $a^{\mathsf T}W_*a>0$, and since $\Sigma_*\succeq W_*$ the share is positive. In the boxes of
-half-width 1/512 the six angles stay separated and both generators stay stable, so the limits stay positive.
+\paragraph{Idea.}
+At strong loss, one step of the full master equation is a rotation of the three dark states, up to corrections of
+order $\epsilon=1/\gamma$. The mixing law without a reset (Appendix~\ref{app:physical}) then gives the first
+statement, and an expansion in six slow covariance directions gives the second. Both end in finitely many strict
+inequalities, which a computer checks with rigorous error bounds. The note \texttt{three\_spin\_limits.pdf} in the
+repository writes out the derivation.
 
 \paragraph{Why coherence carries the memory.}
-Returning bright population to the dark subspace after every step leaves the leading terms of the scaled step
-unchanged, so it keeps the same limits. Dephasing in the dark energy basis, by contrast, removes the coherence planes
-into which $v$ writes. Restricted to populations, the two signs then differ only at order $\epsilon^{3/2}$, because the
-response of a population at order $\sqrt\epsilon$ is a coherence, while the populations still follow the slow
-population dynamics. A new input thus writes a vector of size $\epsilon^{3/2}$, the slow dynamics sum its square over
-$1/\epsilon$ steps, and the stored signal is of order $\epsilon^2$: the collapse as $1/\gamma^2$ of
-Sec.~\ref{sec:writing}. Numerically, applying the loss-only projector $\mathcal P$ after every step, with or without
-dephasing in the energy basis of the projected Hamiltonian, the variance of $X_1$ stays between $10^{-4}$ and
-$2\times10^{-3}$ from $\gamma=2^8$ to $2^{18}$ when the coherences are kept and falls as $\gamma^{-2}$, by six orders
-of magnitude, when they are erased. At a fixed input amplitude it falls as $1/\gamma$.
+With gentle writing the input enters one step at order $\sqrt\epsilon$ and the leak at order $\epsilon$. The leading
+part of the step is a rotation generated by the static Hamiltonian restricted to the dark states. It leaves only the
+populations of the energy levels of this Hamiltonian unchanged, and at order $\sqrt\epsilon$ a new input turns a
+population into a coherence between two levels. Dephasing in this energy basis after every step removes these
+coherences. Restricted to populations, a new input writes only a change of size $\epsilon^{3/2}$, the slow population
+dynamics sum its square over $1/\epsilon$ steps, and the stored signal is of order $\epsilon^2$: the collapse as
+$1/\gamma^2$ of Sec.~\ref{sec:writing}. Numerically, we
+apply the loss-only projector $\mathcal P$ of Appendix~\ref{sec:methods-slow} after every step, with or without this
+dephasing. The variance of $X_1$ stays between $10^{-4}$ and $2\times10^{-3}$ from $\gamma=2^8$ to $2^{18}$ when the
+coherences are kept and falls as $\gamma^{-2}$, by six orders of magnitude, when they are erased. At a fixed input
+amplitude it falls as $1/\gamma$.
 
 \paragraph{What the computer checks.}
-The attached archive \texttt{spin\_certificates.zip} contains the generators, the exact couplings and the interval
-programs. They enclose every quantity above in intervals with rigorous rounding (ball arithmetic of Arb, python-flint
-0.9.0) and check each strict inequality of this appendix at 256 bits, and at 192 bits they reproduce the archived
-enclosures. A second program, sharing no routine with
-them, builds the full finite-rate maps and extrapolates to infinite loss. It agrees with
-the certified rates and limiting recalls to better than one part in a million.
+The archive \texttt{spin\_certificates.zip} in the repository contains the generators, the exact couplings and the
+interval programs. They enclose every quantity in intervals with rigorous rounding (ball arithmetic of Arb,
+python-flint 0.9.0) and check each strict inequality of the derivation at 256 bits. A second program, sharing no
+routine with them, builds the full finite-rate maps and agrees with the certified rates and limiting recalls to
+better than one part in a million.
 
 \section{Numerical details and supporting checks}
 \label{app:numerics}
@@ -413,7 +330,7 @@ $(R-\mathcal S\mathcal H(u)R/\gamma)\,\alpha$. The readout is trained on them ex
 the model has no fitted parameter (Fig.~\ref{fig:darkmodel}a). For the erasure test we replace the dark coordinates
 after every step by their time average, $r\mapsto r-RR^\flat(r-\bar r)$. The control erases the dark subspace rotated
 by a random product of single-spin unitaries. Recall is measured at delays 1 to 100 with 800 training, 200 validation
-and 800 test inputs (Fig.~\ref{fig:darkmodel}b).
+and 800 test inputs, at $\gamma=16$ (Fig.~\ref{fig:darkmodel}b).
 
 The decay out of the dark states falls exactly as $1/\gamma$: for the equal-phase channel $\gamma\bar\kappa$
 approaches $\kappa_{\mathrm c}=2.945$ from $\gamma=512$ on, so $t_{\mathrm f}$ grows in proportion to $\gamma$, while it
@@ -423,24 +340,25 @@ depends on the size.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/figD_dark.pdf}
-\caption{\textbf{Dark states hold the memory.} Equal-phase channel.
-\textbf{a}~A model of the dark states alone, with no fitted parameter, reproduces the recall of the full reservoir
-(lines).
-\textbf{b}~Replacing the dark coordinates by their time averages after every step destroys the memory, while the same
-operation on a randomly rotated set of equal size leaves most of it ($\gamma=16$).}
-\label{fig:darkmodel}
+\includegraphics[width=\columnwidth]{figures/figE_sizes.pdf}
+\caption{\textbf{Other reservoir sizes.} Capacity against the loss rate as in Fig.~\ref{fig:clock}c, for four and
+six spins. A line stops where its recall reaches past the 300 delays summed.}
+\label{fig:sizes}
 \end{figure}
+
+Figure~\ref{fig:sizes} repeats the curves of Fig.~\ref{fig:clock}c at four and six spins, with 30 and 63 features,
+on eight and four reservoirs. The opposite-phase channel reverses the sign of the last $\lfloor N/2\rfloor$ spins.
+With the equal-phase channel the capacity grows with the loss at both sizes, from 11.5 to 18.4 units between
+$\gamma=1$ and 64 at four spins and from 15 to 51 at six, and gentle writing raises the best capacity of the other
+two channels. At three spins, which have only three dark states, the capacity of the equal-phase channel does not
+grow.
 
 \subsection{Recall time and phases (Secs.~\ref{sec:mixing} and~\ref{sec:writing})}
 \label{app:num-mixing}
 We compute $t_{\mathrm f}$ at $\eta=1$, $\tfrac12$, $\tfrac14$ and $\tfrac18$, for $\gamma$ from $2^{-8}$ to $2^6$ with
 independent decay and from $2^{-2}$ to $2^{12}$ with the opposite-phase channel. The collapses of
 Fig.~\ref{fig:mixing}a do not depend on how the recall time is defined: with the slowest mode in place of the mean
-rate they hold to within 11\% wherever the recall time exceeds four steps, and they hold as well with the input on one
-spin. Weakening the input moves the preferred loss rate: on one reservoir with exact moments, the sampled capacity peak
-of independent decay moves from $\gamma\approx1/16$ at $\eta=1$ to $1/64$ at $\eta=\tfrac18$, and the peak capacity
-rises from 16 to 39 units.
+rate they hold to within 11\% wherever the recall time exceeds four steps.
 
 The write per input of Fig.~\ref{fig:mixing}b is $2\|R^\flat[E(\tfrac34)-E(\tfrac14)]r_*\|$ at the stationary state
 $r_*$ of the equal-phase channel, for the input patterns $(1,\dots,1)$ and $\sqrt2\cos(2\pi i/5)$ multiplying $X_i$.
@@ -468,62 +386,95 @@ opposite-phase channel rises from 1.8 at $\gamma=1$ to 23 at $\gamma=4096$, and 
 
 Table~\ref{tab:memory} collects the capacities. With exact readout all capacities of a readout add up to its rank, 45
 here~\cite{Dambre2012}, so raising the linear memory capacity from 15 to 35 units leaves at most 10 instead of 30 for
-products of inputs. The fixed-loss control in Table~\ref{tab:memory} gives a smaller gain than the lifetime-dependent input schedule.
+products of inputs.
 
 \begin{table}[t]
 \caption{\label{tab:memory}Linear memory capacity $\sum_\tau C_\tau$ of the five-spin reservoir in units (ceiling
 45), mean of eight reservoirs, with exact readout or, as recoverable capacity, at a budget of $10^9$ reservoir steps
-per output step (Sec.~\ref{sec:price}).}
+per output step (Sec.~\ref{sec:price}). The last two rows compare the three channels at one strong loss rate.}
 \centering\footnotesize\setlength{\tabcolsep}{1.5pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
  & independent & opposite & equal\\
  & decay & phases & phases\\\midrule
 tuned loss, $\eta=1$ & 14.5 & 14.7 & 31$^{a}$\\
-fixed-loss control$^{b}$ & 16 & 25 & --\\
-gentle writing & 35 ($\gamma=\frac1{64}$) & 36 ($\gamma=256$) & --$^{c}$\\
-budget $10^9$, $\eta=1$ & 13 ($\gamma\approx\frac18$) & 12 ($\gamma\approx16$) & 13 ($\gamma=1$)$^{d}$\\
-budget $10^9$, gentle & 34 ($\gamma=\frac1{64}$)$^{d}$ & 21 ($\gamma\approx64$) & --$^{c}$\\
+gentle writing & 35 ($\gamma=\frac1{64}$) & 36 ($\gamma=256$) & --$^{b}$\\
+budget $10^9$, $\eta=1$ & 13 ($\gamma\approx\frac18$) & 12 ($\gamma\approx16$) & 13 ($\gamma=1$)$^{c}$\\
+budget $10^9$, gentle & 34 ($\gamma=\frac1{64}$)$^{c}$ & 21 ($\gamma\approx64$) & --$^{b}$\\
+$\gamma=64$, exact$^{d}$ & 1.2 & 14.7 & 30.6\\
+$\gamma=64$, sampled$^{d}$ & 0.2 & 11.5 & 1.0\\
 \bottomrule
 \end{tabular}
 
 \smallskip
 \raggedright\footnotesize
-$^{a}$At strong loss. $^{b}$At $\gamma=1$ and $\eta=\frac1{32}$, two reservoirs. $^{c}$The uniform input already
-writes gently in this channel. $^{d}$Smallest loss rate sampled. The capacity falls as the loss grows.
+$^{a}$At strong loss. $^{b}$The uniform input already writes gently in this channel. $^{c}$Smallest loss rate
+sampled. The capacity falls as the loss grows. $^{d}$At $\eta=1$. Sampled: $10^6$ preparations per setting and step, state with the full history.
 \end{table}
+
+\subsection{Best input amplitude (Secs.~\ref{sec:writing} and~\ref{sec:price})}
+\label{app:num-amplitude}
+We mapped the linear memory capacity over loss rates and amplitudes: the first four reservoirs, independent decay at
+$\gamma=2^{-8}$ to $2^{-2}$ and at 1, the opposite-phase channel at $\gamma=1$, 4 and $2^3$ to $2^8$, and fifteen
+amplitudes from $\eta=2^{-7}$ to 1, with exact features or $10^6$ to $10^8$ preparations per setting and step from
+the state with the full history. With exact readout the capacity rises as the input weakens, up to 43 of the 45
+units. With $10^6$ to $10^8$ preparations an optimum exists. Its amplitude falls with the decay-only lifetime, the
+single-input recall time at $\eta=2^{-8}$, with fitted exponents between $-0.40$ and $-0.46$ in all six fits over the
+loss rates whose lifetime is at least four steps. Without the loss rates whose recall reaches past the 300 delays
+summed, the exponents are $-0.48$ to $-0.56$ with independent decay and $-0.38$ to $-0.39$ with the opposite-phase
+channel. The optimum is flat: one amplitude for all loss rates recovers on average 91\% to 97\% of the capacity at
+the optimum tracked at each loss rate, so the input need not be tuned to the loss rate.
 
 \subsection{Measurement (Sec.~\ref{sec:price})}
 \label{app:num-measurement}
-Weak signals cost measurements: with independent decay at $\gamma=64$ the previous input moves the state by about $10^{-9}$, which gives
-perfect recall with exact readout and almost none with $10^8$ preparations per setting and step. Gentle writing makes
-the signal fainter: with the opposite-phase channel it falls from $8\times10^{-5}$ at the full amplitude to
-$5\times10^{-6}$, against $7\times10^{-5}$ with independent decay and gentle writing at $\gamma=1/32$. Restarting each
-run from $|00000\rangle$, as the replay does, raises these to $4\times10^{-5}$ and $1.2\times10^{-4}$, about sevenfold
-for the opposite-phase channel and less than twofold for independent decay. At the full amplitude the signal of the
-equal-phase channel falls from $2\times10^{-4}$ at $\gamma=1$ to $4\times10^{-7}$ at $\gamma=64$, which is why this
-channel loses capacity as the loss grows once measurements are counted.
+Weak signals cost measurements: with independent decay at $\gamma=64$ the previous input moves the state by about
+$10^{-9}$, which gives perfect recall with exact readout and almost none with $10^8$ preparations per setting and
+step. Gentle writing makes the signal fainter: with the opposite-phase channel it falls from $8\times10^{-5}$ at the
+full amplitude to $5\times10^{-6}$, against $7\times10^{-5}$ with independent decay and gentle writing at
+$\gamma=1/32$. Restarting each run from $|00000\rangle$, as the replay does, raises these to $4\times10^{-5}$ and
+$1.2\times10^{-4}$. At the full amplitude the signal of the equal-phase channel falls from $2\times10^{-4}$ at
+$\gamma=1$ to $4\times10^{-7}$ at $\gamma=64$, which is why this channel loses capacity as the loss grows once
+measurements are counted.
 
 The replayed range $\tau_{90}$ grows with the memory lifetime, though more slowly: along the gentle line of the
-opposite-phase channel from about 30 steps at $\gamma=16$ to 130 at $\gamma=256$. The budget changes the preferred loss rates within the sampled range: at $10^{10}$ reservoir steps per output step
-the best sampled loss rate of the equal-phase channel moves from $\gamma=1$ to about 16,
-with 17 units, while the opposite-phase channel with gentle writing peaks near $\gamma=64$ with 25. Gentle writing becomes
-worthwhile once each setting is prepared about $2\times10^4$ times per step with independent decay and $10^5$ times with the
-opposite-phase channel. Below these crossings the full amplitude wins: at $10^4$ preparations per setting and step it
-keeps 11 units with independent decay and 8 with the opposite-phase channel, against 9 and 3 with gentle writing. With
-the input on one spin, which writes more gently by itself, the crossings move to about $3\times10^5$ and $4\times10^6$
-preparations. With the full history, eight times more training inputs change the sampled capacity by less than 1.3
-units.
+opposite-phase channel from about 30 steps at $\gamma=16$ to 130 at $\gamma=256$. The thresholds of Sec.~\ref{sec:price}
+are the crossings of the capacities at the full amplitude and with gentle writing, from replayed runs at $10^3$ to
+$10^{8.5}$ preparations per setting and step. With the full history, eight times more
+training inputs change the sampled capacity by less than 1.3 units.
 
-For the matched decay-only lifetime of Fig.~\ref{fig:sampling}b we find, for every channel and reservoir, the loss rate at which
+\begin{table}[t]
+\caption{\label{tab:matched}The eight decay channels at a decay-only lifetime of 32 input steps and $\eta=0.35$:
+loss rate, write strength, and linear memory capacity with exact readout and with $10^6$ preparations per measurement
+setting and step. Mean of eight reservoirs.}
+\centering\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & loss & write & \multicolumn{2}{c}{capacity}\\
+channel & rate $\gamma$ & strength & exact & at $10^6$\\\midrule
+independent & 0.092 & 1.3 & 23.7 & 17.4\\
+exchange & 0.064 & 0.30 & 25.1 & 10.1\\
+gain/loss & 0.079 & 0.46 & 24.4 & 12.5\\
+pairwise & 168 & 1.5 & 18.2 & 12.4\\
+opposite phases & 101 & 0.68 & 25.3 & 15.0\\
+two channels & 73 & 0.011 & 26.6 & 0.3\\
+equal phases & 47 & 0.018 & 35.3 & 0.3\\
+dephasing & 143 & 0 & 0.0 & 0.2$^{a}$\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\raggedright\footnotesize
+$^{a}$A readout without any recall reads about 0.2 units, the floor of the sum over 300 delays.
+\end{table}
+
+For the matched decay-only lifetime of Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} we find, for every channel and reservoir, the loss rate at which
 $t_{\mathrm{leak}}=32$ steps, at weak loss without protected operators and at strong loss with them, and run the
 reservoir there with $\eta=\sqrt{4/32}$. The write strength is the Euclidean norm of the Pauli
 coefficients $\Tr(PW)$, over all Pauli strings $P$, of the change $W$: the commutator $-i[H_{\mathrm{in}},\rho_*]$ with
 $H_{\mathrm{in}}=h\sum_iX_i$ and $\rho_*$ the stationary state, projected spectrally onto the slow modes. These are the
-protected ones, or without protected operators those decaying at most four times faster than the slowest. The capacity
-that survives $10^6$ preparations rises with the write strength, from 0.3 units for collective decay with equal
-phases, through one channel or two, to 15 for the opposite-phase channel and 17 for independent decay, and power laws fitted within the channels without and with dark states (dotted in
-Fig.~\ref{fig:sampling}b) have exponents 2.0, as linear accumulation of the write predicts, and 1.5.
+protected ones, or without protected operators those decaying at most four times faster than the slowest. The loss
+rate is matched for each reservoir, so Table~\ref{tab:matched} gives its mean. Power laws fitted to the feature variance within the channels without and with dark states
+(dotted in Fig.~\ref{fig:sampling}b) have exponents 2.0, as linear accumulation of the write predicts, and 1.5.
 
 \subsection{Ordinary noise}
 \label{app:num-noise}
