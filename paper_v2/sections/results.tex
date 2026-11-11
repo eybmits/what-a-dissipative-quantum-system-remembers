@@ -25,7 +25,7 @@ one past input recalled perfectly, and the ceiling is 45, the number of features
 $t_{\mathrm{mem}}$ says how long the variance of a stored signal survives (Appendix~\ref{sec:order}). Sections~\ref{sec:clock}
 to~\ref{sec:writing} use exact expectation values, as if every measurement were repeated infinitely often, and
 Sec.~\ref{sec:price} counts measurements. The capacities are numerical results for five spins with all-to-all
-couplings, while the equal-coupling identity, the slowing of the dark modes, the alignment rule and the mixing law
+couplings, while the equal-coupling identity, the slowing of the dark modes, the alignment rule and the two theorems
 below hold for any number of spins and any Hamiltonian. How the signal scales with the number of spins is open, and
 reservoirs whose signals concentrate need exponentially many measurements~\cite{Sannia2025Concentration}.
 
@@ -144,8 +144,9 @@ grows. Gentle writing holds it at 40 units.
 while a non-aligned input keeps writing.
 \textbf{c}~The number of inputs mixed into a stored signal follows the mixing law, and gentle writing keeps it near
 one.
-\textbf{d}~One qubit: the stored signal is largest at an intermediate turn per input (dotted), where single inputs still
-carry 80\% of the capacity.}
+\textbf{d}~The gentle-writing limit (lines) against the five-spin recursion (markers), without a fitted parameter:
+the share of single inputs in the capacity (solid, filled) and the signal they leave in the features, scaled to its
+maximum (dashed, open).}
 \label{fig:mixing}
 \end{figure*}
 
@@ -158,7 +159,7 @@ Three kinds of evidence support the law. It is proved for the reset model, in an
 is quantum: classical state-affine reservoirs, whose state is updated by an input-dependent linear map plus an
 offset~\cite{GrigoryevaOrtegaSAS2018}, obey it under the same conditions. The proof carries over to physical channels
 without a reset, with the slow decay in place of the reset, when a single direction of the stored covariance is slow
-(Appendix~\ref{app:physical}), while several slow directions keep distinct mixing scales (Appendix~\ref{app:slowdir}).
+(Appendix~\ref{app:physical}), while several slow directions keep distinct mixing scales.
 For three spins, interval arithmetic certifies these conditions (Appendix~\ref{app:spins}). For five spins the order
 recursion, Eq.~\eqref{eq:recursion}, gives the distribution of $D$ exactly, and we compare it with the law
 (Fig.~\ref{fig:mixing}c).
@@ -202,16 +203,30 @@ known~\cite{Jaeger2007Leaky,Inubushi2017,Cindrak2026}: it removes the products t
 few steps. The mixing law adds what a long memory requires. Because the disturbance $s$ grows as the square of the
 turn, the accumulated mixing $s\,t_{\mathrm{mem}}$ stays fixed only if the amplitude falls as
 $1/\sqrt{t_{\mathrm{mem}}}$. We call an input weakened in this way gentle writing. Theorem~\ref{thm:law} proves that
-it is necessary: at a fixed input the share of single inputs vanishes as the memory grows. That it is sufficient is
-exact in three systems. One qubit has a closed form, three spins have certified bounds (Appendices~\ref{app:qubit}
-and~\ref{app:spins}), and for five spins the recursion shows that single inputs keep between 0.82 and 0.90 of the
-capacity while the lifetime grows from 20 to 6600 steps (Appendix~\ref{app:num-capacity}). The capacity then rises to
-40 units and stays there (Fig.~\ref{fig:mixing}a).
+it is necessary: at a fixed input the share of single inputs vanishes as the memory grows. Our second theorem proves
+that it is sufficient:
 
-In the five-spin reservoir the amplitude falls as
-$1/\sqrt\gamma$ for the opposite-phase channel, whose lifetime grows with the loss, and as $\sqrt\gamma$ for independent
-decay, whose lifetime grows as the loss weakens (Fig.~\ref{fig:clock}c, circles). This holds $s\,t_{\mathrm{mem}}$ at
-0.01. Within the 300 delays that Fig.~\ref{fig:clock}c sums, the linear memory capacity rises from about 15 to 35
+\begin{keybox}
+\begin{theorem}[Gentle-writing limit, made precise in Appendix~\ref{app:gentle}]\label{thm:gentle}
+Let one step of a reservoir be a rotation, a leak of small rate $\epsilon$ and an input-dependent turn of amplitude
+$\eta$, and let every slow covariance decay. As $\epsilon\to0$ with $\nu=\eta^2/\epsilon$ fixed, the stored signal and
+the distribution of $D$ converge to the solution of a linear problem, which depends on the input only through $\nu$.
+The mean of $D$ stays finite, and single inputs keep a fixed share of the capacity. As $\nu\to\infty$ the limit joins
+the mixing law, with $s\,t_{\mathrm{mem}}$ proportional to $\nu$.
+\end{theorem}
+\end{keybox}
+
+Gentle writing holds $\nu$ fixed, so the memory grows without limit while its content stays the same. The leak is
+$\epsilon=\gamma$ for independent decay and $1/\gamma$ for the dark states, and the limit follows from the Hamiltonian
+and the jump operators without a fitted parameter. It reproduces the five-spin recursion (Fig.~\ref{fig:mixing}d):
+from $\nu=1/16$ to 64 the two agree on the share of single inputs to within 0.002 and 0.009
+(Appendix~\ref{app:num-capacity}). At $\nu=1$ the limit gives single inputs 0.89 of the capacity with independent
+decay and 0.92 with the opposite-phase channel, and 40 units of linear memory capacity for both, where the recursion
+settles while the lifetime grows from 20 to 6600 steps (Fig.~\ref{fig:mixing}a). One qubit and three spins are
+special cases, with a closed form and with certified bounds (Appendices~\ref{app:qubit} and~\ref{app:spins}).
+
+In the five-spin reservoir $\nu=1$ is an amplitude of $1/\sqrt\gamma$ for the opposite-phase channel and of
+$\sqrt\gamma$ for independent decay (Fig.~\ref{fig:clock}c, circles), which holds $s\,t_{\mathrm{mem}}$ at 0.01. Within the 300 delays that Fig.~\ref{fig:clock}c sums, the linear memory capacity rises from about 15 to 35
 units for both channels (Table~\ref{tab:memory}). Both effects of a weak input contribute: with the opposite-phase
 channel the accumulated mixing accounts for 43\% of the inputs that gentle writing removes from the mean of $D$ at a
 lifetime of 20 steps, for 84\% at 200 steps and for 99\% at 750. Since the capacities of all orders add up to the 45
@@ -225,9 +240,11 @@ This amplitude is a ceiling and not an optimum. The ceiling limits the number of
 exact readout: on a map of loss rates and amplitudes the capacity keeps rising as the input weakens, up to 43 of the
 45 units (Appendix~\ref{app:num-amplitude}). A weaker input mixes less, and without measurement
 noise a fainter record costs nothing. The lifetime thus sets only a ceiling on the input strength,
-$s\,t_{\mathrm{mem}}\lesssim1$. One qubit shows what a weak input gives up (Fig.~\ref{fig:mixing}d,
-Appendix~\ref{app:qubit}). Its stored signal is largest when the squared turn per input, accumulated over one relaxation
-time, is of order one, and it vanishes in proportion to this number for weaker inputs.
+$s\,t_{\mathrm{mem}}\lesssim1$. Theorem~\ref{thm:gentle} shows what a weak input gives up (Fig.~\ref{fig:mixing}d).
+The signal that single inputs leave in the features vanishes in proportion to $\nu$ for weak inputs. It is largest at
+$\nu=22$ to 46 with independent decay and at 68 to 215 with the opposite-phase channel, where single inputs carry
+0.38 to 0.55 of the capacity. Because the limit depends on the amplitude only
+through $\nu$, the amplitude of the largest signal falls as $1/\sqrt{t_{\mathrm{mem}}}$.
 
 \begin{figure*}[!t]
 \centering

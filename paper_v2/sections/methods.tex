@@ -1,10 +1,10 @@
 \section{Methods}
 \label{sec:methods}
-This appendix specifies the five-spin simulations and defines the quantities that the main text uses.
-Table~\ref{tab:times} lists the quantities and terms of the text.
+This appendix specifies the five-spin simulations and defines the quantities of the main text, which
+Table~\ref{tab:times} lists.
 
-\begin{table}[t]
-\caption{\label{tab:times}Quantities and terms of the text. Times are in input steps of length $\Delta t$.}
+\begin{table}[!t]
+\caption{\label{tab:times}Quantities of the text. Times are in input steps of length $\Delta t$.}
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lp{0.70\columnwidth}@{}}
 \toprule
@@ -17,10 +17,8 @@ $t_{\mathrm{leak}}$ & decay-only lifetime: the recall time with the input held a
 $\tau_{90}$ & replayed range: the first $\tau_{90}$ delays hold 90\% of the exact recall\\
 $D$ & number of distinct past inputs that a stored contribution depends on\\
 $s$ & disturbance per input: the part of a stored signal that one input turns differently from the average input\\
-aligned & an input field whose strength on each spin follows the phases of the collective channel\\
-gentle writing & an input amplitude that falls as $1/\sqrt{t_{\mathrm{mem}}}$\\
-write strength & how strongly an input changes the slow modes of the stationary state\\
-recoverable & the capacity that survives sampling with $n$ preparations per setting and step\\
+$\nu$ & squared input amplitude per leak, $\eta^2/\epsilon$, which gentle writing holds fixed
+  (Appendix~\ref{app:gentle})\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -53,7 +51,7 @@ for every channel and every Hamiltonian. The protected operators form the kernel
 not the number of dark states: the ten dark states of a collective channel carry $10\times10=100$ protected
 operators.
 
-\begin{table}[t]
+\begin{table}[!t]
 \caption{\label{tab:families}Decay channels at five spins, each with $\Tr K=80\gamma$, and the number of operators
 that the dissipator leaves unchanged. The operators $\sigma_i^\mp$ lower and raise spin $i$, with $i<j$ for pairwise
 decay, $i\neq j$ for exchange and $c=(1,1,1,-1,-1)$.}

@@ -17,7 +17,7 @@
 \maketitle
 \noindent This note writes out the derivation that Appendix D of the paper summarises. It uses the notation of the
 paper: the dissipator $\mathcal D$ at unit loss rate, the mean covariance step $\mathcal B$ and the full covariance
-step $\mathcal T$ of its Appendix A.4, and the mixing law without a reset of its Appendix B.5. The interval programs in
+step $\mathcal T$ of its Appendix A.4, and the mixing law without a reset of its Appendix B.3. The interval programs in
 \texttt{spin\_certificates.zip}, next to this note, check every strict inequality used below.
 
 \paragraph{Statement.}
@@ -72,7 +72,7 @@ the leak of the strong-loss generator (Appendix A.3 of the paper) in between.
 
 \paragraph{Fixed amplitude.}
 At $\eta=1$ the dark rotations $O_u$ of the two signs differ, and the computer checks the conditions of the mixing law
-without a reset (Appendix B.5 of the paper) on the eight traceless dark coordinates. The average rotation forgets. The identity is the only covariance that the random rotations leave unchanged. Three constants from the first-order terms of
+without a reset (Appendix B.3 of the paper) on the eight traceless dark coordinates. The average rotation forgets. The identity is the only covariance that the random rotations leave unchanged. Three constants from the first-order terms of
 Eq.~\eqref{eq:slowstep} are positive: the strength with which an input writes, the rate $\kappa$ at which the slow
 covariance leaks, and the mixing fraction $s_0=1-\|\mathbb EO_u\|_F^2/8$. The law then gives an exponential
 distribution of the order divided by $\gamma$, with rate $\kappa/s_0$, and the variance of

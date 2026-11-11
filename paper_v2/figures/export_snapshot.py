@@ -10,6 +10,7 @@ Sources (exact expectation values, except for the finite-sampling test of the fi
   results/review_runs/{extend,scaled,spectrum,dephasing,variance}.jsonl   runs added for the reviews
   results/clock/*.jsonl                                           clock, sampling, budget and replay runs (run_clock.py)
   results/sizes/memory.jsonl                                      memory against loss at three, four and six spins
+  results/gentle_limit/{limit,exact,dark}.jsonl                   gentle-writing limit and the recursion (run_gentle_limit.py)
   results/measurement_full_v3/measurement_full_aggregate.json     finite sampling of the first version
 """
 from __future__ import annotations
@@ -276,6 +277,27 @@ def five_orders_block():
     return out
 
 
+def gentle_block():
+    """The gentle-writing limit (run_gentle_limit.py): the limit on its grid of nu for every reservoir and channel,
+    the recursion of the full five-spin reservoir at single values of nu, and the recursion of the strong-loss
+    generator against its limit. `main` is the reservoir that was also run at the larger leak."""
+    path = RES / "gentle_limit"
+    if not all((path / f"{name}.jsonl").exists() for name in ("limit", "exact", "dark")):
+        return None
+    fields = ("seed", "design", "unknowns", "reach", "rank", "gap", "slope", "nu", "share1", "share2", "mean_order",
+              "mixing", "signal", "decay", "share1_leading")
+    limit = sorted(({k: r[k] for k in fields if k in r} for r in jsonl(path / "limit.jsonl")),
+                   key=lambda r: (r["design"], r["seed"]))
+    fields = ("seed", "design", "gamma", "eta", "nu", "share1", "share2", "mean_order", "rank", "signal")
+    exact = sorted(({k: r[k] for k in fields} for r in jsonl(path / "exact.jsonl")),
+                   key=lambda r: (r["design"], r["seed"], r["gamma"], r["nu"]))
+    count = defaultdict(int)
+    for r in exact:
+        count[r["seed"]] += 1
+    dark = sorted(jsonl(path / "dark.jsonl"), key=lambda r: (r["nu"], r["gamma"]))
+    return {"main": max(count, key=count.get), "limit": limit, "exact": exact, "dark": dark}
+
+
 def pattern_block():
     """The clock and the sampling test with the input on spin 1 only."""
     out = {}
@@ -503,7 +525,8 @@ def main():
                        ("prefactor", prefactor_block()), ("budget_low", budget_low_block()),
                        ("five_orders", five_orders_block()), ("replay", replay_block()),
                        ("washout", washout_block()), ("budget_replay", budget_replay_block()),
-                       ("replay_shots", replay_shots_block()), ("sizes", sizes_block())):
+                       ("replay_shots", replay_shots_block()), ("sizes", sizes_block()),
+                       ("gentle_limit", gentle_block())):
         if block is not None:
             snap[key] = block
     OUT.parent.mkdir(parents=True, exist_ok=True)

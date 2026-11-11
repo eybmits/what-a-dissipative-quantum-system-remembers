@@ -238,18 +238,37 @@ def fig2():
 
 
 # ----------------------------------------------------------------------------------------------- Figure 3
-def qubit(k):
-    chi = k ** 2 / ((k + 2) * (k + 1))
-    size = 4 * k / ((k + 2) * (3 * k + 2))
-    single = 1 - chi
-    order = (1 + chi) / (1 - chi)
-    return size, single, order
+def gentle_limit(ax):
+    """The gentle-writing limit (lines) against the recursion of the full five-spin reservoir at its weakest leak
+    (markers), for one reservoir: the share of single inputs in the capacity (solid, filled) and the variance they
+    leave in the features, scaled to the largest value of the limit (dashed, open)."""
+    G = SNAP["gentle_limit"]
+    for fam in ("separate", "signed"):
+        col = st.FAMILY[fam]
+        lim = next(r for r in G["limit"] if r["design"] == fam and r["seed"] == G["main"])
+        top = max(lim["signal"])
+        ax.plot(lim["nu"], lim["share1"], color=col, path_effects=st.halo(), zorder=2)
+        ax.plot(lim["nu"], np.array(lim["signal"]) / top, color=col, lw=st.LW_THIN, ls=(0, (3, 1.5)), zorder=2)
+        pts = [e for e in G["exact"] if e["design"] == fam and e["seed"] == G["main"]]
+        weakest = (max if fam == "signed" else min)(e["gamma"] for e in pts)
+        pts = [e for e in pts if e["gamma"] == weakest]
+        ax.plot([e["nu"] for e in pts], [e["share1"] for e in pts], "o", ms=st.MS - 0.4, mfc=col, mec=col, mew=0.9,
+                ls="none", zorder=4)
+        ax.plot([e["nu"] for e in pts], [e["signal"] / top for e in pts], "o", ms=st.MS - 0.4, mfc="white", mec=col,
+                mew=0.9, ls="none", zorder=3)
+    ax.set_xscale("log")
+    st.decades(ax, "x", every=2)
+    ax.set_xlim(0.01, 1000)
+    ax.set_ylim(0, 1.1)
+    ax.set_yticks([0, 0.5, 1])
+    ax.set_xlabel(r"$\nu=\eta^2/\epsilon$")
+    ax.set_ylabel(r"Share, signal")
 
 
 def fig3():
     """The price of a long memory and how the input pays it: the recall against the memory lifetime, the write along
-    and across the phases, the five-spin order against the mixing law and the qubit, in one row; the keys sit inside
-    the panels (a names its markers, its colours are those of c)."""
+    and across the phases, the five-spin order against the mixing law and the gentle-writing limit, in one row; the
+    keys sit inside the panels (a names its markers, its colours are those of c)."""
     fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c, d = (st.wide_place(fig, k) for k in range(4))
     dashed = (0, (3, 1.5))
@@ -295,28 +314,12 @@ def fig3():
     five_law(c)
     c.set_ylim(0.8, 60)
 
-    # d: one qubit in the limit of slow relaxation
-    k = np.geomspace(0.01, 100, 400)
-    size, single, order = qubit(k)
-    d.fill_between(k, 0, size / size.max(), color=st.GENTLE, alpha=0.10, lw=0)
-    d.plot(k, size / size.max(), color=st.GENTLE, path_effects=st.halo())
-    d.plot(k, single, color=st.INK2, ls=dashed, path_effects=st.halo())
-    best = 2 / np.sqrt(3)
-    d.plot([best], [1.0], "o", ms=st.MS, mfc="white", mec=st.GENTLE, mew=0.9, zorder=4)
-    d.plot([best], [qubit(best)[1]], "o", ms=st.MS, mfc="white", mec=st.INK2, mew=0.9, zorder=4)
-    # the largest signal, up to the curve; the key sits above the curves
-    d.plot([2 / np.sqrt(3)] * 2, [0, 1], color=st.GENTLE, lw=st.LW_GUIDE, ls=(0, (1, 1.6)))
-    d.set_xscale("log")
-    st.decades(d, "x")
-    d.set_xlim(0.02, 50)
-    d.set_ylim(0, 1.4)
-    d.set_yticks([0, 0.5, 1])
-    d.set_xlabel(r"$\theta^2/\epsilon$")
-    d.set_ylabel(r"Signal, share")
+    # d: the gentle-writing limit against the five-spin recursion
+    gentle_limit(d)
 
     st.fit_row(fig, (a, b, c, d), (80, 76, 118, 78))
     for ax, name, title in zip((a, b, c, d), "abcd", ("Memory against lifetime", "Writing into dark states",
-                                                      "Mixing law", "One qubit")):
+                                                      "Mixing law", "Gentle-writing limit")):
         st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c, d)])
     st.inkey(a, [(st.marker_handle(st.INK3, mfc=st.INK3, mec=st.INK3, mew=0.9), "full amplitude"),
@@ -331,8 +334,9 @@ def fig3():
                   "opposite phases"),
                  (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing")], "upper left")
     st.along(c, "mixing law", (1, 1), (10, 10), (2.0, 2.0))
-    st.inkey(d, [(st.line_handle(st.GENTLE), "signal"),
-                 (st.line_handle(st.INK2, ls=dashed), "single inputs")], "upper right")
+    st.inkey(d, [(st.line_handle(st.INK3, marker="o", mfc=st.INK3), "share"),
+                 (st.line_handle(st.INK3, ls=dashed, lw=st.LW_THIN, marker="o"), "signal")], "upper left",
+             at=(0.06, 0.66), handle=11.0)
     st.save(fig, HERE / "fig3_price.pdf")
 
 
