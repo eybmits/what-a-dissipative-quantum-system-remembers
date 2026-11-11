@@ -10,14 +10,14 @@ Table~\ref{tab:times} lists.
 \toprule
 $t_{\mathrm{mem}}$ & memory lifetime: how long the variance of a stored signal survives, whatever inputs it combines
   (Appendix~\ref{sec:order})\\
-$t_{\mathrm f}$ & single-input recall time: how long one input stays linearly readable on its own
+$t_{\mathrm f}$ & recall time: how long one input stays linearly readable on its own
   (Appendix~\ref{sec:methods-slow})\\
-$t_{\mathrm{leak}}$ & decay-only lifetime: the recall time with the input held at its mean value
+$t_{\mathrm{rel}}$ & relaxation time: the recall time with the input held at its mean value
   (Appendix~\ref{sec:methods-sampling})\\
 $\tau_{90}$ & replayed range: the first $\tau_{90}$ delays hold 90\% of the exact recall\\
-$D$ & number of distinct past inputs that a stored contribution depends on\\
-$s$ & disturbance per input: the part of a stored signal that one input turns differently from the average input\\
-$\nu$ & squared input amplitude per leak, $\eta^2/\epsilon$, which gentle writing holds fixed
+$D$ & number of distinct past inputs that a part of the stored signal depends on\\
+$s$ & mixing fraction: the part of a stored signal that one input turns differently from the average input\\
+$\nu$ & squared input amplitude per leak, $\eta^2/\epsilon$, which a scaled amplitude holds fixed
   (Appendix~\ref{app:gentle})\\
 \bottomrule
 \end{tabular}
@@ -29,7 +29,7 @@ The Hamiltonian of Eq.~\eqref{eq:H} uses $h=1/2$ and couplings $J_{ij}$ drawn un
 transverse field runs from $h$ to $2h$. Each input $u$ is drawn uniformly from $[0,1]$ and held for a step of length
 $\Delta t=1/2$. We integrate Eq.~\eqref{eq:lindblad} in the 1024-dimensional basis of Pauli operators and evaluate the
 step map $E(u)=e^{\Delta t\mathcal L(u)}$ by Chebyshev interpolation in $u$ at ten nodes. Each reservoir draws its
-couplings and its input stream from one seed, and every channel uses the same eight seeds. After a washout of $\max(800,60\gamma)$ steps, at least four times the single-input recall
+couplings and its input stream from one seed, and every channel uses the same eight seeds. After a washout of $\max(800,60\gamma)$ steps, at least four times the recall
 time, we record the 45 features, the expectation values of $X_i$, $Y_i$, $Z_i$ and of $X_iX_j$, $Y_iY_j$, $Z_iZ_j$, for
 2000 training, 400 validation and 1600 test inputs. The readout is a least-squares fit with an intercept on the
 training and validation inputs, and $C_\tau$ is the squared correlation of its estimate with $u_{t-\tau}$ on the test
@@ -47,9 +47,8 @@ so the $4^N$ eigenvalues $\lambda$ of the generator obey
   \frac{1}{4^N}\sum\operatorname{Re}\lambda=-\frac{\Tr K}{2^N}
   \label{eq:trace}
 \end{equation}
-for every channel and every Hamiltonian. The protected operators form the kernel of the dissipator. Their number is
-not the number of dark states: the ten dark states of a collective channel carry $10\times10=100$ protected
-operators.
+for every channel and every Hamiltonian. The kernel of the dissipator is larger than the set of dark states: the ten
+dark states of a collective channel carry $10\times10=100$ operators.
 
 \begin{table}[!t]
 \caption{\label{tab:families}Decay channels at five spins, each with $\Tr K=80\gamma$, and the number of operators
@@ -58,7 +57,7 @@ decay, $i\neq j$ for exchange and $c=(1,1,1,-1,-1)$.}
 \centering\footnotesize\setlength{\tabcolsep}{3.4pt}
 \begin{tabular}{lll}
 \toprule
-channel & jump operators & \begin{tabular}[b]{@{}l@{}}protected\\operators\end{tabular}\\\midrule
+channel & jump operators & \begin{tabular}[b]{@{}l@{}}kernel\\dimension\end{tabular}\\\midrule
 independent & $\sqrt\gamma\,\sigma_i^-$ & 1\\
 equal phases & $\sqrt\gamma\sum_i\sigma_i^-$ & 100\\
 opposite phases & $\sqrt\gamma\sum_ic_i\sigma_i^-$ & 100\\
@@ -71,13 +70,12 @@ dephasing & $\sqrt{\gamma/2}\,Z_i$ & 32\\
 \end{tabular}
 \end{table}
 
-\subsection{Slow modes, single-input recall time and the strong-loss generator}
+\subsection{Slow modes, recall time and the strong-loss generator}
 \label{sec:methods-slow}
 The input-averaged step $\bar E=\mathbb E_uE(u)$ is computed by six-point Gauss--Legendre quadrature. Its eigenvalues
-$\lambda_j$ give decay rates $\kappa_j=-\ln|\lambda_j|/\Delta t$. If the dissipator protects $n$ operators, the slow
-modes are the $n-1$ slowest decaying ones besides the stationary state, and the single-input recall time is
-$t_{\mathrm f}=1/(\Delta t\,\bar\kappa)$, with $\bar\kappa$ their mean rate. Without protected operators we use the
-slowest mode. The averaged step carries the part of a stored signal that still depends on a single input. Its mean
+$\lambda_j$ give decay rates $\kappa_j=-\ln|\lambda_j|/\Delta t$. If the kernel of the dissipator has dimension $n$, the slow
+modes are the $n-1$ slowest decaying ones besides the stationary state, and the recall time is
+$t_{\mathrm f}=1/(\Delta t\,\bar\kappa)$, with $\bar\kappa$ their mean rate. For $n=1$ we use the slowest mode. The averaged step carries the part of a stored signal that still depends on a single input. Its mean
 rate adds decay and mixing to second order in the amplitude, $\bar\kappa=\bar\kappa_0+c\,\eta^2+O(\eta^4)$, because
 the inputs are distributed symmetrically about their mean and the term of $\bar E$ linear in $\eta$ vanishes.
 Appendix~\ref{app:num-mixing} tests this sum numerically. Figure~\ref{fig:clock}d shows instead the decay
@@ -86,17 +84,16 @@ $n-1$ slowest of them dark and all faster ones bright.
 
 Let $\mathcal D$ be the unit-rate dissipator, $\mathcal P=\lim_{t\to\infty}e^{t\mathcal D}$ the projector onto its
 kernel and $\mathcal S=(\mathcal D+\mathcal P)^{-1}-\mathcal P$ its inverse on the decaying operators. At strong loss,
-eliminating the decaying operators to second order~\cite{Zanardi2014,Reiter2012} gives the generator of the protected
-coordinates,
+eliminating the decaying operators to second order~\cite{Zanardi2014,Reiter2012} gives the generator on the kernel,
 \begin{equation}
   \mathcal G(u)=\mathcal P\mathcal H(u)\mathcal P-\frac1\gamma\,\mathcal P\mathcal H(u)\mathcal S\mathcal H(u)\mathcal P ,
   \label{eq:reduced}
 \end{equation}
-with $\mathcal H=-i[H,\cdot\,]$. The first term is the Hamiltonian restricted to the protected operators, which turns
-them, and the second is the loss through brief excursions into bright states.
+with $\mathcal H=-i[H,\cdot\,]$. The first term is the Hamiltonian restricted to the kernel, which turns its
+operators, and the second is the loss through brief excursions into bright states.
 
-Gentle writing uses the amplitude $\eta=\min(1,\gamma^{-1/2})$ of Sec.~\ref{sec:shapes} for the opposite-phase channel
-and $\eta=\min(1,\gamma^{1/2})$ for independent decay.
+The scaled amplitude is $\eta=\min(1,\gamma^{-1/2})$ for the opposite-phase channel and
+$\eta=\min(1,\gamma^{1/2})$ for independent decay, which is $\nu=1$ in Appendix~\ref{app:gentle}.
 
 \subsection{Number of inputs mixed}
 \label{sec:order}
@@ -131,12 +128,12 @@ Eq.~\eqref{eq:recursion} on the 1023 traceless Pauli coordinates (Appendix~\ref{
 
 \subsection{Finite sampling and the measurement budget}
 \label{sec:methods-sampling}
-A quantum measurement gives a random outcome, so every feature is an average over $n$ preparations per measurement
+A quantum measurement gives a random outcome, so every feature is an average over $n$ shots per measurement
 setting and step. We use three settings, with all spins read along $X$, $Y$ or $Z$. For each step we form the outcome
-distributions of the three settings and draw $n$ preparations from each. The readout is fitted as above, with a ridge
+distributions of the three settings and draw $n$ shots from each. The readout is fitted as above, with a ridge
 chosen from fourteen values between 0 and $10^4$ on the validation inputs. In Sec.~\ref{sec:price} the distributions
 come from the replay: each output step replays its last $\tau_{90}$ inputs from $|00000\rangle$, where the first
-$\tau_{90}$ delays hold 90\% of the exact recall. We count the budget $B$ in reservoir steps, preparations times replayed steps summed over the three settings, per
+$\tau_{90}$ delays hold 90\% of the exact recall. We count the budget $B$ in reservoir steps, shots times replayed steps summed over the three settings, per
 output step, so that $n=B/(3\tau_{90})$, and we also run $n=10^3$ to $10^{8.5}$ in half decades.
-Only Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} use the state with the full history. Its matched decay-only lifetime is the leak time $t_{\mathrm{leak}}=1/(\Delta t\,\bar\kappa_0)$ of 32 input steps, where $\bar\kappa_0$ is the mean decay rate of the slow
+Only Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} use the state with the full history. Their loss rates are matched to a relaxation time $t_{\mathrm{rel}}=1/(\Delta t\,\bar\kappa_0)$ of 32 input steps, where $\bar\kappa_0$ is the mean decay rate of the slow
 modes of the generator at the mean input, without the mixing by the inputs (Appendix~\ref{app:num-measurement}).

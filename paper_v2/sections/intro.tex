@@ -8,7 +8,7 @@
 \textbf{b}~Four forms of dissipation with the same total coupling. The darker spins couple with the opposite sign.
 \textbf{c}~Two spins on one channel: their decays add (bright) or cancel (dark), and strong loss holds them in the
 dark state, the quantum Zeno effect.
-\textbf{d}~A record fades because it leaks away or because later inputs turn it at random.}
+\textbf{d}~A stored signal fades because it leaks away or because later inputs turn it at random.}
 \label{fig:concept}
 \end{figure*}
 
@@ -39,12 +39,12 @@ do decay. If this decay is sufficiently rapid, however, it suppresses those tran
 dissipative quantum Zeno effect~\cite{FacchiPascazio2002,Zanardi2014,Burgarth2019,Reiter2012}. Stronger loss
 therefore slows the escape of information from the protected states (Fig.~\ref{fig:concept}c).
 
-Survival alone does not make information usable. Each new input changes the same state that stores
-the past. A signal that initially records one input therefore comes to depend on combinations of several inputs, such
-as their product. This mixing is useful for tasks that require relationships between inputs, but it reduces the capacity
-available for recalling individual inputs~\cite{Dambre2012,Inubushi2017,Cindrak2026}. Reading the memory has a cost as
-well: resolving a weak quantum signal requires repeated preparation and
-measurement~\cite{Mujal2023,Cindrak2024,Hu2023}, so a long-lived record is hard to retrieve if its signal is faint.
+A long-lived state is not yet a usable memory, because each new input changes the same state that stores the past.
+A signal that initially depends on one input comes to depend on combinations of several inputs, such as their
+product. This mixing is useful for tasks that require relationships between inputs, but it reduces the capacity
+available for recalling single inputs~\cite{Dambre2012,Inubushi2017,Cindrak2026}. Reading the memory has a cost as
+well, because resolving a weak quantum signal requires repeated preparation and
+measurement~\cite{Mujal2023,Cindrak2024,Hu2023}, and a long-lived memory is hard to read if its signal is faint.
 Previous work has established memory limits in classical reservoirs~\cite{JaegerESP2001,White2004,Ganguli2008},
 explored input strength~\cite{Jaeger2007Leaky}, and investigated how noise and protected states affect quantum
 information processing~\cite{Kubota2023,Fry2023,Cheamsawat2025,Akshay2026}. Closest to our work,
@@ -52,7 +52,7 @@ Ref.~\cite{Sannia2024} tunes the dissipation rate of the reservoir we study, Ref
 trade-off between memory and nonlinearity across reservoir schemes, and Ref.~\cite{Akshay2026} reads the output of a
 reservoir from a decoherence-free subspace to classify quantum states. The Zeno protection of dark states and the
 benefit of a weak input for linear memory are established. How protection, continued input, and measurement together
-determine the part of the past that remains recoverable is open.
+determine the part of the past that a readout recovers is open.
 
 % Fig. 2 is declared here so that it lands on the top of the third page
 \begin{figure*}[!t]
@@ -68,23 +68,24 @@ of independent decay (dashed) decays faster.}
 \label{fig:clock}
 \end{figure*}
 
-Here we show that the form of the dissipation sets three separate properties of a memory: how long a record survives,
-whether an input can be written into it, and how strong a signal it leaves to measure (Fig.~\ref{fig:concept}). We
-report four results. First, at equal total coupling the form of the dissipation decides whether stronger loss shortens
-or prolongs the memory: independent decay shortens it, and collective decay prolongs it through dark states
-(Sec.~\ref{sec:clock}). Second, we prove a law for the mixing of inputs, for reservoirs that leak slowly and are mixed
-by their inputs: a stored signal combines on average $s\,t_{\mathrm{mem}}$ inputs, the disturbance $s$ caused by each
-input times the memory lifetime $t_{\mathrm{mem}}$ (Sec.~\ref{sec:mixing}). A longer memory must therefore be written
-more gently, which we call gentle writing. We prove that it suffices: in the limit of a long memory the share of
-single inputs depends on the input only through its squared amplitude times the lifetime, and this limit reproduces
-the five-spin results without a fitted parameter (Sec.~\ref{sec:writing}). Third, the phases with which the spins couple to a collective channel decide
-whether an input reaches the protected memory at all (Sec.~\ref{sec:writing}). Fourth, the state that the dissipation
-leaves behind sets the size of the signal that measurements must resolve: at strong loss a collective channel with
-non-aligned phases recovers the most memory at every measurement budget, and where the loss can be made weak,
-independent decay recovers more still (Sec.~\ref{sec:price}).
+Here we show that the form of the dissipation sets three properties of a memory (Fig.~\ref{fig:concept}): how long a
+stored signal survives, whether and how strongly an input can be written into it, and how strong a signal is left to
+measure. First, the decay channel decides at equal total coupling whether stronger loss shortens or prolongs the
+memory lifetime. Independent decay shortens it, and collective decay prolongs it through dark states
+(Sec.~\ref{sec:clock}). Second, mixing limits how strongly an input can be written. We prove that at a fixed input
+amplitude a stored
+signal combines on average $s\,t_{\mathrm{mem}}$ inputs, where the mixing fraction $s$ is the part of the stored
+signal that one input disturbs and $t_{\mathrm{mem}}$ is the memory lifetime (Sec.~\ref{sec:mixing}). We also prove
+that an amplitude that falls as $1/\sqrt{t_{\mathrm{mem}}}$ removes this limit. The share of single inputs then
+converges to a value that depends on the input only through its squared amplitude times the lifetime, and this limit
+agrees with the five-spin results without a fitted parameter. The phases with which the spins couple to a collective
+channel decide whether an input reaches the dark states at all (Sec.~\ref{sec:writing}). Third, the state that the
+dissipation leaves behind sets the size of the signal that measurements must resolve. At strong loss a
+collective channel whose phases differ from those of the input field recovers the most memory at every measurement
+budget, and where the loss can be made weak, independent decay recovers more still (Sec.~\ref{sec:price}).
 
-Together, these results connect the physical survival of information to what a readout can recover from it. The
-protection relies on quantum interference, while the two theorems hold for every reservoir that meets their
+Together, these results connect the physical survival of information to what a readout recovers from it. The
+protection relies on quantum interference, whereas the two theorems hold for every reservoir that meets their
 conditions, classical ones included, and give the size of the trade-off between memory and nonlinearity. The form of the
-dissipation, the strength of the input and the measurement budget thereby become joint design parameters. This makes
-recoverable memory a quantitative target for engineering physical systems that process information over time.
+dissipation, the input amplitude and the measurement budget become joint design parameters, and the memory that a
+readout recovers becomes a quantity that can be engineered in physical systems that process information over time.

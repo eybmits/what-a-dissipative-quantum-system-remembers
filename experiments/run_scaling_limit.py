@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The gentle-writing limit of a long memory, evaluated for the five-spin reservoir (paper_v2, Sec. 3.3 and
+"""The scaling limit of a long memory, evaluated for the five-spin reservoir (paper_v2, Sec. 3.3 and
 Appendices B.4 and E.3).
 
 A reservoir step r' = A(u) r + b(u) on the traceless coordinates of the state that expands as
@@ -34,8 +34,8 @@ Stages:
           at the weakest leak (gamma = 1/4096 and 4096), the first also at a leak four times larger (exact.jsonl)
   dark    the recursion for the strong-loss generator against its limit, gamma = 2^6 ... 2^18 (dark.jsonl)
 
-Run with:  python experiments/run_gentle_limit.py limit|exact|dark [--workers 3]     (resumes; minutes to an hour)
-           python experiments/run_gentle_limit.py --analyse                          (prints the numbers of the paper)
+Run with:  python experiments/run_scaling_limit.py limit|exact|dark [--workers 3]     (resumes; minutes to an hour)
+           python experiments/run_scaling_limit.py --analyse                          (prints the numbers of the paper)
 """
 from __future__ import annotations
 
@@ -63,7 +63,7 @@ import scipy.linalg as la  # noqa: E402
 
 import psim  # noqa: E402
 
-OUT = HERE.parent / "results" / "gentle_limit"
+OUT = HERE.parent / "results" / "scaling_limit"
 DT = psim.DT
 VAR_U = 1.0 / 12.0                               # variance of an input, uniform on [0, 1]
 FEAT = np.asarray(psim.FEAT)

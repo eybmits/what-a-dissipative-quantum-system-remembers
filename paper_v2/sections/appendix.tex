@@ -1,4 +1,4 @@
-\section{The mixing law and the gentle-writing limit}
+\section{The mixing law and the scaling limit}
 \label{app:law}
 This appendix proves the two theorems and extends the mixing law to physical channels without a reset.
 
@@ -22,7 +22,8 @@ conditions make the law hold:
   $\mathbb E[OXO^{\mathsf T}]=X$, are multiples of the identity.
 \item \emph{The input writes.} One input changes the state: $\mathbb E\|(O-A)\mu\|^2>0$ with $\mu=(1-A)^{-1}b$.
 \end{enumerate}
-The mixing fraction
+The first condition means that only products of inputs can be stored for long, the second that a stored signal
+spreads evenly over all directions, and the third that there is something to store. The mixing fraction
 \begin{equation}
   s=1-\frac{\|A\|_F^2}{n}
   \label{eq:mixing}
@@ -33,9 +34,9 @@ fraction lies between 0 and 1, the first condition makes it positive, and for sm
 $\theta^2$.
 
 \begin{keybox}
-\textbf{Mixing law, precise form.} Assume conditions (1)--(3) and take any fixed linear readout. Pick a stored
-contribution with probability equal to its share of the readout's capacity, and let $D$ be its order, the number of
-distinct inputs it depends on. As $p\to0$, the ratio
+\textbf{Mixing law, precise form.} Assume conditions (1)--(3) and take any fixed linear readout. Pick a part of
+the stored signal with probability equal to its share of the readout's capacity, and let $D$ be its order, the number
+of distinct inputs it depends on. As $p\to0$, the ratio
 $D/t_{\mathrm{mem}}$ becomes exponentially distributed with mean $s$, and
 \[\mathbb ED=s\,t_{\mathrm{mem}}+O(1).\]
 Equivalently, products of more than $x\,t_{\mathrm{mem}}$ inputs carry the share $e^{-x/s}$ of the capacity.
@@ -171,7 +172,7 @@ $e^{-K/(s\,t_{\mathrm{mem}})}$: its largest deviation, over $K$ and the reservoi
 $s\,t_{\mathrm{mem}}\approx1$ to 0.07 and 0.14 at $s\,t_{\mathrm{mem}}\approx20$, with the opposite-phase channel and
 with independent decay.
 
-\subsection{The gentle-writing limit}
+\subsection{The scaling limit}
 \label{app:gentle}
 \emph{Setting.} The amplitude now falls with the leak, $\eta^2=\nu\epsilon$ at fixed $\nu$, and uniformly in the input
 \begin{equation}
@@ -201,7 +202,7 @@ are the leak, what the inputs take from a stored product on average, and what th
 $\Tr\mathsf SX=\Tr\mathsf KX$.
 
 \begin{keybox}
-\textbf{Gentle-writing limit, precise form.} Let every slow covariance decay: the eigenvalues of
+\textbf{Scaling limit, precise form.} Let every slow covariance decay: the eigenvalues of
 $\mathsf L+\nu(\mathsf S-\mathsf K)$ have positive real parts. As $\epsilon\to0$ at fixed $\nu$:
 \begin{enumerate}[label=(\alph*),leftmargin=*,itemsep=1pt,topsep=3pt]
 \item The stationary mean converges to the vector $m_0$ fixed by $O_0$ with
@@ -296,13 +297,13 @@ The three spins evolve under
 with one jump $\sqrt\gamma\,(\sigma_1^--\sigma_2^--\sigma_3^-)$, steps of $\Delta t=1/2$ and signs $u=\pm1$, at
 $\eta=1$ or $\eta=8/\sqrt\gamma$. The jump leaves three dark states, with six slow covariances. At strong loss one
 step of the full master equation is a rotation of them up to corrections of order $1/\gamma$, so the mixing law
-without a reset (Appendix~\ref{app:physical}) gives the first statement and the gentle-writing limit
+without a reset (Appendix~\ref{app:physical}) gives the first statement and the scaling limit
 (Appendix~\ref{app:gentle}) the second, here with explicit error bounds for the full master equation. Both end in
 finitely many strict inequalities, which the archive \texttt{spin\_certificates.zip} in the repository checks in
 interval arithmetic at 256 bits (ball arithmetic of Arb, python-flint 0.9.0), and the note
 \texttt{three\_spin\_limits.pdf} writes out the derivation. An independent program builds the full finite-rate maps
 and agrees with the certified values to better than one part in a million. The certified rate of the exponential law
-lies between 61 and 133, and with gentle writing at $\gamma=2^{16}$ single inputs keep between 8\% and 81\% of the
+lies between 61 and 133, and with the scaled amplitude at $\gamma=2^{16}$ single inputs keep between 8\% and 81\% of the
 capacity of $X_1$.
 
 \paragraph{Why coherence carries the memory.}
@@ -322,7 +323,7 @@ This appendix backs the main text, section by section.
 Figures smooth recall curves for display only, by averaging each delay with its neighbours within a fifth of the
 delay, and no sum uses the smoothed values. The maps of Fig.~\ref{fig:clock}a,b are computed at $\gamma=0.1$, 0.25
 and $2^{-1}$ to $2^6$ and interpolated along the delay. Figure~\ref{fig:clock}c stops the equal-phase channel and the two collective channels at
-$\gamma=64$, where their recall at the full amplitude starts to reach past the 300 delays we sum. Summed over all
+$\gamma=64$, where their recall at a fixed amplitude starts to reach past the 300 delays we sum. Summed over all
 delays with exact moments (Appendix~\ref{sec:order}), their capacity keeps rising up to $\gamma=256$.
 
 Both tests of the dark states act on the 100 dark coordinates. For the dark-state model we write
@@ -351,13 +352,13 @@ six spins, with the same shading. A line stops where its recall reaches past the
 Figure~\ref{fig:sizes} repeats the curves of Fig.~\ref{fig:clock}c at four and six spins, with 30 and 63 features,
 on eight and four reservoirs. The opposite-phase channel reverses the sign of the last $\lfloor N/2\rfloor$ spins.
 With the equal-phase channel the capacity grows with the loss at both sizes, from 11.5 to 18.4 units between
-$\gamma=1$ and 64 at four spins and from 15 to 51 at six, and gentle writing raises the best capacity of the other
+$\gamma=1$ and 64 at four spins and from 15 to 51 at six, and a scaled amplitude raises the best capacity of the other
 two channels. At three spins, which have only three dark states, the capacity of the equal-phase channel does not
 grow.
 
 \subsection{Recall time and phases (Secs.~\ref{sec:mixing} and~\ref{sec:writing})}
 \label{app:num-mixing}
-The single-input recall time $t_{\mathrm f}$ shows the balance of decay and mixing. Its rate adds the decay of the
+The recall time $t_{\mathrm f}$ shows the balance of decay and mixing. Its rate adds the decay of the
 stored signal and a mixing rate that grows as $\eta^2$ (Appendix~\ref{sec:methods-slow}). The decay grows as $\gamma$
 with independent decay and falls as $1/\gamma$ with the opposite-phase channel, so $\eta^2t_{\mathrm f}$ depends on
 loss and input only through $\gamma/\eta^2$ and through $\gamma\eta^2$, the $1/\nu$ and $\nu$ of
@@ -379,7 +380,7 @@ counted. Shading as in Fig.~\ref{fig:clock}c.}
 
 The write per input of Fig.~\ref{fig:mixing}b is $2\|R^\flat[E(\tfrac34)-E(\tfrac14)]r_*\|$ at the stationary state
 $r_*$ of the equal-phase channel, for the input patterns $(1,\dots,1)$ and $\sqrt2\cos(2\pi i/5)$ multiplying $X_i$.
-The aligned pattern falls as $1/\gamma$, to 0.003 at $\gamma=128$, while the other falls from 0.40 to 0.18. The rule
+The mode-matched pattern falls as $1/\gamma$, to 0.003 at $\gamma=128$, while the other falls from 0.40 to 0.18. The rule
 is sharp: a phase error $\delta$ couples dark states directly at order $\delta$, so beyond $\gamma\sim1/\delta$ the
 equal-phase channel behaves like the opposite-phase channel.
 
@@ -392,19 +393,22 @@ shrink at a settled ratio, whose geometric tail we add. The linear recall follow
 $C_\tau=c_\tau^{\mathsf T}\Sigma_y^{-1}c_\tau/\mathrm{Var}\,u$ with $c_\tau$ the covariance of the features with
 $u_{t-\tau}$ and $\Sigma_y$ their covariance, and reproduces the simulated capacities to a median of 2\%. Three steps of
 inverse iteration on $\mathcal T$, from the input's covariance $V$ and from the identity, give $t_{\mathrm{mem}}$, $Q$
-and $\ell$. Loss rates run in powers of four over the ranges of Fig.~\ref{fig:mixing}c, and with gentle writing to
-16384 and $1/4096$, on four reservoirs, two at the longest memory lifetimes. At the full amplitude the mean order of the
+and $\ell$. Loss rates run in powers of four over the ranges of Fig.~\ref{fig:mixing}c, and with the scaled amplitude to
+16384 and $1/4096$, on four reservoirs, two at the longest memory lifetimes. At a fixed amplitude the mean order of the
 opposite-phase channel rises from 1.8 at $\gamma=1$ to 23 at $\gamma=4096$, and with independent decay it stays within
 2.2 of $s\,t_{\mathrm{mem}}$ up to $s\,t_{\mathrm{mem}}=18$.
 
-Figure~\ref{fig:mixing}a shows the linear recall summed over all delays, from the same moments. At the full amplitude
+Figure~\ref{fig:mixing}a shows the linear recall summed over all delays, from the same moments. At a fixed amplitude
 it peaks at 16.0 units with the opposite-phase channel ($\gamma=64$, $s\,t_{\mathrm{mem}}=0.32$) and at 14.9 with
 independent decay ($\gamma=1/16$, 0.20), and falls to 2.2 and 3.7 units at lifetimes of 750 and 430 steps, where
-single past inputs carry 0.05 and 0.09 of the capacity. With gentle writing single inputs carry 0.82 of the capacity
+single past inputs carry 0.05 and 0.09 of the capacity. Table~\ref{tab:memory} sums the first 300 delays of simulated
+runs on eight reservoirs instead, which gives 14.7 units for the opposite-phase channel at $\gamma=64$. With the scaled amplitude single inputs carry 0.82 of the capacity
 at a lifetime of 20 steps and 0.87 to 0.90 beyond 80 steps, the recall stays between 39 and 40 units, and
-$s\,t_{\mathrm{mem}}$ between 0.007 and 0.014.
+$s\,t_{\mathrm{mem}}$ between 0.007 and 0.014. Of the inputs that the scaled amplitude removes from the mean of $D$
+with the opposite-phase channel, the mixing over the lifetime accounts for 43\% at a lifetime of 20 steps, for 84\%
+at 200 steps and for 99\% at 750.
 
-\paragraph{The gentle-writing limit.}
+\paragraph{The scaling limit.}
 We build the limit of Appendix~\ref{app:gentle} from the generator of each reservoir: $O_0$, $a_1$ and $a_2$ are the
 orders zero to two of the step in the input field, and $Y$ and $c_0$ its first order in the leak. Independent decay
 has 992 slow covariances and the opposite-phase channel 90, for the ten dark states under Eq.~\eqref{eq:reduced}, and
@@ -429,7 +433,7 @@ products of inputs.
 
 \begin{table}[!t]
 \caption{\label{tab:memory}Linear memory capacity $\sum_\tau C_\tau$ of the five-spin reservoir in units (ceiling
-45): with exact readout, at a budget of $10^9$ reservoir steps per output step, and with $n$ preparations per setting
+45), summed over the first 300 delays of simulated runs: with exact readout, at a budget of $10^9$ reservoir steps per output step, and with $n$ shots per setting
 and step of replayed inputs (Sec.~\ref{sec:price}). Mean and standard deviation over eight reservoirs.}
 \centering\footnotesize\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lccc@{}}
@@ -437,9 +441,9 @@ and step of replayed inputs (Sec.~\ref{sec:price}). Mean and standard deviation 
  & independent & opposite & equal\\
  & decay & phases & phases\\\midrule
 tuned loss, $\eta=1$$^{a}$ & $14.5\pm1.0$ & $14.7\pm1.1$ & $30.6\pm1.4$\\
-gentle writing$^{b}$ & $34.9\pm2.0$ & $35.7\pm3.0$ & --$^{c}$\\
+scaled amplitude$^{b}$ & $34.9\pm2.0$ & $35.7\pm3.0$ & --$^{c}$\\
 budget $10^9$, $\eta=1$$^{d}$ & $12.8\pm0.7$ & $12.0\pm0.7$ & $12.8\pm0.7$\\
-budget $10^9$, gentle$^{e}$ & $33.7\pm1.1$ & $20.9\pm1.1$ & --$^{c}$\\
+budget $10^9$, scaled$^{e}$ & $33.7\pm1.1$ & $20.9\pm1.1$ & --$^{c}$\\
 $\gamma=64$, exact$^{f}$ & $1.2\pm0.0$ & $14.7\pm1.1$ & $30.6\pm1.4$\\
 $\gamma=64$, $n=10^4$$^{f}$ & $0.2\pm0.0$ & $8.2\pm0.8$ & $0.2\pm0.0$\\
 $\gamma=64$, $n=10^6$$^{f}$ & $0.2\pm0.0$ & $9.9\pm0.7$ & $2.3\pm1.0$\\
@@ -448,8 +452,8 @@ $\gamma=64$, $n=10^6$$^{f}$ & $0.2\pm0.0$ & $9.9\pm0.7$ & $2.3\pm1.0$\\
 
 \smallskip
 \raggedright\footnotesize
-$^{a}$At $\gamma=0.1$, 64 and 64. $^{b}$At $\gamma=1/64$ and 256. $^{c}$The uniform input already writes gently
-in this channel. $^{d}$At $\gamma=1/8$, 16 and 1, the best loss rates on the grid. $^{e}$At $\gamma=1/64$ and 64.
+$^{a}$At $\gamma=0.1$, 64 and 64. $^{b}$At $\gamma=1/64$ and 256. $^{c}$The uniform input is mode-matched
+to this channel. $^{d}$At $\gamma=1/8$, 16 and 1, the best loss rates on the grid. $^{e}$At $\gamma=1/64$ and 64.
 $^{f}$At $\eta=1$.
 \end{table}
 
@@ -457,10 +461,10 @@ $^{f}$At $\eta=1$.
 \label{app:num-amplitude}
 We mapped the linear memory capacity over loss rates and amplitudes: the first four reservoirs, independent decay at
 $\gamma=2^{-8}$ to $2^{-2}$ and at 1, the opposite-phase channel at $\gamma=1$, 4 and $2^3$ to $2^8$, and fifteen
-amplitudes from $\eta=2^{-7}$ to 1, with exact features or $10^6$ to $10^8$ preparations per setting and step from
+amplitudes from $\eta=2^{-7}$ to 1, with exact features or $10^6$ to $10^8$ shots per setting and step from
 the state with the full history. With exact readout the capacity rises as the input weakens, up to 43 of the 45
-units. With $10^6$ to $10^8$ preparations an optimum exists. Its amplitude falls with the decay-only lifetime, the
-single-input recall time at $\eta=2^{-8}$, with fitted exponents between $-0.40$ and $-0.46$ in all six fits over the
+units. With $10^6$ to $10^8$ shots an optimum exists. Its amplitude falls with the relaxation time, here the recall
+time at $\eta=2^{-8}$, with fitted exponents between $-0.40$ and $-0.46$ in all six fits over the
 loss rates whose lifetime is at least four steps. Without the loss rates whose recall reaches past the 300 delays
 summed, the exponents are $-0.48$ to $-0.56$ with independent decay and $-0.38$ to $-0.39$ with the opposite-phase
 channel. The optimum is flat: one amplitude for all loss rates recovers on average 91\% to 97\% of the capacity at
@@ -469,32 +473,36 @@ the optimum tracked at each loss rate, so the input need not be tuned to the los
 \subsection{Measurement (Sec.~\ref{sec:price})}
 \label{app:num-measurement}
 Weak signals cost measurements: with independent decay at $\gamma=64$ the previous input moves the state by about
-$10^{-9}$, which gives perfect recall of that input with exact readout and none with $10^8$ preparations per setting
-and step. With the opposite-phase channel, gentle writing lowers the signal from $8\times10^{-5}$ to $5\times10^{-6}$,
+$10^{-9}$, which gives perfect recall of that input with exact readout and none with $10^8$ shots per setting
+and step. With the opposite-phase channel, the scaled amplitude lowers the signal from $8\times10^{-5}$ to $5\times10^{-6}$,
 and restarting each run from $|00000\rangle$, as the replay does, raises it to $4\times10^{-5}$, against
-$1.2\times10^{-4}$ with independent decay and gentle writing at $\gamma=1/32$.
+$1.2\times10^{-4}$ with independent decay and the scaled amplitude at $\gamma=1/32$.
 
-The replayed range $\tau_{90}$ grows with the memory lifetime: along the gentle line of the
+The replayed range $\tau_{90}$ grows with the memory lifetime: with the scaled amplitude of the
 opposite-phase channel from about 30 steps at $\gamma=16$ to 130 at $\gamma=256$. The thresholds of Sec.~\ref{sec:price}
-are the crossings of the capacities at the full amplitude and with gentle writing, from replayed runs at $10^3$ to
-$10^{8.5}$ preparations per setting and step. With replayed inputs the equal-phase channel at $\gamma=64$ stays at the
-floor up to $10^4$ preparations and recovers 2.3 units at $10^6$ and 15.5 at $3\times10^8$. There it passes the
-opposite-phase channel at the full amplitude, 11.0 units, and stays below it with gentle writing, 26.3 units.
+are the crossings of the capacities at a fixed and with the scaled amplitude, from replayed runs at $10^3$ to
+$10^{8.5}$ shots per setting and step. With replayed inputs the equal-phase channel at $\gamma=64$ stays at the
+floor up to $10^4$ shots and recovers 2.3 units at $10^6$ and 15.5 at $3\times10^8$. There it passes the
+opposite-phase channel at a fixed amplitude, 11.0 units, and stays below it with the scaled amplitude, 26.3 units.
+At $10^3$ and $10^4$ shots the opposite-phase channel at $\gamma=64$ recovers 5.4 and 8.2 units at a fixed amplitude,
+and independent decay at $\gamma=1/32$ recovers 8.2 and 11.0. The scaled amplitude overtakes the fixed one at
+$2\times10^4$ shots with independent decay and at $10^5$ with the opposite-phase channel, and independent decay then
+reaches 31.5 units at $3\times10^8$.
 
 Figure~\ref{fig:checks}b shows the capacity at a budget of $10^9$ reservoir steps per output step, which is
-$3\times10^6$ to $3\times10^7$ preparations per setting and step, and Table~\ref{tab:memory} lists its best values.
+$3\times10^6$ to $3\times10^7$ shots per setting and step, and Table~\ref{tab:memory} lists its best values.
 With the full history, eight times more
 training inputs change the sampled capacity by less than 1.3 units.
 
 \begin{table}[!t]
-\caption{\label{tab:matched}The eight decay channels at a decay-only lifetime of 32 input steps and $\eta=0.35$:
-loss rate, write strength, and linear memory capacity with exact readout and with $10^6$ preparations per measurement
+\caption{\label{tab:matched}The eight decay channels at a relaxation time of 32 input steps and $\eta=0.35$:
+loss rate, stationary response, and linear memory capacity with exact readout and with $10^6$ shots per measurement
 setting and step. Mean and standard deviation over eight reservoirs.}
 \centering\footnotesize\setlength{\tabcolsep}{3.5pt}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
- & loss & write & \multicolumn{2}{c}{capacity}\\
-channel & rate $\gamma$ & strength & exact & at $10^6$\\\midrule
+ & loss & & \multicolumn{2}{c}{capacity}\\
+channel & rate $\gamma$ & response & exact & at $10^6$\\\midrule
 independent & 0.092 & 1.3 & $23.7\pm1.1$ & $17.4\pm2.3$\\
 exchange & 0.064 & 0.30 & $25.1\pm0.8$ & $10.1\pm0.9$\\
 gain/loss & 0.079 & 0.46 & $24.4\pm0.8$ & $12.5\pm0.9$\\
@@ -511,13 +519,14 @@ dephasing & 143 & 0 & 0.0 & 0.2$^{a}$\\
 $^{a}$A readout without any recall reads about 0.2 units, the floor of the sum over 300 delays.
 \end{table}
 
-For the matched decay-only lifetime of Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} we find, for every channel and reservoir, the loss rate at which
-$t_{\mathrm{leak}}=32$ steps, at weak loss without protected operators and at strong loss with them, and run the
-reservoir there with $\eta=\sqrt{4/32}$. The write strength is the Euclidean norm of the Pauli
+For the matched relaxation time of Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} we find, for every channel
+and reservoir, the loss rate at which $t_{\mathrm{rel}}=32$ steps, at weak loss when the kernel of the dissipator is
+the stationary state alone and at strong loss otherwise, and run the reservoir there with $\eta=\sqrt{4/32}$. The
+stationary response is the Euclidean norm of the Pauli
 coefficients $\Tr(PW)$, over all Pauli strings $P$, of the change $W$: the commutator $-i[H_{\mathrm{in}},\rho_*]$ with
 $H_{\mathrm{in}}=h\sum_iX_i$ and $\rho_*$ the stationary state, projected spectrally onto the slow modes. These are the
-protected ones, or without protected operators those decaying at most four times faster than the slowest. The loss
-rate is matched for each reservoir, so Table~\ref{tab:matched} gives its mean. Over the 56 reservoirs of the seven channels that write, the rank correlation of the write strength is 0.96 with
+modes of the kernel, or without one those decaying at most four times faster than the slowest. The loss
+rate is matched for each reservoir, so Table~\ref{tab:matched} gives its mean. Over the 56 reservoirs of the seven channels that respond, the rank correlation of the stationary response is 0.96 with
 the recovered fraction of the capacity and 0.83 with the recovered capacity itself.
 
 \subsection{Ordinary noise}
@@ -526,7 +535,7 @@ Adding independent decay $\sqrt{\gamma_{\mathrm{loc}}}\,\sigma_i^-$ to the equal
 $\bar\kappa=\kappa_{\mathrm c}/\gamma+\kappa_{\mathrm l}\gamma_{\mathrm{loc}}$, where to first order $\kappa_{\mathrm l}$
 is the trace of the added dissipator on the 99 slow dark modes divided by 99, $140/99\approx1.414$. Local dephasing
 $\sqrt{\gamma_\phi}\,Z_i$ adds $\kappa_\phi\gamma_\phi$ with $\kappa_\phi=403.2/99\approx4.073$, and the full spectra
-reproduce both coefficients to within 0.2\%. A single-input recall time of at least $T$ steps,
+reproduce both coefficients to within 0.2\%. A recall time of at least $T$ steps,
 $\kappa_{\mathrm c}/\gamma+\kappa_{\mathrm l}\gamma_{\mathrm{loc}}\le1/(\Delta t\,T)$, then needs
 $\gamma/\gamma_{\mathrm{loc}}\ge4\kappa_{\mathrm c}\kappa_{\mathrm l}\,\Delta t^2T^2\approx4.2\,T^2$, or $12\,T^2$ for
 dephasing.

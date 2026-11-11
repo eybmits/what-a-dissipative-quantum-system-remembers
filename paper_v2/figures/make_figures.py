@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 SNAP = json.loads((HERE.parent / "data" / "snapshot.json").read_text())
 ORDER = ("separate", "exchange", "gainloss", "dephasing", "pair", "signed", "groups", "shared")
 FAR_MAX = 4096.0                      # largest loss rate shown for the slow modes
-SCALED = (0, (3.2, 1.1, 0.9, 1.1))    # gentle writing: the input amplitude follows the loss
+SCALED = (0, (3.2, 1.1, 0.9, 1.1))    # scaled amplitude: the input amplitude follows the loss
 FEATURES = (0, (4, 2))                # the limit set by the number of features
 
 
@@ -185,7 +185,7 @@ def fig2():
     b.tick_params(axis="y", which="both", labelleft=False)
 
     # c: memory against loss for every shape, the four that carry the story in colour and the others in grey;
-    # circles: gentle writing
+    # circles: scaled amplitude
     for fam in families():
         rec = SNAP["memory"][fam]
         x = np.array(rec["gamma"])
@@ -232,17 +232,17 @@ def fig2():
     shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
     st.inkey(c, [shape("separate"), shape("signed"),
                  shape("shared"), (st.line_handle(st.OTHER, lw=st.LW_THIN), "other channels"),
-                 shape("dephasing"), (st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing")],
+                 shape("dephasing"), (st.line_handle(st.INK3, ls=SCALED, marker="o"), "scaled amplitude")],
              "upper left", ncol=2, pad=(3.5, 5.0), handle=8.0, gap=2.5, sep=4.0)
     st.save(fig, HERE / "fig2_clock.pdf")
 
 
 # ----------------------------------------------------------------------------------------------- Figure 3
-def gentle_limit(ax):
-    """The gentle-writing limit (lines) against the recursion of the full five-spin reservoir at its weakest leak
+def scaling_limit(ax):
+    """The scaling limit (lines) against the recursion of the full five-spin reservoir at its weakest leak
     (markers), for one reservoir: the share of single inputs in the capacity (solid, filled) and the variance they
     leave in the features, scaled to the largest value of the limit (dashed, open)."""
-    G = SNAP["gentle_limit"]
+    G = SNAP["scaling_limit"]
     for fam in ("separate", "signed"):
         col = st.FAMILY[fam]
         lim = next(r for r in G["limit"] if r["design"] == fam and r["seed"] == G["main"])
@@ -267,14 +267,14 @@ def gentle_limit(ax):
 
 def fig3():
     """The price of a long memory and how the input pays it: the recall against the memory lifetime, the write along
-    and across the phases, the five-spin order against the mixing law and the gentle-writing limit, in one row; the
+    and across the phases, the five-spin order against the mixing law and the scaling limit, in one row; the
     keys sit inside the panels (a names its markers, its colours are those of c)."""
     fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c, d = (st.wide_place(fig, k) for k in range(4))
     dashed = (0, (3, 1.5))
 
-    # a: linear recall summed over all delays against the memory lifetime, from exact moments: at the full amplitude
-    # (filled) it peaks and then falls as the memory grows, with gentle writing (open) it stays
+    # a: linear recall summed over all delays against the memory lifetime, from exact moments: at the fixed amplitude
+    # (filled) it peaks and then falls as the memory grows, with scaled amplitude (open) it stays
     for fam in ("separate", "signed"):
         col = st.FAMILY[fam]
         for full in (True, False):
@@ -314,25 +314,25 @@ def fig3():
     five_law(c)
     c.set_ylim(0.8, 60)
 
-    # d: the gentle-writing limit against the five-spin recursion
-    gentle_limit(d)
+    # d: the scaling limit against the five-spin recursion
+    scaling_limit(d)
 
     st.fit_row(fig, (a, b, c, d), (80, 76, 118, 78))
     for ax, name, title in zip((a, b, c, d), "abcd", ("Memory against lifetime", "Writing into dark states",
-                                                      "Mixing law", "Gentle-writing limit")):
+                                                      "Mixing law", "Scaling limit")):
         st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c, d)])
-    st.inkey(a, [(st.marker_handle(st.INK3, mfc=st.INK3, mec=st.INK3, mew=0.9), "full amplitude"),
-                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing")], "upper left")
-    st.inkey(b, [(st.line_handle(st.FAMILY["shared"], marker="o"), "aligned"),
-                 (st.line_handle(st.FAMILY["signed"], marker="o"), "not aligned"),
+    st.inkey(a, [(st.marker_handle(st.INK3, mfc=st.INK3, mec=st.INK3, mew=0.9), "fixed amplitude"),
+                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "scaled amplitude")], "upper left")
+    st.inkey(b, [(st.line_handle(st.FAMILY["shared"], marker="o"), "matched"),
+                 (st.line_handle(st.FAMILY["signed"], marker="o"), "not matched"),
                  (st.line_handle(st.INK3, ls=(0, (1, 1.6)), lw=st.LW_GUIDE), r"$1/\gamma$")], "lower left",
              pad=(3.0, 5.0))
     st.inkey(c, [(st.marker_handle(st.FAMILY["separate"], mfc=st.FAMILY["separate"], mec=st.FAMILY["separate"],
                                    mew=0.9), "independent"),
                  (st.marker_handle(st.FAMILY["signed"], mfc=st.FAMILY["signed"], mec=st.FAMILY["signed"], mew=0.9),
                   "opposite phases"),
-                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "gentle writing")], "upper left")
+                 (st.marker_handle(st.INK3, mfc="white", mec=st.INK3, mew=0.9), "scaled amplitude")], "upper left")
     st.along(c, "mixing law", (1, 1), (10, 10), (2.0, 2.0))
     st.inkey(d, [(st.line_handle(st.INK3, marker="o", mfc=st.INK3), "share"),
                  (st.line_handle(st.INK3, ls=dashed, lw=st.LW_THIN, marker="o"), "signal")], "upper left",
@@ -383,7 +383,7 @@ def fig_darkmodel():
 
 # ------------------------------------------------------------------------------------- five-spin order and law
 def five_rows(fam, full):
-    """Entries of the five-spin order runs along the full amplitude (full=True) or the gentle line, by loss rate."""
+    """Entries of the five-spin order runs along the fixed amplitude (full=True) or the line of scaled amplitude, by loss rate."""
     rows = [r for r in SNAP.get("five_orders", []) if r["design"] == fam and "law_mean" in r]
     gentle = lambda g: min(1.0, g ** (-0.5 if fam == "signed" else 0.5))
     sel = [r for r in rows if (r["eta"] == 1.0) == full and (full or abs(r["eta"] - gentle(r["gamma"])) < 1e-12)]
@@ -391,8 +391,8 @@ def five_rows(fam, full):
 
 
 def five_law(ax):
-    """Mean order of the five-spin memory against the mixing law's s t_mem: full amplitude (filled, along the loss
-    rate) and gentle writing (open); dashed: the law."""
+    """Mean order of the five-spin memory against the mixing law's s t_mem: fixed amplitude (filled, along the loss
+    rate) and scaled amplitude (open); dashed: the law."""
     for fam in ("separate", "signed"):
         col = st.FAMILY[fam]
         for full in (True, False):
@@ -420,7 +420,7 @@ def five_law(ax):
 
 def five_shape(ax):
     """Share of the five-spin capacity carried by products of more than K inputs against K/(s t_mem), at the
-    longest memory of each shape at the full amplitude, and the exponential law."""
+    longest memory of each shape at the fixed amplitude, and the exponential law."""
     for fam in ("separate", "signed"):
         sel = five_rows(fam, True)
         if not sel:
@@ -441,7 +441,7 @@ def five_shape(ax):
 
 
 # --------------------------------------------------------------------------------------- Figure 4: sampling
-BUDGET = 1e9          # preparations times replayed steps per output step
+BUDGET = 1e9          # shots times replayed steps per output step
 FIXED = (0, (3.2, 1.4))                 # the full input amplitude
 STRONG_LOSS = (0, (1.0, 1.4))           # independent decay at the strong loss rate of the collective channels
 BUDGET_LINES = ((("separate", "gentle_weak"), "-", 0.0), (("separate", "fixed"), FIXED, 0.45),
@@ -450,15 +450,15 @@ BUDGET_LINES = ((("separate", "gentle_weak"), "-", 0.0), (("separate", "fixed"),
 
 
 def at_budget(rec, budget):
-    """Memory of each reservoir when each output step may use `budget` preparations times replayed steps: three
-    settings, each with n = budget / (3 tau_90) preparations that replay the last tau_90 inputs, the range holding 90%
+    """Memory of each reservoir when each output step may use `budget` shots times replayed steps: three
+    settings, each with n = budget / (3 tau_90) shots that replay the last tau_90 inputs, the range holding 90%
     of the exact recall, from |00000> (run_clock.py budget_replay)."""
     return np.array([m[rec["budgets"].index(budget)] for m in rec["memory"]])
 
 
 def budget_line(design, rule, budget):
-    """Loss rates and memory at a fixed budget along one line, rows over the reservoirs; the gentle lines start from
-    the full amplitude at gamma = 1."""
+    """Loss rates and memory at a fixed budget along one line, rows over the reservoirs; the line of scaled amplitudes start from
+    the fixed amplitude at gamma = 1."""
     recs = [r for r in SNAP.get("budget_replay", []) if r["design"] == design
             and (r["rule"] == rule or (rule != "fixed" and r["rule"] == "fixed" and r["gamma"] == 1.0))]
     recs.sort(key=lambda r: r["gamma"])
@@ -471,13 +471,13 @@ REPLAY_LINES = ((("separate", "gentle_weak", 0.03125), "-", "o"), (("separate", 
 
 
 def fig_sampling():
-    """What survives sampling and why: memory against the number of preparations, and feature variance and the
-    recovered fraction of the capacity against the write strength at a matched decay-only lifetime, three panels
+    """What survives sampling and why: memory against the number of shots, and feature variance and the
+    recovered fraction of the capacity against the stationary response at a matched relaxation time, three panels
     across the page; the key of the line styles sits in a and the key of the colours, which all panels share, in b."""
     fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c = (st.wide_place(fig, k) for k in range(3))
 
-    # a: memory against the preparations per setting and step, features from the replay of the last tau_90 inputs:
+    # a: memory against the shots per setting and step, features from the replay of the last tau_90 inputs:
     # independent decay at weak loss (gamma = 1/32) and, at strong loss (gamma = 64), the two collective channels and
     # independent decay
     lines = {(r["design"], r["rule"], r["gamma"]): r for r in SNAP["replay_shots"]["uniform"]}
@@ -488,12 +488,12 @@ def fig_sampling():
     a.set_xscale("log")
     st.decades(a, "x", labels="power", every=2)
     a.set_xlim(7e2, 5e8)
-    a.set_ylim(0, 45)                       # room above the curves for the key
+    a.set_ylim(0, 47)                       # the key sits above the rising curves, in the upper left
     a.set_yticks([0, 10, 20, 30])
-    a.set_xlabel(r"Preparations $n$")
+    a.set_xlabel(r"Shots $n$")
     a.set_ylabel(r"Capacity $\sum_\tau C_\tau$")
 
-    # b, c: feature variance, and the fraction of the exact capacity that 10^6 preparations per setting and step
+    # b, c: feature variance, and the fraction of the exact capacity that 10^6 shots per setting and step
     # recover, against the write onto the slow modes: every reservoir of every channel that writes, at one decay-only
     # lifetime and amplitude; the four channels that carry the story in colour, the others in grey
     P = SNAP["polarization"]
@@ -510,7 +510,7 @@ def fig_sampling():
         ax.set_yscale("log")
         st.decades(ax, "x", labels="power", every=2)
         ax.set_xlim(1.2e-3, 4)
-        ax.set_xlabel(r"Write strength")
+        ax.set_xlabel(r"Stationary response")
     st.decades(b, "y", labels="power", every=2)
     b.set_ylim(1e-8, 3e-3)
     b.set_ylabel("Feature variance")
@@ -525,15 +525,13 @@ def fig_sampling():
                textcoords="offset points", ha="right", va="baseline", color=st.INK3, fontsize=st.KEY_TXT)
 
     st.fit_row(fig, (a, b, c), (10, 9, 9))
-    for ax, name, title in zip((a, b, c), "abc", ("Finite measurements", "Signal size", "Recovered capacity")):
+    for ax, name, title in zip((a, b, c), "abc", ("Finite sampling", "Signal size", "Recovered capacity")):
         st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c)])
-    st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
-                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude")], "upper left", ncol=2,
-             box=False)
-    st.inkey(a, [(st.line_handle(st.FAMILY["separate"], ls=STRONG_LOSS, lw=st.LW_THIN), r"independent, $\gamma=64$")],
-             "upper left", pad=(6.0, 6.5 + st.KEY_ROW), box=False)
-    st.frame(fig, 3)
+    st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "scaled amplitude"),
+                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "fixed amplitude"),
+                 (st.line_handle(st.FAMILY["separate"], ls=STRONG_LOSS, lw=st.LW_THIN), r"independent, $\gamma=64$")],
+             "upper left")
     dot = lambda col: st.marker_handle(col, mfc=col, mec=col, mew=0.5)
     st.inkey(b, [(dot(st.FAMILY["separate"]), "independent"), (dot(st.FAMILY["shared"]), "equal phases"),
                  (dot(st.FAMILY["signed"]), "opposite phases"), (dot(st.OTHER), "other channels")], "upper left",
@@ -544,7 +542,7 @@ def fig_sampling():
 def fig_checks():
     """Appendix E: two supporting results across one column. a: the collapse of the single-input recall time, eta^2 t_f
     against gamma/eta^2 (independent decay) and gamma eta^2 (opposite phases), one marker per amplitude. b: memory at a
-    fixed budget of preparations times replayed steps per output step against the loss rate. The key of the line
+    fixed budget of shots times replayed steps per output step against the loss rate. The key of the line
     styles of b sits above its curves; the keys of the colours and of the markers of a sit in rows under the panels."""
     fig = st.wide_figure(1, width=st.COLUMN, hp=112.0)
     a, b = st.wide_place(fig, 0), st.wide_place(fig, 1)
@@ -597,8 +595,8 @@ def fig_checks():
                  for m, label in zip(marks, (r"$\eta=1$", r"$1/2$", r"$1/4$", r"$1/8$"))],
              "upper left", ncol=2, pad=(6.0, 6.5 + 2 * st.KEY_ROW), handle=5.0, gap=2.5, sep=8.0, box=False)
     st.frame(fig, 6)
-    st.inkey(b, [(st.line_handle(st.INK3, marker="o"), "gentle writing"),
-                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "full amplitude"), dot("shared")], "upper right")
+    st.inkey(b, [(st.line_handle(st.INK3, marker="o"), "scaled amplitude"),
+                 (st.line_handle(st.INK3, ls=FIXED, lw=st.LW_THIN), "fixed amplitude"), dot("shared")], "upper right")
     st.save(fig, HERE / "figE_checks.pdf")
 
 
@@ -608,7 +606,7 @@ TAIL = 3 * 20 / 1600      # recall summed over the last twenty delays: three tim
 
 def fig_sizes():
     """The memory curves of Fig. 2c at four and six spins: independent decay, equal phases and opposite phases at the
-    full amplitude, and gentle writing for independent decay and opposite phases, which starts from the full amplitude
+    fixed amplitude, and scaled amplitude for independent decay and opposite phases, which starts from the fixed amplitude
     at gamma = 1. A line stops where its recall reaches past the 300 delays summed. Two panels across one column, each
     with its number of spins above the dashed line at its number of features; the key that the panels share sits
     under them."""
@@ -644,7 +642,7 @@ def fig_sizes():
     st.align(fig, rows=[tuple(axes)])
     shape = lambda f: (st.line_handle(st.FAMILY[f], ls=st.DASH[f]), st.NAME[f])
     st.inkey(axes[0], [shape("separate"), shape("shared"), shape("signed")], "upper left")
-    st.inkey(axes[1], [(st.line_handle(st.INK3, ls=SCALED, marker="o"), "gentle writing"),
+    st.inkey(axes[1], [(st.line_handle(st.INK3, ls=SCALED, marker="o"), "scaled amplitude"),
                        (st.line_handle(st.INK3, ls=FEATURES, lw=st.LW_GUIDE), "all features")], "upper left")
     st.save(fig, HERE / "figE_sizes.pdf")
 

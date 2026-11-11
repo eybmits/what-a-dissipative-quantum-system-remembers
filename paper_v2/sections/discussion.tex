@@ -1,36 +1,32 @@
 \section{Conclusion}
 \label{sec:conclusion}
-A useful quantum reservoir must retain a readable record of the past while continuing to accept new information. We
-have shown that the structure of dissipation changes how this record survives. Independent decay
-shortens memory as loss grows, whereas strong collective decay prolongs it by protecting information in dark states
-through the quantum Zeno effect. The environment therefore provides a physical means of designing the memory of a
-driven quantum system.
+A useful quantum reservoir must keep a readable signal of the past while it accepts new inputs. We have shown that the
+form of the dissipation sets three properties of this memory. Its lifetime depends on the decay channel, because
+independent decay shortens the memory as the loss grows, whereas strong collective decay prolongs it by holding the
+stored signal in dark states through the quantum Zeno effect.
 
-Longer storage also leaves more time for subsequent inputs to mix with the stored information. Our mixing law makes this accumulation quantitative. It sets a ceiling on the input strength:
-the longer the memory, the more gently new information must be written, so that earlier inputs remain individually
-recoverable. Gentle writing is also sufficient: in the limit of a long memory the share of single inputs follows
-from a linear problem, which reproduces the simulations without a fitted parameter. In the spin reservoirs studied, weakening the input raises the capacity to recall past inputs from about
-15 to 35 units with exact readout, where no input is too weak.
+Writing is limited by mixing, because a longer memory leaves more time for later inputs to mix with the stored
+signal, and the mixing law gives the number of inputs that mix. The input amplitude must fall as the inverse square root of the
+lifetime, and the scaling limit shows that this is enough. The share of single inputs then follows from a linear
+problem that reproduces the simulations without a fitted parameter, and in the spin reservoirs studied the linear
+memory capacity rises from about 15 to 40 of 45 units with an exact readout. The phases of a collective channel decide
+whether an input reaches the dark states at all.
 
-Measurement adds a further requirement: the stored information must produce a signal strong enough to resolve.
-Protection does not make a memory readable: the equal-phase channel holds the largest memory and leaves the faintest
-signal. At strong loss a collective
-channel with non-aligned phases keeps a readable memory where independent decay keeps none. Where the loss can be made
-weak, independent decay recovers the most because its signals are stronger. The resources needed to retrieve information are therefore
-part of the design of the memory itself.
+The signal must be strong enough to resolve, and here the equal-phase channel holds the largest memory and leaves
+the faintest signal. At strong loss a collective channel whose phases differ from those of
+the input field keeps a readable memory where independent decay keeps none. Where the loss can be made weak,
+independent decay recovers the most because its signals are stronger.
 
-Engineering the environment, the input, and the readout together thus provides a route from long-lived quantum
-dynamics to memory that a readout can recover. Four rules summarize this design:
+The environment, the input and the readout have to be designed together, and three rules summarize the design:
 
 \begin{keybox}
 \begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=0pt]
-\item Collective decay protects a memory in dark states. Stronger loss then makes it last longer, as long as local
-  loss stays weak.
-\item The input must be able to reach the protected memory. An input aligned with the decay channel writes into
-  it ever more weakly as the loss grows.
-\item The longer a memory lasts, the more gently each input must be written. Otherwise new inputs mix with the old
-  ones.
-\item What can be read out depends on how strongly the inputs move the state that the dissipation leaves behind. At
-  strong loss a collective channel that is not aligned with the input recovers the most.
+\item \emph{Lifetime.} Collective decay protects a memory in dark states. Stronger loss then makes it last longer, as
+  long as local loss stays weak.
+\item \emph{Writing.} The input must reach the dark states, and an input with the phases of the decay channel reaches
+  them ever more weakly as the loss grows. The longer the memory lasts, the weaker each input must be, or new inputs
+  mix with the old ones.
+\item \emph{Signal.} What can be read out depends on how strongly the inputs move the state that the dissipation
+  leaves behind. At strong loss a collective channel whose phases differ from those of the input recovers the most.
 \end{enumerate}
 \end{keybox}
