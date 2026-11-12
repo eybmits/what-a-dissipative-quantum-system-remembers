@@ -30,6 +30,9 @@
 % violet presentation for the title, hyperlinks, and page numbers.
 \hypersetup{allcolors=quantumviolet}
 \makeatletter
+% run-in paragraph headings with less space above them than the class default
+\renewcommand*\paragraph{\@startsection{paragraph}{4}{\z@}{1.6ex \@plus .6ex \@minus .2ex}{-1em}%
+  {\normalfont\normalsize\bfseries}}
 \renewcommand{\@printtitle}{%
   \color{quantumviolet}%
   % one line: the largest size at which the title fits the page width

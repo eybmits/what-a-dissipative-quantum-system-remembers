@@ -58,11 +58,12 @@ determine the part of the past that a readout recovers is open.
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig2_clock.pdf}
-\caption{\textbf{The decay structure decides whether loss shortens or prolongs the memory.}
+\caption{\textbf{The decay channel decides whether stronger loss shortens or prolongs the memory.}
 \textbf{a,b}~Recall of the input $\tau$ steps back: stronger loss pushes it to shorter delays with independent decay
 (a) and to longer delays with the equal-phase channel (b).
-\textbf{c}~Linear memory capacity of all channels. Shading marks loss stronger than the couplings
-($\gamma>1$).
+\textbf{c}~Linear memory capacity of all channels at a fixed input amplitude, and with the scaled amplitude of
+Sec.~\ref{sec:writing} (circles), in simulated runs summed over the first 300 delays. Shading marks loss stronger
+than the couplings ($\gamma>1$).
 \textbf{d}~With the equal-phase channel the dark modes decay more slowly as the loss grows, while the slowest mode
 of independent decay (dashed) decays faster.}
 \label{fig:clock}
@@ -70,17 +71,15 @@ of independent decay (dashed) decays faster.}
 
 Here we show that the form of the dissipation sets three properties of a memory (Fig.~\ref{fig:concept}): how long a
 stored signal survives, whether and how strongly an input can be written into it, and how strong a signal is left to
-measure. First, the decay channel decides at equal total coupling whether stronger loss shortens or prolongs the
-memory lifetime. Independent decay shortens it, and collective decay prolongs it through dark states
-(Sec.~\ref{sec:clock}). Second, mixing limits how strongly an input can be written. We prove that at a fixed input
+measure. First, at equal total coupling, stronger loss shortens the memory lifetime with independent decay and prolongs it
+with collective decay, through dark states (Sec.~\ref{sec:clock}). Second, mixing limits how strongly an input can be written. We prove that at a fixed input
 amplitude a stored
 signal combines on average $s\,t_{\mathrm{mem}}$ inputs, where the mixing fraction $s$ is the part of the stored
 signal that one input disturbs and $t_{\mathrm{mem}}$ is the memory lifetime (Sec.~\ref{sec:mixing}). We also prove
-that an amplitude that falls as $1/\sqrt{t_{\mathrm{mem}}}$ removes this limit. The share of single inputs then
-converges to a value that depends on the input only through its squared amplitude times the lifetime, and this limit
-agrees with the five-spin results without a fitted parameter. The phases with which the spins couple to a collective
-channel decide whether an input reaches the dark states at all (Sec.~\ref{sec:writing}). Third, the state that the
-dissipation leaves behind sets the size of the signal that measurements must resolve. At strong loss a
+that an amplitude that falls as $1/\sqrt{t_{\mathrm{mem}}}$ removes this limit. Single inputs then keep a fixed share
+of the memory, and this limit agrees with the five-spin results without a fitted parameter. The phases with which the spins couple to a collective
+channel decide whether an input reaches the dark states at all (Sec.~\ref{sec:writing}). Third, the stationary state sets
+the size of the signal that measurements must resolve. At strong loss a
 collective channel whose phases differ from those of the input field recovers the most memory at every measurement
 budget, and where the loss can be made weak, independent decay recovers more still (Sec.~\ref{sec:price}).
 

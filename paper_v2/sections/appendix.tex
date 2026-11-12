@@ -44,7 +44,7 @@ Equivalently, products of more than $x\,t_{\mathrm{mem}}$ inputs carry the share
 
 \subsection{Proof}
 \label{app:proof}
-The proof makes the race of Sec.~\ref{sec:mixing} exact: on average $1/s$ steps pass before the next input joins a
+The proof makes the competition of Sec.~\ref{sec:mixing} exact: on average $1/s$ steps pass before the next input joins a
 product, which meanwhile loses a fraction $1/(s\,t_{\mathrm{mem}})$ of its weight.
 The proof works with covariance matrices. Appendix~\ref{sec:order} splits the stationary covariance $\Sigma$ of the state into the
 parts $G_k$ carried by products of $k$ inputs and gives their recursion, Eq.~\eqref{eq:recursion}: the mean step
@@ -85,7 +85,7 @@ eigenvalue one moves to
   1-\frac{2}{s}\,p+O(p^2):
   \label{eq:ordereig}
 \end{equation}
-each step up in order costs a fraction $2p/s=1/(s\,t_{\mathrm{mem}})$ of the weight, as in the race. To see this,
+each step up in order costs a fraction $2p/s=1/(s\,t_{\mathrm{mem}})$ of the weight, as in that competition. To see this,
 differentiate $(1-\mathcal B)\mathcal F=\mathcal K$ at $p=0$ and apply it to the identity, which gives
 $(1-\mathcal B_0)\mathcal F_0'1=-2\cdot1$. Its trace is the weight $\ell(\mathcal F_0'1)=-2n$, and dividing by
 $\ell(1)=ns$ gives the rate $2/s$.
@@ -184,7 +184,7 @@ with independent decay.
 \end{equation}
 with a rotation $O_0$, $\mathbb Ea_1=0$, and a step that is a rotation without the leak, so that
 $a_1^{\mathsf T}=-a_1$ and $a_2+a_2^{\mathsf T}=a_1^2$. Weak independent decay has this form with $\epsilon=\gamma$,
-and the strong-loss generator of Eq.~\eqref{eq:reduced} has it on the dark coordinates with $\epsilon=1/\gamma$:
+and the effective generator of Eq.~\eqref{eq:reduced} has it on the dark coordinates with $\epsilon=1/\gamma$:
 $O_0$ is the step of the Hamiltonian at the mean input, $a_1$ and $a_2$ are its response to the input field, and $Y$
 and $c_0$ the leak. Let $\Pi_0$ project onto the vectors that $O_0$ leaves fixed and $\Pi$ onto the symmetric matrices
 that commute with $O_0$, the slow covariances. For $d$ energy levels with distinct transition frequencies these are
@@ -309,8 +309,8 @@ capacity of $X_1$.
 \paragraph{Why coherence carries the memory.}
 In the limit the mean $m_0$ consists of populations of the energy levels of the Hamiltonian restricted to the dark
 states, and a new input turns a population into a coherence between two levels: $V_1$ lies in the coherences.
-Dephasing in this energy basis after every step removes them, and the stored signal falls to order $\epsilon^2$, the
-collapse as $1/\gamma^2$ of Sec.~\ref{sec:writing}. Numerically the variance of $X_1$ stays between $10^{-4}$ and
+Coherence shapes the performance of spin reservoirs~\cite{Palacios2024}. Dephasing in this energy basis after every
+step removes the coherences, and the stored signal falls to order $\epsilon^2$, that is, as $1/\gamma^2$. Numerically the variance of $X_1$ stays between $10^{-4}$ and
 $2\times10^{-3}$ from $\gamma=2^8$ to $2^{18}$ when the coherences are kept and falls as $\gamma^{-2}$, by six orders
 of magnitude, when they are erased.
 
@@ -371,14 +371,14 @@ place of the mean rate they hold to within 11\% wherever the recall time exceeds
 \centering
 \includegraphics[width=\columnwidth]{figures/figE_checks.pdf}
 \caption{\textbf{Two supporting results.}
-\textbf{a}~The time over which one input stays readable, rescaled as the sum of decay and mixing predicts: the four
-amplitudes fall on one curve per channel.
-\textbf{b}~Capacity recovered at a budget of $10^9$ reservoir steps per output step, with every replayed step
+\textbf{a}~The recall time $t_{\mathrm f}$, rescaled as the sum of decay and mixing predicts: the four amplitudes fall
+on one curve per channel.
+\textbf{b}~Capacity recovered at a budget of $10^9$ reservoir steps per output step, with every repeated step
 counted. Shading as in Fig.~\ref{fig:clock}c.}
 \label{fig:checks}
 \end{figure}
 
-The write per input of Fig.~\ref{fig:mixing}b is $2\|R^\flat[E(\tfrac34)-E(\tfrac14)]r_*\|$ at the stationary state
+The change per input of Fig.~\ref{fig:mixing}b is $2\|R^\flat[E(\tfrac34)-E(\tfrac14)]r_*\|$ at the stationary state
 $r_*$ of the equal-phase channel, for the input patterns $(1,\dots,1)$ and $\sqrt2\cos(2\pi i/5)$ multiplying $X_i$.
 The mode-matched pattern falls as $1/\gamma$, to 0.003 at $\gamma=128$, while the other falls from 0.40 to 0.18. The rule
 is sharp: a phase error $\delta$ couples dark states directly at order $\delta$, so beyond $\gamma\sim1/\delta$ the
@@ -401,8 +401,7 @@ opposite-phase channel rises from 1.8 at $\gamma=1$ to 23 at $\gamma=4096$, and 
 Figure~\ref{fig:mixing}a shows the linear recall summed over all delays, from the same moments. At a fixed amplitude
 it peaks at 16.0 units with the opposite-phase channel ($\gamma=64$, $s\,t_{\mathrm{mem}}=0.32$) and at 14.9 with
 independent decay ($\gamma=1/16$, 0.20), and falls to 2.2 and 3.7 units at lifetimes of 750 and 430 steps, where
-single past inputs carry 0.05 and 0.09 of the capacity. Table~\ref{tab:memory} sums the first 300 delays of simulated
-runs on eight reservoirs instead, which gives 14.7 units for the opposite-phase channel at $\gamma=64$. With the scaled amplitude single inputs carry 0.82 of the capacity
+single past inputs carry 0.05 and 0.09 of the capacity. With the scaled amplitude single inputs carry 0.82 of the capacity
 at a lifetime of 20 steps and 0.87 to 0.90 beyond 80 steps, the recall stays between 39 and 40 units, and
 $s\,t_{\mathrm{mem}}$ between 0.007 and 0.014. Of the inputs that the scaled amplitude removes from the mean of $D$
 with the opposite-phase channel, the mixing over the lifetime accounts for 43\% at a lifetime of 20 steps, for 84\%
@@ -418,7 +417,7 @@ $1/\gamma$, which the readout of the limit includes and which raises the share o
 one at order $1/\gamma^2$, which the recursion no longer resolves from $\gamma=1024$ on. The share of single inputs is
 here the share of $D=1$, which includes the current input.
 
-For the strong-loss generator the recursion converges onto the limit: at $\nu=1$ the share of single inputs agrees to
+For the effective generator of Eq.~\eqref{eq:reduced} the recursion converges onto the limit: at $\nu=1$ the share of single inputs agrees to
 four digits from $\gamma=2^{14}$ on. For the full master equation at $\gamma=1/4096$ and 4096, on two reservoirs and
 for $\nu=1/16$ to 64, it differs from the limit by at most 0.002 with independent decay and 0.009 with the
 opposite-phase channel, the mean of $D$ by 0.003 and 0.016, and the signal, the variance that single inputs leave in
@@ -427,22 +426,26 @@ with independent decay and 0.90 to 0.94 with the opposite-phase channel. The sig
 at 68 to 215, where single inputs carry 0.38 to 0.55 of the capacity and $\varrho/(1-\varrho)$ lies between 0.8 and
 4.8.
 
-Table~\ref{tab:memory} collects the capacities. With exact readout all capacities of a readout add up to its rank, 45
-here~\cite{Dambre2012}, so raising the linear memory capacity from 15 to 35 units leaves at most 10 instead of 30 for
-products of inputs.
+Table~\ref{tab:memory} collects the capacities of simulated runs on eight reservoirs. Their readout is trained and
+tested on a finite number of inputs, and their sum stops at 300 delays. On the four reservoirs that both use, with the
+scaled amplitude at $\gamma=1/64$ and 256, the simulated runs give 35.0 and 37.1 units, and the exact moments give 36.8
+and 39.4 units within the first 300 delays and 36.9 and 39.9 over all delays. All capacities of a readout add up to its rank, 45 here~\cite{Dambre2012}, so raising the linear
+memory capacity from 15 to 40 units leaves at most 5 instead of 30 for products of inputs.
 
 \begin{table}[!t]
-\caption{\label{tab:memory}Linear memory capacity $\sum_\tau C_\tau$ of the five-spin reservoir in units (ceiling
-45), summed over the first 300 delays of simulated runs: with exact readout, at a budget of $10^9$ reservoir steps per output step, and with $n$ shots per setting
-and step of replayed inputs (Sec.~\ref{sec:price}). Mean and standard deviation over eight reservoirs.}
+\caption{\label{tab:memory}Linear memory capacity $\sum_\tau C_\tau$ of the five-spin reservoir in simulated runs, in
+units (maximum 45) and summed over the first 300 delays: with exact expectation values, at a budget of $10^9$
+reservoir steps per output step, and with $n$ shots per setting and step with the rewinding protocol
+(Sec.~\ref{sec:price}). Mean and standard deviation over eight reservoirs. Exact moments over all delays, as quoted in
+Secs.~\ref{sec:mixing} and~\ref{sec:writing}, are higher by up to 4 units (Appendix~\ref{app:num-capacity}).}
 \centering\footnotesize\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
  & independent & opposite & equal\\
  & decay & phases & phases\\\midrule
-tuned loss, $\eta=1$$^{a}$ & $14.5\pm1.0$ & $14.7\pm1.1$ & $30.6\pm1.4$\\
+fixed amplitude$^{a}$ & $14.5\pm1.0$ & $14.7\pm1.1$ & $30.6\pm1.4$\\
 scaled amplitude$^{b}$ & $34.9\pm2.0$ & $35.7\pm3.0$ & --$^{c}$\\
-budget $10^9$, $\eta=1$$^{d}$ & $12.8\pm0.7$ & $12.0\pm0.7$ & $12.8\pm0.7$\\
+budget $10^9$, fixed$^{d}$ & $12.8\pm0.7$ & $12.0\pm0.7$ & $12.8\pm0.7$\\
 budget $10^9$, scaled$^{e}$ & $33.7\pm1.1$ & $20.9\pm1.1$ & --$^{c}$\\
 $\gamma=64$, exact$^{f}$ & $1.2\pm0.0$ & $14.7\pm1.1$ & $30.6\pm1.4$\\
 $\gamma=64$, $n=10^4$$^{f}$ & $0.2\pm0.0$ & $8.2\pm0.8$ & $0.2\pm0.0$\\
@@ -452,9 +455,9 @@ $\gamma=64$, $n=10^6$$^{f}$ & $0.2\pm0.0$ & $9.9\pm0.7$ & $2.3\pm1.0$\\
 
 \smallskip
 \raggedright\footnotesize
-$^{a}$At $\gamma=0.1$, 64 and 64. $^{b}$At $\gamma=1/64$ and 256. $^{c}$The uniform input is mode-matched
+$^{a}$At the best loss rates, $\gamma=0.1$, 64 and 64. $^{b}$At $\gamma=1/64$ and 256. $^{c}$The uniform input is mode-matched
 to this channel. $^{d}$At $\gamma=1/8$, 16 and 1, the best loss rates on the grid. $^{e}$At $\gamma=1/64$ and 64.
-$^{f}$At $\eta=1$.
+$^{f}$At a fixed amplitude.
 \end{table}
 
 \subsection{Best input amplitude (Secs.~\ref{sec:writing} and~\ref{sec:price})}
@@ -462,10 +465,10 @@ $^{f}$At $\eta=1$.
 We mapped the linear memory capacity over loss rates and amplitudes: the first four reservoirs, independent decay at
 $\gamma=2^{-8}$ to $2^{-2}$ and at 1, the opposite-phase channel at $\gamma=1$, 4 and $2^3$ to $2^8$, and fifteen
 amplitudes from $\eta=2^{-7}$ to 1, with exact features or $10^6$ to $10^8$ shots per setting and step from
-the state with the full history. With exact readout the capacity rises as the input weakens, up to 43 of the 45
+the state with the full history. With exact expectation values the capacity rises as the input weakens, up to 43 of the 45
 units. With $10^6$ to $10^8$ shots an optimum exists. Its amplitude falls with the relaxation time, here the recall
 time at $\eta=2^{-8}$, with fitted exponents between $-0.40$ and $-0.46$ in all six fits over the
-loss rates whose lifetime is at least four steps. Without the loss rates whose recall reaches past the 300 delays
+loss rates whose relaxation time is at least four steps. Without the loss rates whose recall reaches past the 300 delays
 summed, the exponents are $-0.48$ to $-0.56$ with independent decay and $-0.38$ to $-0.39$ with the opposite-phase
 channel. The optimum is flat: one amplitude for all loss rates recovers on average 91\% to 97\% of the capacity at
 the optimum tracked at each loss rate, so the input need not be tuned to the loss rate.
@@ -473,15 +476,15 @@ the optimum tracked at each loss rate, so the input need not be tuned to the los
 \subsection{Measurement (Sec.~\ref{sec:price})}
 \label{app:num-measurement}
 Weak signals cost measurements: with independent decay at $\gamma=64$ the previous input moves the state by about
-$10^{-9}$, which gives perfect recall of that input with exact readout and none with $10^8$ shots per setting
+$10^{-9}$, which gives perfect recall of that input with exact expectation values and none with $10^8$ shots per setting
 and step. With the opposite-phase channel, the scaled amplitude lowers the signal from $8\times10^{-5}$ to $5\times10^{-6}$,
-and restarting each run from $|00000\rangle$, as the replay does, raises it to $4\times10^{-5}$, against
+and restarting each run from $|00000\rangle$, as the rewinding protocol does, raises it to $4\times10^{-5}$, against
 $1.2\times10^{-4}$ with independent decay and the scaled amplitude at $\gamma=1/32$.
 
-The replayed range $\tau_{90}$ grows with the memory lifetime: with the scaled amplitude of the
+The rewinding window $\tau_{90}$ grows with the memory lifetime: with the scaled amplitude of the
 opposite-phase channel from about 30 steps at $\gamma=16$ to 130 at $\gamma=256$. The thresholds of Sec.~\ref{sec:price}
-are the crossings of the capacities at a fixed and with the scaled amplitude, from replayed runs at $10^3$ to
-$10^{8.5}$ shots per setting and step. With replayed inputs the equal-phase channel at $\gamma=64$ stays at the
+are the crossings of the capacities at a fixed and with the scaled amplitude, from runs with the rewinding protocol at $10^3$ to
+$10^{8.5}$ shots per setting and step. With the rewinding protocol the equal-phase channel at $\gamma=64$ stays at the
 floor up to $10^4$ shots and recovers 2.3 units at $10^6$ and 15.5 at $3\times10^8$. There it passes the
 opposite-phase channel at a fixed amplitude, 11.0 units, and stays below it with the scaled amplitude, 26.3 units.
 At $10^3$ and $10^4$ shots the opposite-phase channel at $\gamma=64$ recovers 5.4 and 8.2 units at a fixed amplitude,
@@ -496,7 +499,8 @@ training inputs change the sampled capacity by less than 1.3 units.
 
 \begin{table}[!t]
 \caption{\label{tab:matched}The eight decay channels at a relaxation time of 32 input steps and $\eta=0.35$:
-loss rate, stationary response, and linear memory capacity with exact readout and with $10^6$ shots per measurement
+loss rate, linear response of the stationary state, and linear memory capacity with exact expectation values and with
+$10^6$ shots per measurement
 setting and step. Mean and standard deviation over eight reservoirs.}
 \centering\footnotesize\setlength{\tabcolsep}{3.5pt}
 \begin{tabular}{@{}lcccc@{}}
@@ -522,14 +526,14 @@ $^{a}$A readout without any recall reads about 0.2 units, the floor of the sum o
 For the matched relaxation time of Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} we find, for every channel
 and reservoir, the loss rate at which $t_{\mathrm{rel}}=32$ steps, at weak loss when the kernel of the dissipator is
 the stationary state alone and at strong loss otherwise, and run the reservoir there with $\eta=\sqrt{4/32}$. The
-stationary response is the Euclidean norm of the Pauli
+linear response of the stationary state is the Euclidean norm of the Pauli
 coefficients $\Tr(PW)$, over all Pauli strings $P$, of the change $W$: the commutator $-i[H_{\mathrm{in}},\rho_*]$ with
 $H_{\mathrm{in}}=h\sum_iX_i$ and $\rho_*$ the stationary state, projected spectrally onto the slow modes. These are the
 modes of the kernel, or without one those decaying at most four times faster than the slowest. The loss
-rate is matched for each reservoir, so Table~\ref{tab:matched} gives its mean. Over the 56 reservoirs of the seven channels that respond, the rank correlation of the stationary response is 0.96 with
+rate is matched for each reservoir, so Table~\ref{tab:matched} gives its mean. Over the 56 reservoirs of the seven channels that respond, the rank correlation of the linear response is 0.96 with
 the recovered fraction of the capacity and 0.83 with the recovered capacity itself.
 
-\subsection{Ordinary noise}
+\subsection{Local loss and dephasing}
 \label{app:num-noise}
 Adding independent decay $\sqrt{\gamma_{\mathrm{loc}}}\,\sigma_i^-$ to the equal-phase channel gives
 $\bar\kappa=\kappa_{\mathrm c}/\gamma+\kappa_{\mathrm l}\gamma_{\mathrm{loc}}$, where to first order $\kappa_{\mathrm l}$

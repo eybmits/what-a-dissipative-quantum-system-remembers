@@ -4,21 +4,28 @@ This appendix specifies the five-spin simulations and defines the quantities of 
 Table~\ref{tab:times} lists.
 
 \begin{table}[!t]
-\caption{\label{tab:times}Quantities of the text. Times are in input steps of length $\Delta t$.}
+\caption{\label{tab:times}Time scales and other quantities. Times are in input steps of length $\Delta t$. The
+theorems use only $t_{\mathrm{mem}}$.}
 \centering\footnotesize\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lp{0.70\columnwidth}@{}}
+\begin{tabular}{@{}lp{0.80\columnwidth}@{}}
 \toprule
-$t_{\mathrm{mem}}$ & memory lifetime: how long the variance of a stored signal survives, whatever inputs it combines
-  (Appendix~\ref{sec:order})\\
-$t_{\mathrm f}$ & recall time: how long one input stays linearly readable on its own
-  (Appendix~\ref{sec:methods-slow})\\
-$t_{\mathrm{rel}}$ & relaxation time: the recall time with the input held at its mean value
-  (Appendix~\ref{sec:methods-sampling})\\
-$\tau_{90}$ & replayed range: the first $\tau_{90}$ delays hold 90\% of the exact recall\\
+\multicolumn{2}{@{}l}{\emph{Time scales}}\\
+$t_{\mathrm{mem}}$ & memory lifetime: decay time of the variance of the stored signal
+  (Appendix~\ref{sec:order}). Used in Secs.~\ref{sec:clock} to~\ref{sec:writing}.\\
+$t_{\mathrm{rel}}$ & relaxation time: decay time of the slow modes at the mean input, independent of the input
+  amplitude (Appendix~\ref{sec:methods-sampling}). Used to match the channels in Fig.~\ref{fig:sampling}b,c and
+  Table~\ref{tab:matched}.\\
+$t_{\mathrm f}$ & recall time: decay time of the response to one input, with
+  $1/t_{\mathrm f}=1/t_{\mathrm{rel}}+O(\eta^2)$ (Appendix~\ref{sec:methods-slow}). Used in
+  Appendix~\ref{app:numerics} only.\\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Other quantities}}\\
 $D$ & number of distinct past inputs that a part of the stored signal depends on\\
 $s$ & mixing fraction: the part of a stored signal that one input turns differently from the average input\\
-$\nu$ & squared input amplitude per leak, $\eta^2/\epsilon$, which a scaled amplitude holds fixed
+$\nu$ & squared input amplitude per leak rate, $\eta^2/\epsilon$, which the scaled amplitude holds fixed
   (Appendix~\ref{app:gentle})\\
+$\tau_{90}$ & rewinding window: the first $\tau_{90}$ delays hold 90\% of the exact recall
+  (Appendix~\ref{sec:methods-sampling})\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -33,7 +40,8 @@ couplings and its input stream from one seed, and every channel uses the same ei
 time, we record the 45 features, the expectation values of $X_i$, $Y_i$, $Z_i$ and of $X_iX_j$, $Y_iY_j$, $Z_iZ_j$, for
 2000 training, 400 validation and 1600 test inputs. The readout is a least-squares fit with an intercept on the
 training and validation inputs, and $C_\tau$ is the squared correlation of its estimate with $u_{t-\tau}$ on the test
-inputs. The linear memory capacity sums $C_\tau$ over delays 1 to 300. A delay without any recall reads about $1/1600$
+inputs. In these simulated runs the linear memory capacity sums $C_\tau$ over delays 1 to 300, and the exact
+moments of Appendix~\ref{sec:order} give the sum over all delays. A delay without any recall reads about $1/1600$
 on the test inputs, so the sum has a floor of about 0.2 units. Figures show the mean of the eight reservoirs, with
 bands from the 16th to the 84th percentile.
 
@@ -70,7 +78,7 @@ dephasing & $\sqrt{\gamma/2}\,Z_i$ & 32\\
 \end{tabular}
 \end{table}
 
-\subsection{Slow modes, recall time and the strong-loss generator}
+\subsection{Slow modes, recall time and the effective generator}
 \label{sec:methods-slow}
 The input-averaged step $\bar E=\mathbb E_uE(u)$ is computed by six-point Gauss--Legendre quadrature. Its eigenvalues
 $\lambda_j$ give decay rates $\kappa_j=-\ln|\lambda_j|/\Delta t$. If the kernel of the dissipator has dimension $n$, the slow
@@ -84,7 +92,8 @@ $n-1$ slowest of them dark and all faster ones bright.
 
 Let $\mathcal D$ be the unit-rate dissipator, $\mathcal P=\lim_{t\to\infty}e^{t\mathcal D}$ the projector onto its
 kernel and $\mathcal S=(\mathcal D+\mathcal P)^{-1}-\mathcal P$ its inverse on the decaying operators. At strong loss,
-eliminating the decaying operators to second order~\cite{Zanardi2014,Reiter2012} gives the generator on the kernel,
+adiabatic elimination of the decaying operators to second order~\cite{Zanardi2014,Reiter2012} gives the effective
+generator on the kernel,
 \begin{equation}
   \mathcal G(u)=\mathcal P\mathcal H(u)\mathcal P-\frac1\gamma\,\mathcal P\mathcal H(u)\mathcal S\mathcal H(u)\mathcal P ,
   \label{eq:reduced}
@@ -99,7 +108,8 @@ $\eta=\min(1,\gamma^{1/2})$ for independent decay, which is $\nu=1$ in Appendix~
 \label{sec:order}
 The order $D$ of a stored signal is the number of distinct past inputs it depends on (Sec.~\ref{sec:mixing}).
 Precisely, for independent inputs, every function of the past inputs with finite variance splits uniquely into orthogonal parts, each of which
-depends on a fixed finite set of inputs. The order of a part is the size of its set, not a polynomial degree. For signs
+depends on a fixed finite set of inputs, the Hoeffding decomposition~\cite{Hoeffding1948}. The order of a part is the
+size of its set, not a polynomial degree. For signs
 $u_t=\pm1$ the parts are the products $\prod_{j\in J}u_{t-j}$, and for continuous inputs one uses orthogonal
 polynomials in each input. We collect the traceless
 coefficients of the state in an orthonormal operator basis in a vector $r$, on which quantum channels act
@@ -132,8 +142,9 @@ A quantum measurement gives a random outcome, so every feature is an average ove
 setting and step. We use three settings, with all spins read along $X$, $Y$ or $Z$. For each step we form the outcome
 distributions of the three settings and draw $n$ shots from each. The readout is fitted as above, with a ridge
 chosen from fourteen values between 0 and $10^4$ on the validation inputs. In Sec.~\ref{sec:price} the distributions
-come from the replay: each output step replays its last $\tau_{90}$ inputs from $|00000\rangle$, where the first
-$\tau_{90}$ delays hold 90\% of the exact recall. We count the budget $B$ in reservoir steps, shots times replayed steps summed over the three settings, per
+come from the rewinding protocol~\cite{Mujal2023}: for each output step the reservoir is restarted in
+$|00000\rangle$ and the last $\tau_{90}$ inputs are repeated, where the first $\tau_{90}$ delays hold 90\% of the exact
+recall. We count the budget $B$ in reservoir steps, shots times repeated steps summed over the three settings, per
 output step, so that $n=B/(3\tau_{90})$, and we also run $n=10^3$ to $10^{8.5}$ in half decades.
 Only Fig.~\ref{fig:sampling}b,c and Table~\ref{tab:matched} use the state with the full history. Their loss rates are matched to a relaxation time $t_{\mathrm{rel}}=1/(\Delta t\,\bar\kappa_0)$ of 32 input steps, where $\bar\kappa_0$ is the mean decay rate of the slow
 modes of the generator at the mean input, without the mixing by the inputs (Appendix~\ref{app:num-measurement}).

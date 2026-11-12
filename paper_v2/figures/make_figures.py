@@ -308,7 +308,7 @@ def fig3():
     b.set_xlim(0.15, 250)
     b.set_ylim(2e-4, 1)                     # room under the curves for the key
     b.set_xlabel(r"Loss rate $\gamma$")
-    b.set_ylabel(r"Write per input")
+    b.set_ylabel(r"Change per input")
 
     # c: five spins, mean order against the mixing law; room above the points for the key
     five_law(c)
@@ -472,7 +472,7 @@ REPLAY_LINES = ((("separate", "gentle_weak", 0.03125), "-", "o"), (("separate", 
 
 def fig_sampling():
     """What survives sampling and why: memory against the number of shots, and feature variance and the
-    recovered fraction of the capacity against the stationary response at a matched relaxation time, three panels
+    recovered fraction of the capacity against the linear response at a matched relaxation time, three panels
     across the page; the key of the line styles sits in a and the key of the colours, which all panels share, in b."""
     fig = st.wide_figure(1, hp=st.HP_ROW)
     a, b, c = (st.wide_place(fig, k) for k in range(3))
@@ -510,7 +510,7 @@ def fig_sampling():
         ax.set_yscale("log")
         st.decades(ax, "x", labels="power", every=2)
         ax.set_xlim(1.2e-3, 4)
-        ax.set_xlabel(r"Stationary response")
+        ax.set_xlabel(r"Linear response")
     st.decades(b, "y", labels="power", every=2)
     b.set_ylim(1e-8, 3e-3)
     b.set_ylabel("Feature variance")

@@ -8,8 +8,8 @@ Claudia Linnhoff-Popien and Jonas Stein, [arXiv:2608.14181](https://arxiv.org/ab
 - Three-spin limits (Appendix D): derivation in `paper_v2/certificates/three_spin_limits.pdf`, interval
   certificates in `paper_v2/certificates/spin_certificates.zip`; its `README.txt` explains how to run them
 
-Sections 3.1 to 3.3 of the paper use exact expectation values; Sec. 3.4 counts measurements, replaying the
-inputs that the memory holds from a fixed state. Five-spin runs use eight fixed seeds unless the paper states
+Sections 3.1 to 3.3 of the paper use exact expectation values; Sec. 3.4 counts measurements with the
+rewinding protocol, which restarts the reservoir and repeats the inputs that the memory holds. Five-spin runs use eight fixed seeds unless the paper states
 fewer.
 
 ## Reproduce
@@ -35,10 +35,10 @@ The raw records come from these scripts; each one documents its stages, and they
 
 | Script | Content |
 |---|---|
-| `experiments/run_dark_projection.py` | five-spin memory, spectra, decay rates and every decay rate of Fig. 2d, dark-state model, erasure, write of aligned and non-aligned input patterns, added independent decay |
-| `experiments/run_jump_families.py` | exchange, gain/loss and dephasing; protected operators |
+| `experiments/run_dark_projection.py` | five-spin memory, spectra, decay rates and every decay rate of Fig. 2d, dark-state model, erasure, change per input for mode-matched and other input patterns, added independent decay |
+| `experiments/run_jump_families.py` | exchange, gain/loss and dephasing; kernel of the dissipator |
 | `experiments/run_review_runs.py` | scaled amplitude, slow modes up to large loss, local dephasing, signal size |
-| `experiments/run_clock.py` | single-input recall time at four input amplitudes, finite sampling, budgets and crossings with the replayed inputs, write onto the slow modes, input on one spin |
+| `experiments/run_clock.py` | recall time at four input amplitudes, finite sampling, budgets and crossings with the rewinding protocol, linear response of the stationary state, input on one spin |
 | `experiments/run_five_spin_orders.py` | exact order distribution of the five-spin capacity against the mixing law |
 | `experiments/run_scaling_limit.py` | the scaling limit for independent decay and the opposite-phase channel, and the order recursion at fixed squared amplitude per leak (Fig. 4d, Appendices B.4 and E.3); `--analyse` prints the numbers |
 | `experiments/run_sizes.py` | memory against the loss rate at three, four and six spins (Fig. 6) |
