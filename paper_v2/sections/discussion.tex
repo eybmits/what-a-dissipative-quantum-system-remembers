@@ -1,21 +1,23 @@
 \section{Conclusion}
 \label{sec:conclusion}
-Until now, the usual control over the dissipation of a quantum reservoir was its rate. Stronger loss meant a shorter
-memory, and the best rate was a compromise~\cite{Sannia2024,Goetting2025}. Three facts were known separately. Dark
-states are protected by the quantum Zeno effect, memory trades against nonlinearity, and a weak signal is costly to
-measure. How they act together on a memory that keeps receiving inputs was open.
+Until now, the usual control over the dissipation of a quantum reservoir was its
+rate~\cite{Sannia2024,Goetting2025}, and three things were unknown. It was unknown whether a reservoir can keep its
+memory under strong loss. It was unknown how much of a long memory survives the inputs that keep arriving, because
+the trade-off between memory and nonlinearity had no law. And it was unknown which form of dissipation leaves a
+memory that measurements can read.
 
-We now know that the form of the dissipation decides how such a memory is stored, written and read. Loss can protect
-a memory, because with collective decay a stronger loss makes it last longer. The trade-off between memory and
-nonlinearity has a law, which gives the number of inputs that mix into a stored signal as its lifetime times the
-fraction that one input mixes. An input scaled to the lifetime keeps this number fixed, so a memory can last as long
-as desired and still hold single inputs. Both statements are theorems, and they hold for classical and quantum
-reservoirs alike. What measurements recover of a memory is decided by the stationary state.
+All three are now known. Strong loss can protect a memory. With collective decay the memory is held in dark states
+and lasts longer the stronger the loss. The trade-off between memory and nonlinearity has a law. The longer a memory
+lasts, the more inputs mix into it, and a weaker input, scaled to the lifetime, stops this growth, so a memory can
+last as long as desired and still hold single inputs. Both statements are theorems. They hold for classical and
+quantum reservoirs alike, and they agree with our simulations without a fitted parameter. Finally, the stationary
+state decides how much of a memory measurements can read, and with it which dissipation to build.
 
-For a reservoir under strong loss, three rules follow. Store the memory in dark states. Write it with an input that
-reaches these states and is scaled to the lifetime. Read it where the stationary state responds to the input.
-
-Engineered dissipation is known to prepare and protect quantum states~\cite{Poyatos1996,Verstraete2009}. Our results
-show that it also shapes the memory of a system that processes information over time, and that what this memory
-holds follows from the equations of motion, before any training. Dissipation makes a reservoir forget, and its form
-decides what the reservoir remembers.
+For the field, this turns dissipation from a rate to be tuned into a structure to be designed. Platforms with
+collective loss, such as emitters that share a waveguide or a cavity, can use strong loss to lengthen a memory
+instead of fighting it. The trade-off between memory and nonlinearity can be computed from the equations of motion,
+before a reservoir is built or trained, and for classical reservoirs as well. Three design rules follow. Store a
+memory in dark states, write it with an input that reaches them and is scaled to the lifetime, and read it where the
+stationary state responds to the input. Engineered dissipation is known to prepare and protect quantum
+states~\cite{Poyatos1996,Verstraete2009}, and it now also shapes a memory. Dissipation makes a reservoir forget, and
+its form decides what the reservoir remembers.

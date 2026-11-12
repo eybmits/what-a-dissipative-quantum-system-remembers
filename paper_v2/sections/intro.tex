@@ -76,20 +76,16 @@ of independent decay (dashed) decays faster.}
 Here we show that the form of the dissipation matters as much as its rate, because it decides how a memory is
 stored, written and read (Fig.~\ref{fig:concept}). Our contributions are threefold.
 \begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=3pt]
-\item \emph{Storing.} Stronger loss can prolong a memory. At equal total coupling, independent decay shortens the
-  memory as the loss grows, whereas collective decay prolongs it, because the quantum Zeno effect holds the stored
-  signal in dark states (Sec.~\ref{sec:clock}).
-\item \emph{Writing.} Two theorems say what a long memory holds. The mixing law states that a stored signal combines
-  on average $s\,t_{\mathrm{mem}}$ inputs, the memory lifetime $t_{\mathrm{mem}}$ times the fraction $s$ of the
-  signal that one input mixes. The scaling limit states that an input amplitude that falls as
-  $1/\sqrt{t_{\mathrm{mem}}}$ keeps this number fixed however long the memory lasts. The limit agrees with five-spin
-  reservoirs without a fitted parameter, and this amplitude raises their linear memory capacity from 15 or 16 to
-  40, out of at most 45 (Sec.~\ref{sec:mixing}).
-\item \emph{Reading.} The stationary state sets what measurements recover. At strong loss a collective channel whose
-  phases differ from those of the input field recovers the most memory, and at weak loss independent decay does
-  (Sec.~\ref{sec:price}).
+\item \emph{Storing.} Stronger loss can protect a memory. When the spins decay collectively, the quantum Zeno effect
+  holds the stored signal in dark states, and the memory lasts longer the stronger the loss (Sec.~\ref{sec:clock}).
+\item \emph{Writing.} A long memory is hard to write, because every new input mixes with the inputs already stored.
+  We prove a law for how many inputs mix as a memory grows longer, and we prove that a weaker input, scaled to the
+  lifetime, keeps this number fixed. A memory can then last as long as desired and still hold single inputs. In our
+  five-spin reservoirs this more than doubles the number of past inputs that can be recalled
+  (Sec.~\ref{sec:mixing}).
+\item \emph{Reading.} A weaker input leaves a fainter signal. We show that the stationary state decides how much of
+  a memory measurements recover, and which form of dissipation recovers the most (Sec.~\ref{sec:price}).
 \end{enumerate}
-Both theorems hold for every reservoir that meets their conditions, classical ones included, and give the trade-off
-between memory and nonlinearity from the equations of motion alone. Together, these results make dissipation a
-design tool. A reservoir can be built to remember longer under stronger loss, and what it will remember can be
-computed before it is built.
+Both theorems hold for classical reservoirs as well. Together, these results make dissipation a design tool. A
+reservoir can be built to remember longer under stronger loss, and what it will remember can be computed before it
+is built.
