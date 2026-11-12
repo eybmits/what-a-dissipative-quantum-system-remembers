@@ -1,33 +1,21 @@
 \section{Conclusion}
 \label{sec:conclusion}
-A useful quantum reservoir must keep a readable signal of the past while it accepts new inputs. We have shown that the
-form of the dissipation decides how this memory is stored, written and read. Collective decay stores a signal in dark
-states, and the quantum Zeno effect makes it last longer the stronger the loss, whereas independent decay shortens
-the memory. Writing is limited by mixing, because a longer memory leaves more time for later inputs to mix with the
-stored signal. The mixing law gives the number of inputs that mix, the memory lifetime times the fraction of the
-signal that one input mixes. The scaling limit shows that an amplitude that falls as the inverse square root of the
-lifetime keeps this number fixed, so single inputs keep their share of the memory however long it lasts. In the
-spin reservoirs studied, this scaling brings the linear memory capacity close to its upper bound, the number of
-features. Reading needs a signal that is strong enough to resolve, and the stationary state sets its size.
+Until now, the usual control over the dissipation of a quantum reservoir was its rate. Stronger loss meant a shorter
+memory, and the best rate was a compromise~\cite{Sannia2024,Goetting2025}. Three facts were known separately. Dark
+states are protected by the quantum Zeno effect, memory trades against nonlinearity, and a weak signal is costly to
+measure. How they act together on a memory that keeps receiving inputs was open.
 
-The environment, the input and the readout have to be designed together, following three rules:
+We now know that the form of the dissipation decides how such a memory is stored, written and read. Loss can protect
+a memory, because with collective decay a stronger loss makes it last longer. The trade-off between memory and
+nonlinearity has a law, which gives the number of inputs that mix into a stored signal as its lifetime times the
+fraction that one input mixes. An input scaled to the lifetime keeps this number fixed, so a memory can last as long
+as desired and still hold single inputs. Both statements are theorems, and they hold for classical and quantum
+reservoirs alike. What measurements recover of a memory is decided by the stationary state.
 
-\begin{keybox}
-\begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=0pt]
-\item \emph{Store.} Collective decay protects a memory in dark states. Stronger loss then makes it last longer, as
-  long as independent decay stays weak.
-\item \emph{Write.} The input must reach the dark states, and an input with the phases of the decay channel reaches
-  them ever more weakly as the loss grows. The longer the memory lasts, the weaker each input must be, or new inputs
-  mix with the old ones.
-\item \emph{Read.} What can be read out depends on how strongly the inputs move the stationary state. At strong
-  loss a collective channel whose phases differ from those of the input recovers the most, and at weak loss
-  independent decay does.
-\end{enumerate}
-\end{keybox}
+For a reservoir under strong loss, three rules follow. Store the memory in dark states. Write it with an input that
+reaches these states and is scaled to the lifetime. Read it where the stationary state responds to the input.
 
 Engineered dissipation is known to prepare and protect quantum states~\cite{Poyatos1996,Verstraete2009}. Our results
-show that it also shapes the memory of a system that processes information over time. The two theorems hold for every reservoir that meets their conditions, classical
-ones included, and they give the trade-off between memory and nonlinearity from the equations of motion, before any
-training. Collective decay arises wherever emitters share a mode, and
-dark states of several qubits have been prepared in superconducting circuits~\cite{Zanner2022}. Dissipation makes a
-reservoir forget, and its form decides what the reservoir remembers.
+show that it also shapes the memory of a system that processes information over time, and that what this memory
+holds follows from the equations of motion, before any training. Dissipation makes a reservoir forget, and its form
+decides what the reservoir remembers.

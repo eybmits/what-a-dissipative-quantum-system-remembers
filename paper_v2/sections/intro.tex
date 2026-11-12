@@ -73,23 +73,23 @@ of independent decay (dashed) decays faster.}
 \label{fig:clock}
 \end{figure*}
 
-Here we show that the form of the dissipation decides how a memory is stored, written and read
-(Fig.~\ref{fig:concept}). Storing depends on the decay channel. At equal total coupling, stronger loss shortens the
-memory lifetime with independent decay and prolongs it with collective decay, which holds the stored signal in dark
-states (Sec.~\ref{sec:clock}). Writing follows two theorems. The mixing law states that a stored signal combines on
-average $s\,t_{\mathrm{mem}}$ inputs, where $t_{\mathrm{mem}}$ is the memory lifetime and the mixing fraction $s$ is
-the part of the signal that one input mixes. The scaling limit states that an amplitude that falls as $1/\sqrt{t_{\mathrm{mem}}}$ removes this
-limit. Single inputs keep a fixed share of the memory however long it lasts, and the predicted share agrees with the
-five-spin results without a fitted parameter. In these reservoirs the scaling raises the number of past inputs that
-the readout recalls from 15 or 16 to 40, out of at most 45. The phases with which the spins couple to a collective
-channel decide whether an input reaches the dark states at all (Sec.~\ref{sec:mixing}). Reading depends on the
-stationary state, which sets the size of the signal that measurements must resolve. At strong loss a collective
-channel whose phases differ from those of the input field recovers the most memory from a finite number of
-measurements, and where the loss can be made weak, independent decay recovers more still (Sec.~\ref{sec:price}).
-
-Together, these results make the memory of a dissipative quantum system a matter of design, with the form of the
-dissipation, the input amplitude and the measurement budget as its parameters. The two theorems hold for every
-reservoir that meets their conditions, classical ones included, and give the size of the trade-off between memory
-and nonlinearity from the Hamiltonian and the jump operators alone. In dark states stronger loss prolongs a memory,
-and with an input scaled to the lifetime the memory can last arbitrarily long while single inputs keep their share
-of it.
+Here we show that the form of the dissipation matters as much as its rate, because it decides how a memory is
+stored, written and read (Fig.~\ref{fig:concept}). Our contributions are threefold.
+\begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=3pt]
+\item \emph{Storing.} Stronger loss can prolong a memory. At equal total coupling, independent decay shortens the
+  memory as the loss grows, whereas collective decay prolongs it, because the quantum Zeno effect holds the stored
+  signal in dark states (Sec.~\ref{sec:clock}).
+\item \emph{Writing.} Two theorems say what a long memory holds. The mixing law states that a stored signal combines
+  on average $s\,t_{\mathrm{mem}}$ inputs, the memory lifetime $t_{\mathrm{mem}}$ times the fraction $s$ of the
+  signal that one input mixes. The scaling limit states that an input amplitude that falls as
+  $1/\sqrt{t_{\mathrm{mem}}}$ keeps this number fixed however long the memory lasts. The limit agrees with five-spin
+  reservoirs without a fitted parameter, and this amplitude raises their linear memory capacity from 15 or 16 to
+  40, out of at most 45 (Sec.~\ref{sec:mixing}).
+\item \emph{Reading.} The stationary state sets what measurements recover. At strong loss a collective channel whose
+  phases differ from those of the input field recovers the most memory, and at weak loss independent decay does
+  (Sec.~\ref{sec:price}).
+\end{enumerate}
+Both theorems hold for every reservoir that meets their conditions, classical ones included, and give the trade-off
+between memory and nonlinearity from the equations of motion alone. Together, these results make dissipation a
+design tool. A reservoir can be built to remember longer under stronger loss, and what it will remember can be
+computed before it is built.
