@@ -3,6 +3,16 @@
 Manuscript source, code and data for the paper by Markus Baumann, Itamar Fink, Johannes Wittmann,
 Claudia Linnhoff-Popien and Jonas Stein, [arXiv:2608.14181](https://arxiv.org/abs/2608.14181) (version 2).
 
+The rate of dissipation is the usual control of a quantum reservoir computer. The paper shows that the form of the
+dissipation matters as much, because it decides how a memory is stored, written and read:
+
+- **Storing.** With collective decay, the quantum Zeno effect holds the memory in dark states, and it lasts longer
+  the stronger the loss.
+- **Writing.** Two theorems. The mixing law gives the number of inputs that mix into a stored signal, and the
+  scaling limit shows that a weaker input, scaled to the lifetime, keeps this number fixed however long the memory
+  lasts.
+- **Reading.** The stationary state decides how much of a memory a finite number of measurements recovers.
+
 - [Read the paper](paper_v2/dissipation_qrc.pdf); its LaTeX source is in `paper_v2/`
 - Data behind every figure: `paper_v2/data/snapshot.json`; raw records: `paper_v2/data/raw_results.tar.gz`
 - Three-spin limits (Appendix D): derivation in `paper_v2/certificates/three_spin_limits.pdf`, interval
