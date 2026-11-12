@@ -1,28 +1,33 @@
 \section{Conclusion}
 \label{sec:conclusion}
 A useful quantum reservoir must keep a readable signal of the past while it accepts new inputs. We have shown that the
-form of the dissipation sets three properties of this memory. Its lifetime depends on the decay channel, because
-independent decay shortens the memory as the loss grows, whereas strong collective decay prolongs it by holding the
-stored signal in dark states through the quantum Zeno effect.
+form of the dissipation decides how this memory is stored, written and read. Collective decay stores a signal in dark
+states, and the quantum Zeno effect makes it last longer the stronger the loss, whereas independent decay shortens
+the memory. Writing is limited by mixing, because a longer memory leaves more time for later inputs to mix with the
+stored signal. The mixing law gives the number of inputs that mix, the memory lifetime times the fraction of the
+signal that one input mixes. The scaling limit shows that an amplitude that falls as the inverse square root of the
+lifetime keeps this number fixed, so single inputs keep their share of the memory however long it lasts. In the
+spin reservoirs studied, this scaling brings the linear memory capacity close to its upper bound, the number of
+features. Reading needs a signal that is strong enough to resolve, and the stationary state sets its size.
 
-Writing is limited by mixing, because a longer memory leaves more time for later inputs to mix with the stored
-signal. The mixing law gives the number of inputs that mix, and the scaling limit shows that an amplitude that falls
-as the inverse square root of the lifetime keeps this number fixed. In the spin reservoirs studied, the linear
-memory capacity then rises from about 15 to 40 of 45 units with exact expectation values.
-
-The signal must be strong enough to resolve, and the equal-phase channel holds the largest memory and leaves the
-faintest signal. Where the loss can be made weak, independent decay recovers the most because its signals are
-stronger.
-
-The environment, the input and the readout have to be designed together, and three rules summarize the design:
+The environment, the input and the readout have to be designed together, following three rules:
 
 \begin{keybox}
 \begin{enumerate}[label=(\arabic*),leftmargin=*,itemsep=2pt,topsep=0pt]
-\item \emph{Lifetime.} Collective decay protects a memory in dark states. Stronger loss then makes it last longer, as
-  long as local loss stays weak.
-\item \emph{Writing.} The input must reach the dark states, and an input with the phases of the decay channel reaches
+\item \emph{Store.} Collective decay protects a memory in dark states. Stronger loss then makes it last longer, as
+  long as independent decay stays weak.
+\item \emph{Write.} The input must reach the dark states, and an input with the phases of the decay channel reaches
   them ever more weakly as the loss grows. The longer the memory lasts, the weaker each input must be, or new inputs
   mix with the old ones.
-\item \emph{Signal.} What can be read out depends on how strongly the inputs move the stationary state. At strong loss a collective channel whose phases differ from those of the input recovers the most.
+\item \emph{Read.} What can be read out depends on how strongly the inputs move the stationary state. At strong
+  loss a collective channel whose phases differ from those of the input recovers the most, and at weak loss
+  independent decay does.
 \end{enumerate}
 \end{keybox}
+
+Engineered dissipation is known to prepare and protect quantum states~\cite{Poyatos1996,Verstraete2009}. Our results
+show that it also shapes the memory of a system that processes information over time. The two theorems hold for every reservoir that meets their conditions, classical
+ones included, and they give the trade-off between memory and nonlinearity from the equations of motion, before any
+training. Collective decay arises wherever emitters share a mode, and
+dark states of several qubits have been prepared in superconducting circuits~\cite{Zanner2022}. Dissipation makes a
+reservoir forget, and its form decides what the reservoir remembers.

@@ -8,7 +8,7 @@ Claudia Linnhoff-Popien and Jonas Stein, [arXiv:2608.14181](https://arxiv.org/ab
 - Three-spin limits (Appendix D): derivation in `paper_v2/certificates/three_spin_limits.pdf`, interval
   certificates in `paper_v2/certificates/spin_certificates.zip`; its `README.txt` explains how to run them
 
-Sections 3.1 to 3.3 of the paper use exact expectation values; Sec. 3.4 counts measurements with the
+Sections 3.1 and 3.2 of the paper use exact expectation values; Sec. 3.3 counts measurements with the
 rewinding protocol, which restarts the reservoir and repeats the inputs that the memory holds. Five-spin runs use eight fixed seeds unless the paper states
 fewer.
 
@@ -16,7 +16,7 @@ fewer.
 
 ```bash
 python -m pip install -r requirements.txt     # numpy, scipy, matplotlib, pytest; figures also need LaTeX
-python paper_v2/figures/make_figures.py       # Figs. 2-7 from paper_v2/data/snapshot.json
+python paper_v2/figures/make_figures.py       # Figs. 2-7 from paper_v2/data/snapshot.json; prints the rank correlations of Appendix E.5
 cd paper_v2/figures && pdflatex fig1_concept.tex && cd ../..   # Fig. 1 (TikZ)
 cd paper_v2 && latexmk -pdf dissipation_qrc.tex && cd ..       # the paper
 ```

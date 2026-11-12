@@ -8,8 +8,8 @@ time $\Delta t$:
   \label{eq:H}
 \end{equation}
 with Pauli operators $X_i$, $Z_i$ of spin $i$ and a field strength $h$. To weaken the input at a fixed mean drive, we
-replace $h(1+u)$ by $h[\tfrac32+\eta(u-\tfrac12)]$, where the amplitude $\eta$ scales how far each input moves the
-field. The state $\rho$ of the spins follows a Lindblad master
+replace $h(1+u)$ by $h[\tfrac32+\eta(u-\tfrac12)]$. The amplitude $\eta$, known as the input scaling in
+reservoir computing~\cite{Jaeger2007Leaky}, sets how far each input moves the field. The state $\rho$ of the spins follows a Lindblad master
 equation~\cite{Gorini1976,Lindblad1976},
 \begin{equation}
   \dot\rho=-i[H(u),\rho]+\sum_k\Bigl(L_k\rho L_k^\dagger-\tfrac12\{L_k^\dagger L_k,\rho\}\Bigr),
@@ -18,58 +18,60 @@ equation~\cite{Gorini1976,Lindblad1976},
 where the Hamiltonian drives the internal dynamics and each jump operator $L_k$, scaled by one loss rate $\gamma$, is
 one way the environment changes the state, such as removing an excitation or erasing a phase.
 
-A linear readout of 45 features, the single-spin and two-spin expectation values, is trained to estimate the input
-from $\tau$ steps back. The recall $C_\tau$, between 0 and 1, is the squared correlation between the estimate and the
-input on held-out data, known as the memory function~\cite{White2004}. The linear memory capacity
-$\sum_\tau C_\tau$ adds up the recall over the delays. One unit is one past input recalled perfectly, and the number
-of features bounds the capacity~\cite{Dambre2012}.
+A linear readout is trained on 45 features, the expectation values of $X_i$, $Y_i$, $Z_i$ and of the same-axis pairs
+$X_iX_j$, $Y_iY_j$, $Z_iZ_j$, to estimate the input from $\tau$ steps back. Its accuracy is the memory
+function~\cite{White2004} $C_\tau=\operatorname{corr}^2(\hat y_t,u_{t-\tau})$, the squared correlation between the
+estimate $\hat y_t$ and the input on held-out data. We call $C_\tau$ the recall at delay $\tau$. Its sum over the
+delays is the linear memory capacity, and one unit is one past input recalled perfectly. The capacities for all
+functions of the past inputs add up to the number of features, the total capacity of 45 units~\cite{Dambre2012}.
 
-We call the part of the state that depends on the past inputs the stored signal. The memory lifetime
-$t_{\mathrm{mem}}$ is the number of steps over which its variance survives (Appendix~\ref{sec:order}).
-Sections~\ref{sec:clock} to~\ref{sec:writing} and both theorems use only this time scale. One comparison in
-Sec.~\ref{sec:price} uses the relaxation time $t_{\mathrm{rel}}$ instead, and Table~\ref{tab:times} defines all
-quantities.
+We call the part of the state that depends on the past inputs the stored signal. The variance that an input leaves in
+the state, taken over the inputs that follow, decays in the long run as $(1-1/t_{\mathrm{mem}})^t$, which defines the
+memory lifetime $t_{\mathrm{mem}}$ in steps (Appendix~\ref{sec:order}). It depends on the dissipation and on the
+inputs, and both theorems use it. Where only the dissipation matters we use the relaxation time $t_{\mathrm{rel}}$,
+the decay time of the slow modes at the mean input, which for independent decay is the inverse of the Liouvillian
+gap (Table~\ref{tab:times}).
 
-Capacities quoted in the text use exact expectation values, the limit of infinitely many shots, and are summed over
-all delays. Figure~\ref{fig:clock}c and the tables instead show simulated runs summed over the first 300 delays,
-and Sec.~\ref{sec:price} counts shots.
+\paragraph{Conventions.}
+Capacities quoted in the text come from exact moments, that is, from exact expectation values, the limit of
+infinitely many shots, summed over all delays. Figure~\ref{fig:clock}c, the tables and the appendix figures show
+simulated runs summed over the first 300 delays. Section~\ref{sec:price} counts shots. All numbers are for five spins with
+all-to-all couplings. How the signal scales with the number of spins is open, and reservoirs whose signals
+concentrate need exponentially many measurements~\cite{Sannia2025Concentration}.
 
-All numbers are for five spins with all-to-all couplings. Four statements hold for any number of spins and any
-Hamiltonian: the total coupling fixes the mean decay rate, the decay out of the dark states falls as $1/\gamma$, an
-input field with the phases of a collective channel does not couple its dark states, and the two theorems. How the
-signal scales with the number of spins is open, and reservoirs whose signals concentrate need exponentially many
-measurements~\cite{Sannia2025Concentration}.
-
-We compare decay channels at equal total coupling $\Tr K=\sum_k\Tr L_k^\dagger L_k$ and hold the Hamiltonian fixed
-to isolate the effect of the form of the dissipation. The generator of Eq.~\eqref{eq:lindblad} has $4^N$ modes,
-patterns of change in the state that each decay at their own rate. Equal total coupling fixes their mean rate for
-every Hamiltonian, but not the slow modes, which hold a stored signal longest and become slower or faster with the
-channel (Appendix~\ref{sec:methods-shapes}). Table~\ref{tab:families} lists the eight channels.
+\paragraph{Decay channels.}
+We compare eight dissipators, sets of jump operators that we call decay channels, at equal total coupling $\Tr K$
+with $K=\sum_kL_k^\dagger L_k$, and hold the Hamiltonian fixed to isolate the effect of the form of the dissipation.
+The Liouvillian, the generator of Eq.~\eqref{eq:lindblad}, has $4^N$ modes, patterns of change in the state that each
+decay at their own rate. Equal total coupling fixes their mean rate for every Hamiltonian, but not the slow modes,
+which hold a stored signal longest and become slower or faster with the channel
+(Appendix~\ref{sec:methods-shapes}, Table~\ref{tab:families}).
 
 We discuss four of them (Fig.~\ref{fig:concept}b). With independent decay every spin loses its excitation on its own.
-With collective decay all spins lose it through one shared channel, with equal phases or with opposite phases on
+With collective decay all spins lose it through one shared jump operator, with equal phases or with opposite phases on
 spins 4 and 5, and we refer to the equal-phase and the opposite-phase channel. With dephasing every spin loses its
 phase. The channels differ in the kernel of the dissipator, the operators that the dissipation alone leaves
 unchanged, although the Hamiltonian can still turn them or couple them to decaying ones. For independent decay the
 kernel is the ground state alone. A collective channel cannot empty its dark states, so its kernel contains every
 operator on the dark subspace. There are $\binom{N}{\lfloor N/2\rfloor}$ dark states, ten for five spins, and their
-number grows exponentially with the number of spins. Dephasing erases the coherences between the spin
-configurations. Every step then leaves the fully mixed state unchanged
-whatever the input, the driven reservoir relaxes to this state, and dephasing stores nothing.
+number grows exponentially with the number of spins. Dephasing leaves the maximally mixed state unchanged whatever
+the input, so the driven reservoir relaxes to this state and stores nothing.
 
 \section{Results}
 \label{sec:results}
 
-\subsection{The decay channel sets the memory lifetime}
+\subsection{Storing: the decay channel sets the memory lifetime}
 \label{sec:clock}
-Increasing the loss separates the channels into two groups (Fig.~\ref{fig:clock}). With independent decay, recall
-retreats to shorter delays and the linear memory capacity falls steadily (Fig.~\ref{fig:clock}a,c). With the
-equal-phase channel the capacity first dips and then doubles, and at strong loss inputs fifty steps back are still
-recalled (Fig.~\ref{fig:clock}b,c). The other channels follow one of the two (Fig.~\ref{fig:clock}c, grey). Exchange
-and gain/loss follow independent decay, two collective channels follow the equal-phase channel, and pairwise decay
-follows the opposite-phase channel. The decay rates explain the split, because without dark states the slowest rate
-grows in proportion to $\gamma$ and the memory lifetime shrinks, while with dark states the slow rates fall as
-$1/\gamma$ and the lifetime grows (Fig.~\ref{fig:clock}d).
+Increasing the loss separates the channels into two groups (Fig.~\ref{fig:clock}). Without dark states the memory
+shrinks. With independent decay, recall retreats to shorter delays and the linear memory capacity falls steadily
+(Fig.~\ref{fig:clock}a,c), and exchange and gain/loss behave in the same way (Fig.~\ref{fig:clock}c, grey). With dark
+states the memory survives strong loss. With the equal-phase channel the capacity first dips and then doubles, and
+inputs fifty steps back are still recalled (Fig.~\ref{fig:clock}b,c). The decay rates explain the split. Without
+dark states the Liouvillian gap, the slowest decay rate, grows in proportion to $\gamma$ and the memory lifetime
+shrinks. With dark states the slow rates fall as $1/\gamma$ and the lifetime grows (Fig.~\ref{fig:clock}d). Among
+the long-lived channels the capacity grows with the loss for the equal-phase channel and for collective decay in two
+groups, and returns to its weak-loss level for the opposite-phase channel and for pairwise decay (Fig.~\ref{fig:clock}c,
+grey).
 
 \paragraph{Zeno protection.}
 Stronger collective decay prolongs the memory through the quantum Zeno
@@ -95,7 +97,7 @@ spins (Appendix~\ref{app:num-lifetime}).
 \caption{\textbf{Dark states hold the memory.} Equal-phase channel.
 \textbf{a}~A model of the dark states alone (circles) reproduces the recall of the full reservoir (lines).
 \textbf{b}~Erasing what the dark states know about the inputs destroys the memory (dark), while erasing a rotated
-copy of them leaves most of it (copy).}
+copy of them leaves most of it (copy), at $\gamma=16$.}
 \label{fig:darkmodel}
 \end{figure}
 
@@ -106,105 +108,91 @@ the dark-state components of the state by their time averages after every step, 
 the inputs, destroys all memory beyond a few steps, while the same operation on a randomly rotated set of equal size
 leaves most of it (Fig.~\ref{fig:darkmodel}b).
 
-\paragraph{Local loss.}
-Residual local loss limits the lifetime. For the equal-phase
-channel, recalling inputs over $T$ steps requires a ratio of collective to local loss rates of at least $4.2\,T^2$
-(Appendix~\ref{app:num-noise}), so that a ratio of $10^4$ protects 49 steps. For superconducting qubits coupled to a
+\paragraph{Added independent decay.}
+Residual independent decay limits the lifetime. For the equal-phase channel, a relaxation time of $T$ steps requires a
+ratio of collective to independent decay rates of at least $4.2\,T^2$ (Appendix~\ref{app:num-noise}), so that a ratio
+of $10^4$ protects 49 steps. For superconducting qubits coupled to a
 waveguide, a four-qubit dark state outlives the decay of a single qubit into the waveguide by more than two orders
 of magnitude~\cite{Zanner2022}, and qubit arrays reach a cooperativity of 172~\cite{Mirhosseini2019}.
 
 Dark states protect a stored signal against decay but not against the inputs that follow it. With the opposite-phase
-channel the dark states are just as protected as with the equal-phase channel, yet the capacity returns only to its
-weak-loss level (Fig.~\ref{fig:clock}c).
+channel the dark states are just as protected as with the equal-phase channel, yet the capacity does not grow.
 
-\subsection{New inputs mix the stored signal}
+\subsection{Writing: new inputs mix the stored signal}
 \label{sec:mixing}
 Each new input turns the stored state by a small angle that depends on the input (Fig.~\ref{fig:concept}d), so every
 newer input acts as noise on an older one. Over the memory lifetime the stored direction takes a random walk of small
 turns $\pm\theta$ and spreads by about $\theta\sqrt{t_{\mathrm{mem}}}$. Once the spread reaches about a radian, an
 old input survives only multiplied by the inputs that followed it, and a linear readout cannot turn such products
-back into single inputs.
+back into single inputs. We call this the mixing of inputs. It is the nonlinearity in the trade-off between memory
+and nonlinearity~\cite{Dambre2012,Inubushi2017}.
 
 \paragraph{Counting the inputs.}
-A stored signal splits into parts that each depend on a fixed set of past inputs (Appendix~\ref{sec:order}), and we
-denote the number of inputs in the set by $D$. A function of $u_{t-3}$ alone has $D=1$, even if it is nonlinear in
-$u_{t-3}$, and the product $u_{t-3}u_{t-5}$ has $D=2$. Linear memory requires $D=1$. The information processing
-capacity~\cite{Dambre2012,MartinezPenaIPC2023} measures how well a readout reconstructs any function of the past
-inputs, and sorting its contributions by $D$ separates single inputs from combinations of inputs.
+A stored signal splits into parts that each depend on a fixed set of inputs (Appendix~\ref{sec:order}). The number of
+inputs in the set is the order $D$ of the part. A function of $u_{t-3}$ alone has $D=1$, even if it is nonlinear in
+$u_{t-3}$, and the product $u_{t-3}u_{t-5}$ has $D=2$. Linear memory requires $D=1$. The total capacity divides among
+the orders~\cite{Dambre2012,MartinezPenaIPC2023}, and the share of single inputs is the part with $D=1$.
 
 \paragraph{The mixing law.}
-Two quantities decide how many inputs a stored signal combines. The memory lifetime $t_{\mathrm{mem}}$ says how long
-the signal lasts. The mixing fraction $s$, between 0 and 1, is the part of the signal that one input turns
-differently from the average input, and for small turns it grows as the square of the turn. Our first theorem states
-that a part of the stored signal combines on average $s\,t_{\mathrm{mem}}$ inputs. It applies to reservoirs that leak
-slowly and are mixed by their inputs, and it assumes that one direction of the covariance of the state over input
-histories outlives all others.
+Two quantities decide the order of a stored signal. The memory lifetime $t_{\mathrm{mem}}$ says how long the signal
+lasts. The mixing fraction $s$, between 0 and 1, is the part of the signal that one input turns differently from the
+average input (Eq.~\eqref{eq:mixing}), and for small turns it grows as the square of the turn. In each step a
+fraction $s$ of the stored signal picks up one more input, and a fraction $1/t_{\mathrm{mem}}$ of it is lost. A
+signal collects about $s\,t_{\mathrm{mem}}$ inputs before it is lost, and our first theorem makes this exact.
 
 \begin{keybox}
 \begin{theorem}[Mixing law, made precise in Appendix~\ref{app:law}]\label{thm:law}
-Let a reservoir be reset with probability $p$ per step, so that $t_{\mathrm{mem}}\sim1/(2p)$ as $p\to0$, and otherwise
-turned by an input-dependent rotation. Let the average rotation shrink every state, let the rotations leave no stored
-covariance unchanged on average except the isotropic one, and let one input change the stationary state (conditions
-(1) to (3) of Appendix~\ref{app:law}). Pick a part of the stored signal with probability equal to its share
-of the capacity, and let $D$ be the number of distinct inputs it depends on. As $p\to0$, $D/t_{\mathrm{mem}}$ becomes
-exponentially distributed with mean $s$, and
+Let a reservoir lose its stored signal slowly: in each step it is reset with a small probability and is otherwise
+rotated by the input, under conditions (1) to (3) of Appendix~\ref{app:law}. Pick a part of the stored signal with
+probability equal to its share of the total capacity. As the memory lifetime grows, its order $D$ becomes
+exponentially distributed, with the mean
 \begin{equation*}
-  \mathbb ED=s\,t_{\mathrm{mem}}+O(1).
+  \mathbb ED=s\,t_{\mathrm{mem}}
 \end{equation*}
+up to an additive constant.
 \end{theorem}
 \end{keybox}
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig3_price.pdf}
 \caption{\textbf{New inputs mix the stored signal, and a scaled amplitude limits the mixing.}
-\textbf{a}~At a fixed input amplitude the capacity, summed over all delays, peaks and then falls as the memory grows,
-and a scaled amplitude holds it at 40 units.
+\textbf{a}~At a fixed input amplitude the linear memory capacity peaks and then falls as the memory grows, and a
+scaled amplitude holds it at 40 units.
 \textbf{b}~An input that is mode-matched to the equal-phase channel writes less into the dark states as the loss
 grows, while an input that is not mode-matched keeps writing.
-\textbf{c}~The number of inputs mixed into a stored signal follows the mixing law, and a scaled amplitude keeps it
-near one.
-\textbf{d}~The scaling limit (lines) against the exact five-spin calculation (markers), without a fitted parameter. Solid
-lines and filled markers show the share of single inputs in the capacity, dashed lines and open markers the signal
-they leave in the features, scaled to its maximum.}
+\textbf{c}~The mean order follows the mixing law, and a scaled amplitude keeps it near one.
+\textbf{d}~The scaling limit (lines) against the exact five-spin calculation (markers) for one reservoir, without a
+fitted parameter. Solid lines and filled markers show the share of single inputs in the total capacity, dashed lines
+and open markers the variance that single inputs leave in the features, scaled to its maximum. Panels a and c show
+exact moments, averaged over four reservoirs, two at the longest memories.}
 \label{fig:mixing}
 \end{figure*}
 
-
-The law follows from a competition between two rates. In each step a fraction $s$ of the stored signal picks up one
-more input, and a fraction $1/t_{\mathrm{mem}}$ of it is lost. The number of inputs then follows a geometric
-distribution, which becomes exponential for long memories.
-
 \paragraph{Scope of the law.}
 The proof uses a reservoir with a reset, in any dimension, and nothing in it is quantum. Classical state-affine
-reservoirs, whose state is updated by an input-dependent linear map plus an
-offset~\cite{GrigoryevaOrtegaSAS2018}, obey the law under the same conditions. For physical channels without a reset
-the same proof applies, with the slow decay in place of the reset, if a single direction of the stored covariance is
-slow. Several slow directions keep distinct mixing scales (Appendix~\ref{app:physical}). For five spins,
-Eq.~\eqref{eq:recursion} gives the distribution of $D$ exactly, and we compare it with the law
-(Fig.~\ref{fig:mixing}c).
+reservoirs~\cite{GrigoryevaOrtegaSAS2018} obey the law under the same conditions. For reservoirs without a reset the
+same proof applies, with the slow decay in place of the reset, if a single direction of the stored covariance is
+slow. Several slow directions keep distinct mixing scales (Appendix~\ref{app:physical}).
 
 \paragraph{Five spins.}
-At a fixed amplitude, $\eta=1$, one input disturbs the stored signal only slightly, $s\approx0.02$. For short memories
-the mean of $D$ is slightly below two, because the reservoir combines the latest inputs within a few steps. As the
-memory grows, the mean of $D$ follows $s\,t_{\mathrm{mem}}$ to within about two inputs, up to 23 inputs at the
-longest memory, and the distribution of $D$ approaches the exponential law (Appendix~\ref{app:physical}). The product
-$s\,t_{\mathrm{mem}}$ is the size of the trade-off between memory and nonlinearity~\cite{Cindrak2026}, and
-dissipation enters it through both factors.
+For five spins, Eq.~\eqref{eq:recursion} gives the distribution of $D$ exactly, and we compare it with the law
+(Fig.~\ref{fig:mixing}c). At a fixed amplitude, $\eta=1$, the mixing fraction lies between 0.01 and 0.05 wherever
+the memory exceeds ten steps. As the memory grows, the mean of $D$ follows $s\,t_{\mathrm{mem}}$ to within about two
+inputs, up to 23 inputs at the longest memory, and the distribution of $D$ approaches the exponential law
+(Appendix~\ref{app:physical}). The product $s\,t_{\mathrm{mem}}$ is the size of the trade-off between memory and
+nonlinearity~\cite{Cindrak2026}, and dissipation enters it through both factors.
 
-At a fixed amplitude, lengthening the memory beyond $s\,t_{\mathrm{mem}}\approx0.3$ lowers the linear memory capacity
-(Fig.~\ref{fig:mixing}a). With the opposite-phase channel it peaks at 16 units and falls to 2 units while the lifetime
-grows from 20 to 750 steps, and independent decay behaves in the same way (Appendix~\ref{app:num-capacity}). The
-stored signal has moved into products of inputs, and the share of the capacity carried by single inputs falls from
-0.37 to 0.05. Single inputs stay readable only if the mixing fraction shrinks as the lifetime grows. The phases of the
-decay channel and the amplitude of the input both achieve this.
+At a fixed amplitude a longer memory lowers the linear memory capacity once $s\,t_{\mathrm{mem}}$ exceeds 0.2 to 0.3
+(Fig.~\ref{fig:mixing}a). The capacity peaks at 16 units with the opposite-phase channel and at 15 units with
+independent decay, and falls to 2 and 4 units at the longest memories (Appendix~\ref{app:num-capacity}). The stored
+signal has moved into products of inputs, and with the opposite-phase channel the share of single inputs falls from
+0.41 to 0.07. Single inputs stay readable only if the mixing fraction shrinks as the lifetime grows. The phases of
+the decay channel and the amplitude of the input both achieve this.
 
-\subsection{Channel phases and input amplitude control the mixing}
-\label{sec:writing}
 \paragraph{Channel phases.}
 The phases of a collective channel decide whether an input reaches the dark states. Spin $i$ couples to the channel
 with the sign $c_i=\pm1$, and the collective lowering operator $\sum_ic_i\sigma_i^-$ annihilates the dark states. An
-input field is mode-matched to the channel if its strength on spin $i$ is proportional to $c_i$, so that it drives
-the collective mode through which the spins decay. A mode-matched field $\sum_ic_iX_i$ is the lowering operator plus
+input field is mode-matched to the channel if its strength on spin $i$ is proportional to $c_i$. A mode-matched field $\sum_ic_iX_i$ is the lowering operator plus
 its adjoint and cannot couple two dark states, for any number of spins and any Hamiltonian. It writes into them only
 through brief excursions into bright states, with a strength that falls as $1/\gamma$. The part of a field that is
 not mode-matched writes into them directly (Fig.~\ref{fig:mixing}b, Appendix~\ref{app:num-mixing}).
@@ -212,49 +200,49 @@ not mode-matched writes into them directly (Fig.~\ref{fig:mixing}b, Appendix~\re
 The uniform input of Eq.~\eqref{eq:H} is mode-matched to the equal-phase channel. Its mixing fraction shrinks as the
 loss grows, and this channel reaches twice the capacity of the other two at a fixed amplitude
 (Table~\ref{tab:memory}). With the opposite-phase channel the same input is not mode-matched. It writes directly into
-the dark states and mixes them at every loss rate. This is the generic case, because a phase error opens a direct
-coupling within the dark subspace (Appendix~\ref{app:num-mixing}).
+the dark states and mixes them at every loss rate. The two channels differ in nothing else. Rotating spins 4 and 5
+by $Z$ maps the opposite-phase channel with the uniform input onto the equal-phase channel with an input of opposite
+sign on these two spins, and changes only the signs of couplings $J_{ij}$, whose distribution is symmetric. The
+missing mode matching is the generic case, because a phase error opens a direct coupling within the dark subspace
+(Appendix~\ref{app:num-mixing}).
 
-\paragraph{Input amplitude.}
+\paragraph{Input scaling.}
 The input amplitude $\eta$ controls the mixing for every channel. A weak input is known to favour linear
 memory~\cite{Jaeger2007Leaky,Inubushi2017,Cindrak2026}, because it suppresses the products of the latest inputs that
 the reservoir forms within a few steps. The mixing law adds what a long memory requires. The mixing fraction grows
-as the square of the amplitude, so $s\,t_{\mathrm{mem}}$ stays fixed only if the amplitude falls as
-$1/\sqrt{t_{\mathrm{mem}}}$. We refer to this choice as the scaled amplitude and to $\eta=1$ as the fixed amplitude.
-Theorem~\ref{thm:law} shows that the scaling is necessary, because at a fixed amplitude the share of single inputs
-vanishes as the memory grows. Our second theorem shows that it is sufficient.
+as $\eta^2$, and the lifetime as the inverse of the leak rate $\epsilon$ at which the stored signal decays. The
+product $s\,t_{\mathrm{mem}}$ stays fixed only if the ratio $\nu=\eta^2/\epsilon$ does. We call an amplitude with fixed $\nu$, which falls as $1/\sqrt{t_{\mathrm{mem}}}$, a scaled amplitude, and
+$\eta=1$ the fixed amplitude. Theorem~\ref{thm:law} shows that the scaling is necessary, because at a fixed amplitude
+the share of single inputs vanishes as the memory grows. Our second theorem shows that it is sufficient.
 
 \begin{keybox}
 \begin{theorem}[Scaling limit, made precise in Appendix~\ref{app:gentle}]\label{thm:gentle}
-Let one step of a reservoir be a rotation, a leak of small rate $\epsilon$ and an input-dependent turn of amplitude
-$\eta$, under the decay condition of Appendix~\ref{app:gentle}. As $\epsilon\to0$ with $\nu=\eta^2/\epsilon$ fixed,
-the stored signal and the distribution of $D$ converge to the solution of a linear problem that depends on the input
-only through $\nu$. The mean of $D$ stays finite, and single inputs keep a fixed share of the capacity. As
-$\nu\to\infty$ the limit joins the mixing law, with $s\,t_{\mathrm{mem}}$ proportional to $\nu$.
+Let one step of a reservoir be a rotation, a leak at a small rate $\epsilon$ and an input-dependent turn of amplitude
+$\eta$, under the decay condition of Appendix~\ref{app:gentle}. Let the leak vanish while $\nu$ stays fixed. Then the
+memory lifetime grows without limit, while the distribution of the order $D$ converges. Its mean stays finite, and
+single inputs keep a fixed share of the total capacity. Both depend on the input only through $\nu$. For large $\nu$
+the mean of $D$ grows in proportion to $\nu$, as the mixing law requires.
 \end{theorem}
 \end{keybox}
 
-The scaled amplitude holds $\nu$ fixed. The memory lifetime can then grow without limit while the stored signal keeps
-the same division between single inputs and products of inputs. The leak rate is $\epsilon=\gamma$ for independent
-decay and $\epsilon=1/\gamma$ for the dark states, and the limit follows from the Hamiltonian and the jump operators
-without a fitted parameter. One qubit gives a closed form (Appendix~\ref{app:qubit}). For three spins with the
-opposite-phase channel, interval arithmetic confirms both regimes at strong loss. At a fixed amplitude single inputs
-lose their share of the capacity, and with an amplitude $\eta_0/\sqrt\gamma$ they keep it. The stored signal resides
-there in coherences between the energy levels of the dark states (Appendix~\ref{app:spins}).
+The leak rate is $\epsilon=\gamma$ for independent decay and $\epsilon=1/\gamma$ for the dark states, and the limit
+follows from the Hamiltonian and the jump operators without a fitted parameter. One qubit gives a closed form
+(Appendix~\ref{app:qubit}). For three spins with the opposite-phase channel, interval arithmetic confirms both
+theorems at strong loss. At a fixed amplitude single inputs lose their share of the capacity, and with a scaled
+amplitude they keep it. The stored signal resides there in coherences between the energy levels of the dark states
+(Appendix~\ref{app:spins}).
 
 \paragraph{Comparison with five spins.}
-In the five-spin reservoir $\nu=1$ is an amplitude of $1/\sqrt\gamma$ for the opposite-phase channel and of
-$\sqrt\gamma$ for independent decay. The limit reproduces the exact five-spin calculation over three decades of
-$\nu$, with the share of single inputs agreeing to within 0.01 (Fig.~\ref{fig:mixing}d,
-Appendix~\ref{app:num-capacity}). At $\nu=1$ single inputs carry about 0.9 of the capacity, and the linear memory
-capacity is 40 units for both channels. The five-spin capacity settles at this level as the lifetime grows
-(Fig.~\ref{fig:mixing}a), up from about 15 units at the best loss rate of a fixed amplitude. Simulated runs on eight
-reservoirs, with a readout trained on a finite number of inputs and summed over the first 300 delays, reach 35 units
-(Fig.~\ref{fig:clock}c, Table~\ref{tab:memory}).
+For five spins we use $\nu=1$, an amplitude of $1/\sqrt\gamma$ for the opposite-phase channel and of $\sqrt\gamma$
+for independent decay. The limit reproduces the exact five-spin calculation over three decades of $\nu$, with the
+share of single inputs agreeing to within 0.01 (Fig.~\ref{fig:mixing}d, Appendix~\ref{app:num-capacity}). At $\nu=1$
+single inputs carry about 0.9 of the total capacity, and the linear memory capacity settles at 40 units for both
+channels as the lifetime grows (Fig.~\ref{fig:mixing}a). At the best loss rate of a fixed amplitude it is 15 units
+with independent decay and 16 with the opposite-phase channel. Simulated runs on eight reservoirs, with a readout
+trained on a finite number of inputs and summed over the first 300 delays, reach 35 units (Fig.~\ref{fig:clock}c,
+Table~\ref{tab:memory}).
 
-The capacities of all values of $D$ add up to the number of
-features~\cite{Dambre2012}, so the gain moves capacity from combinations of inputs to single inputs. The scaled
-amplitude is the choice for recall. A task that needs products of inputs calls for a larger amplitude, and
+The total capacity is fixed, so the gain moves capacity from combinations of inputs to single inputs. A task that needs products of inputs calls for a larger amplitude, and
 $s\,t_{\mathrm{mem}}$ gives the number of inputs that a stored signal then combines. A long memory needs no dark
 states, because weak independent decay with a scaled amplitude reaches one too. Dark states add a memory that stays
 long under strong dissipation and grows with the loss.
@@ -262,53 +250,49 @@ long under strong dissipation and grows with the loss.
 \paragraph{The cost of a weak input.}
 The scaled amplitude is an upper bound on the input and not an optimum. With exact expectation values the capacity
 keeps rising as the input weakens, towards the number of features (Appendix~\ref{app:num-amplitude}), because a
-weaker input mixes less and a fainter signal costs nothing without measurement noise. The lifetime bounds the
-amplitude only from above, $s\,t_{\mathrm{mem}}\lesssim1$. Theorem~\ref{thm:gentle} quantifies what a weak input
-gives up (Fig.~\ref{fig:mixing}d). The variance that single inputs leave in the features vanishes in proportion to
-$\nu$ for weak inputs. It is largest where a stored signal combines a few inputs and single inputs carry about half
-of the capacity (Appendix~\ref{app:num-capacity}). The limit depends on the amplitude only through $\nu$, so the
-amplitude of the largest signal also falls as $1/\sqrt{t_{\mathrm{mem}}}$.
+weaker input mixes less and a fainter signal costs nothing without measurement noise. Theorem~\ref{thm:gentle} quantifies what a weak input gives up
+(Fig.~\ref{fig:mixing}d). The variance that single inputs leave in the features vanishes in proportion to $\nu$ for
+weak inputs. It is largest where a stored signal combines a few inputs and single inputs carry about half of the
+total capacity (Appendix~\ref{app:num-capacity}).
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig4_sampling.pdf}
 \caption{\textbf{Finite sampling limits the memory that can be read out.}
 \textbf{a}~Capacity recovered against the number of shots per setting and step with the rewinding protocol, for
-independent decay at weak loss ($\gamma=1/32$) and the two collective channels at strong loss ($\gamma=64$).
+independent decay at weak loss ($\gamma=1/32$) and for the opposite-phase and the equal-phase channel at strong loss
+($\gamma=64$).
 \textbf{b}~The variance of the features grows with the linear response of the stationary state to the input field.
 \textbf{c}~So does the fraction of the exact capacity that $10^6$ shots recover.
-Points in b and c are single reservoirs. Their loss rates give every channel the same relaxation time,
-$t_{\mathrm{rel}}=32$ steps (Table~\ref{tab:times}), and every shot repeats the full input history.}
+Points in b and c are single reservoirs at $\eta=0.35$. Their loss rates give every channel the same relaxation
+time, $t_{\mathrm{rel}}=32$ steps, and every shot repeats the full input history.}
 \label{fig:sampling}
 \end{figure*}
 
 
-\subsection{The stationary state sets the measurable signal}
+\subsection{Reading: the stationary state sets the measurable signal}
 \label{sec:price}
 A weaker input leaves a fainter signal. This costs nothing with exact expectation values and many measurements
 otherwise. Each feature is estimated from $n$ shots per measurement setting and step, and its statistical error must
-stay below the signal, the variation of the feature with the inputs (Appendix~\ref{sec:methods-sampling}). A memory
-with a scaled amplitude grows longer without growing larger, because the capacity cannot exceed the number of
-features, so each delay is recalled more faintly. The capacity recovered from a finite number of shots is the
-counterpart, for the recall of past inputs, of the resolvable expressive capacity of Ref.~\cite{Hu2023}.
+stay below the signal, the variation of the feature with the inputs (Appendix~\ref{sec:methods-sampling}).
 
 \paragraph{Signal size.}
-The stationary state sets the size of the signal. An input acts on the stationary state $\rho_*$ through the
-commutator with the input field, and only the part of this change that lies on the slow modes is remembered. Its
-size is the linear response of the stationary state to the input field (Appendix~\ref{app:num-measurement}), in the
-spirit of the link between memory and optical absorption of Ref.~\cite{Goetting2025}.
+The stationary state sets the size of the signal. An input acts on the stationary state $\rho_*$, the steady state
+of the dynamics averaged over the inputs, through the commutator with the input field, and only the part of this change that lies on the
+slow modes is remembered. Its size is the linear response of the stationary state to the input field
+(Appendix~\ref{app:num-measurement}), in the spirit of the link between memory and optical absorption of
+Ref.~\cite{Goetting2025}.
 
-To compare all eight channels we choose the loss rate of each so that its slow modes relax in 32 steps at the mean
-input. This relaxation time $t_{\mathrm{rel}}$ replaces the memory lifetime in this comparison only, because it does
-not depend on the input amplitude (Table~\ref{tab:times}). The variance of the features then follows the linear
-response over four orders of magnitude for the seven channels that respond (Fig.~\ref{fig:sampling}b). The fraction
-of the exact capacity that $10^6$ shots recover follows it as well, with a rank correlation of 0.96 over all
-reservoirs (Fig.~\ref{fig:sampling}c). The equal-phase channel leaves a polarized state that the uniform input moves
-only through bright states. It has the largest exact capacity of all channels and recovers 1\% of it. Reversing the
-coupling phase of two spins lets the input move the state directly (Sec.~\ref{sec:writing}), and the opposite-phase
-channel recovers 60\% of its exact capacity, against 73\% for independent decay
-(Appendix~\ref{app:num-measurement}). The exact capacity does not predict what measurements recover. The linear
-response predicts which fraction of it they do.
+To compare all eight channels we choose the loss rate of each so that its relaxation time is 32 steps, and set
+$\eta=0.35$. The relaxation time replaces the memory lifetime here because it does not depend on the input. The
+variance of the features then follows the linear response over four orders of magnitude for the seven channels that
+respond (Fig.~\ref{fig:sampling}b). The fraction of the exact capacity that $10^6$ shots recover follows it as well
+(Fig.~\ref{fig:sampling}c). The rank correlation is 0.96 over all reservoirs and at least 0.81 within six of the
+seven channels (Appendix~\ref{app:num-measurement}). The equal-phase channel leaves a polarized state that the
+uniform input moves only through bright states. It has the largest exact capacity of all channels, and $10^6$ shots
+recover less than 1\% of it. Reversing the coupling phase of two spins lets the input move the state directly, and
+the opposite-phase channel recovers 60\% of its exact capacity, against 73\% for independent decay. The exact
+capacity does not predict what measurements recover. The linear response predicts which fraction of it they do.
 
 \paragraph{Strong loss.}
 The form of the dissipation matters most where the loss is strong (Fig.~\ref{fig:sampling}a). At $\gamma=64$ and a
@@ -329,6 +313,7 @@ steps per output step gives the three channels the same capacity at a fixed ampl
 holds at weak loss. With the scaled amplitude, weak independent decay recovers the most, 34 units against 21 with
 the opposite-phase channel.
 
-With a finite number of shots a best amplitude exists. It falls as a power of the relaxation time, with a fitted
-exponent close to the $-1/2$ of the scaled amplitude (Appendix~\ref{app:num-amplitude}). The lifetime bounds the
-input amplitude from above, and the measurement budget bounds it from below.
+With a finite number of shots a best amplitude exists. It falls as a power of the relaxation time, with fitted
+exponents between $-0.40$ and $-0.46$, close to the $-1/2$ of the scaled amplitude
+(Appendix~\ref{app:num-amplitude}). The lifetime bounds the input amplitude from above, and the measurement budget
+bounds it from below.

@@ -470,6 +470,26 @@ REPLAY_LINES = ((("separate", "gentle_weak", 0.03125), "-", "o"), (("separate", 
                 (("shared", "fixed", 64.0), FIXED, None), (("separate", "fixed", 64.0), STRONG_LOSS, None))
 
 
+def response_correlations():
+    """Rank correlations of the linear response of the stationary state with what 10^6 shots recover (Appendix E.5):
+    over all reservoirs of the seven channels that respond, for the channel medians, and within each channel
+    (eight reservoirs each), with the recovered fraction, the recovered capacity and the variance of the features."""
+    from scipy import stats
+    P = SNAP["polarization"]
+    shown = [f for f in families() if f in P and f != "dephasing"]
+    w = {f: np.array(P[f]["write_slow"]) for f in shown}
+    frac = {f: np.array(P[f]["shots_1000000"]) / np.array(P[f]["exact"]) for f in shown}
+    var = {f: np.array(P[f]["var_mean"]) for f in shown}
+    rho = lambda x, y: float(stats.spearmanr(x, y)[0])
+    cat = lambda d: np.concatenate([d[f] for f in shown])
+    med = lambda d: np.array([np.median(d[f]) for f in shown])
+    return {"pooled": rho(cat(w), cat(frac)),
+            "pooled_capacity": rho(cat(w), np.concatenate([P[f]["shots_1000000"] for f in shown])),
+            "medians": rho(med(w), med(frac)),
+            "within": {f: rho(w[f], frac[f]) for f in shown},
+            "within_variance": {f: rho(w[f], var[f]) for f in shown}}
+
+
 def fig_sampling():
     """What survives sampling and why: memory against the number of shots, and feature variance and the
     recovered fraction of the capacity against the linear response at a matched relaxation time, three panels
@@ -517,15 +537,12 @@ def fig_sampling():
     st.decades(c, "y", labels="plain")
     c.set_ylim(2e-3, 2)
     c.set_ylabel("Recovered fraction")
-    from scipy import stats
-    shown = [f for f in families() if f in P and f != "dephasing"]
-    rho = stats.spearmanr(np.concatenate([P[f]["write_slow"] for f in shown]),
-                          np.concatenate([np.array(P[f]["shots_1000000"]) / np.array(P[f]["exact"]) for f in shown]))[0]
+    rho = response_correlations()["pooled"]
     c.annotate(rf"rank correlation {rho:.2f}", xy=(1, 0), xycoords="axes fraction", xytext=(-6, 7),
                textcoords="offset points", ha="right", va="baseline", color=st.INK3, fontsize=st.KEY_TXT)
 
     st.fit_row(fig, (a, b, c), (10, 9, 9))
-    for ax, name, title in zip((a, b, c), "abc", ("Finite sampling", "Signal size", "Recovered capacity")):
+    for ax, name, title in zip((a, b, c), "abc", ("Finite sampling", "Signal size", "Recovered fraction")):
         st.letter(ax, name, title)
     st.align(fig, rows=[(a, b, c)])
     st.inkey(a, [(st.line_handle(st.INK3, marker="o"), "scaled amplitude"),
@@ -648,6 +665,7 @@ def fig_sizes():
 
 
 if __name__ == "__main__":
+    print("rank correlations of the linear response (Appendix E.5):", response_correlations())
     fig2()
     fig3()
     fig_sampling()

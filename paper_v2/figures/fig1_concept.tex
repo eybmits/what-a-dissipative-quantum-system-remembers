@@ -1,4 +1,5 @@
-% Figure 1: the reservoir, the shapes of the environment, bright and dark states, and the two ways to forget.
+% Figure 1: the reservoir as a memory (write, store, read), the forms of dissipation, bright and dark states, and
+% the two ways to forget.
 % Build: pdflatex fig1_concept.tex -> fig1_concept.pdf, drawn at the text width of the Quantum class (17 cm). All text
 % is set in Latin Modern Roman at 10 pt, the font of the text at the size of the captions, as in the other figures;
 % panels carry letters, no titles. Panels a to c are drawn in isometric projection: glass tiles carry the spins,
@@ -84,6 +85,10 @@
 \foreach \k in {1,...,5}{\ball{(f\k)}{shared}}
 \draw[arr,drive] (i1) -- (i2);
 \node[lab,anchor=base west,text=ink2] at (0,54) {input $u_t$};
+% the three steps of a memory: write, store, read
+\node[lab,anchor=base west,font=\fontsize{10}{12}\selectfont\bfseries] at (0,66) {write};
+\node[lab,font=\fontsize{10}{12}\selectfont\bfseries] at (77.2,95) {store};
+\node[lab,font=\fontsize{10}{12}\selectfont\bfseries] at (139.5,83) {read};
 \node[lab,text=ink2] at (77.2,83) {spins, couplings $J_{ij}$};
 \draw[wavy] (60.2,37.5) -- (60.2,29);
 \draw[wavy] (73.2,34.5) -- (73.2,25.5);
@@ -124,18 +129,18 @@
 % local
 \node[lab,text=local] at (218.0,83) {independent};
 \cubes{218.0}{local}\drops{218.0}{local}\tile{218.0}{local}\spheres{local}
-\jumps{218.0}{$L_i=\sigma_i^-$}
+\jumps{218.0}{$L_i\propto\sigma_i^-$}
 % one shared channel, equal phases; a bracket joins it with the next column as collective decay
 \node[lab,text=shared] at (295.8,83) {equal phases};
 \draw[ink3!70,line width=0.45pt] (266,91.5) -- (266,94) -- (405.4,94) -- (405.4,91.5);
 \node[lab,text=ink2] at (334.7,97.5) {collective decay};
 \slabbath{295.8}{shared}\drops{295.8}{shared}\tile{295.8}{shared}\spheres{shared}
-\jumps{295.8}{$L=\sum_i\sigma_i^-$}
+\jumps{295.8}{$L\propto\sum_i\sigma_i^-$}
 % the same channel with opposite phases: the darker spin decays with the reversed phase
 \node[lab,text=opp] at (373.6,83) {opposite phases};
 \slabbath{373.6}{opp}\drops{373.6}{opp}\tile{373.6}{opp}
 \ball{(t3)}{opp!55!black}\ball{(t2)}{opp}\ball{(t1)}{opp}
-\jumps{373.6}{$L=\sum_ic_i\,\sigma_i^-$}
+\jumps{373.6}{$L\propto\sum_ic_i\,\sigma_i^-$}
 % dephasing: rings of random phase around each spin; no bath takes energy
 \node[lab,text=deph] at (451.4,83) {dephasing};
 \tile{451.4}{deph}
@@ -145,7 +150,7 @@
   \ball{(t\k)}{deph}
   \draw[deph,line width=0.5pt,dash pattern=on 1.4pt off 1pt] ($(t\k)+(0,1.2)$) ++(-7.6,0)
      arc[start angle=180,end angle=360,x radius=7.6pt,y radius=4.0pt];}
-\jumps{451.4}{$L_i=\sigma_i^z$}
+\jumps{451.4}{$L_i\propto Z_i$}
 \end{scope}
 
 %=================================================================== c  bright and dark states

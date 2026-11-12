@@ -1,9 +1,9 @@
 \section{The mixing law and the scaling limit}
 \label{app:law}
-This appendix proves the two theorems and extends the mixing law to physical channels without a reset.
+This appendix proves the two theorems and extends the mixing law to reservoirs without a reset.
 
 \subsection{Setting and statement}
-We describe the reservoir by the $n$ traceless coordinates $r$ of its state in an orthonormal basis of operators, the
+We describe the reservoir by the $d$ traceless coordinates $r$ of its state in an orthonormal basis of operators, the
 Bloch vector for a qubit. A unitary acts on $r$ as a rotation. In each step the reservoir is reset to a fixed state
 with a small probability $p$ and is otherwise rotated by $O(u)$:
 \begin{equation}
@@ -25,7 +25,7 @@ conditions make the law hold:
 The first condition means that only products of inputs can be stored for long, the second that a stored signal
 spreads evenly over all directions, and the third that there is something to store. The mixing fraction
 \begin{equation}
-  s=1-\frac{\|A\|_F^2}{n}
+  s=1-\frac{\|A\|_F^2}{d}
   \label{eq:mixing}
 \end{equation}
 says how strongly one input turns the stored state. For a unit vector $x$ of random orientation,
@@ -57,10 +57,10 @@ $\mathcal T_0$ and $\mathcal K_0$ for the same maps at $p=0$.
 The stationary mean is $m=p\,[1-(1-p)A]^{-1}b=p\mu+O(p^2)$, so one input writes the change $(1-p)(O-A)m$, of size
 $p$. Its covariance $V$ has the trace $p^2v+O(p^3)$ with $v=\mathbb E\|(O-A)\mu\|^2$, which is positive by
 condition (3). The random rotations preserve the trace of a covariance and, by condition (2), leave only the identity unchanged. Since they cannot enlarge a covariance, the identity is a simple fixed point with the projector
-$X\mapsto(\Tr X/n)\,1$. On every other direction $(1-\mathcal T)^{-1}$ stays bounded as $p\to0$, while on the identity
+$X\mapsto(\Tr X/d)\,1$. On every other direction $(1-\mathcal T)^{-1}$ stays bounded as $p\to0$, while on the identity
 it equals $1/[1-(1-p)^2]\approx1/(2p)$. The written covariance therefore piles up along the identity:
 \begin{equation}
-  \Sigma=(1-\mathcal T)^{-1}V=\frac{pv}{2n}\,1+O(p^2).
+  \Sigma=(1-\mathcal T)^{-1}V=\frac{pv}{2d}\,1+O(p^2).
   \label{eq:slowcov}
 \end{equation}
 
@@ -76,7 +76,7 @@ Call $\mathcal F=(1-\mathcal B)^{-1}\mathcal K$ the order transfer, so that $G_{
 leaves the identity unchanged, because $\mathcal K_01=1-AA^{\mathsf T}=(1-\mathcal B_0)1$. Its matching left
 eigenvector is the weight
 \begin{equation}
-  \ell(X)=\Tr[(1-A^{\mathsf T}A)X],\qquad \ell(1)=ns ,
+  \ell(X)=\Tr[(1-A^{\mathsf T}A)X],\qquad \ell(1)=ds ,
   \label{eq:weight}
 \end{equation}
 since $\ell(\mathcal F_0X)=\Tr\mathcal K_0X=\ell(X)$ when the rotations preserve the trace. For small $p$ the
@@ -87,17 +87,17 @@ eigenvalue one moves to
 \end{equation}
 each step up in order costs a fraction $2p/s=1/(s\,t_{\mathrm{mem}})$ of the weight, as in that competition. To see this,
 differentiate $(1-\mathcal B)\mathcal F=\mathcal K$ at $p=0$ and apply it to the identity, which gives
-$(1-\mathcal B_0)\mathcal F_0'1=-2\cdot1$. Its trace is the weight $\ell(\mathcal F_0'1)=-2n$, and dividing by
-$\ell(1)=ns$ gives the rate $2/s$.
+$(1-\mathcal B_0)\mathcal F_0'1=-2\cdot1$. Its trace is the weight $\ell(\mathcal F_0'1)=-2d$, and dividing by
+$\ell(1)=ds$ gives the rate $2/s$.
 
-To turn the eigenvalue into a distribution, weigh order $k$ with $e^{-\lambda pk}$. Summing the recursion gives
-$\sum_kz^kG_k=z(1-z\mathcal F)^{-1}G_1$, and as $z=e^{-\lambda p}$ approaches one, only the eigenvalue of
+To turn the eigenvalue into a distribution, weigh order $k$ with $e^{-\zeta pk}$. Summing the recursion gives
+$\sum_kz^kG_k=z(1-z\mathcal F)^{-1}G_1$, and as $z=e^{-\zeta p}$ approaches one, only the eigenvalue of
 Eq.~\eqref{eq:ordereig} makes the inverse large. With $\ell(G_1)=p^2v+O(p^3)$ and $\beta=2/s$,
 \begin{equation}
-  \sum_{k\ge1}e^{-\lambda pk}G_k=\frac{pv}{2n}\,\frac{\beta}{\lambda+\beta}\,1+O(p^2).
+  \sum_{k\ge1}e^{-\zeta pk}G_k=\frac{pv}{2d}\,\frac{\beta}{\zeta+\beta}\,1+O(p^2).
   \label{eq:laplace}
 \end{equation}
-Divided by Eq.~\eqref{eq:slowcov}, this is $\beta/(\lambda+\beta)$, the Laplace transform of an exponential
+Divided by Eq.~\eqref{eq:slowcov}, this is $\beta/(\zeta+\beta)$, the Laplace transform of an exponential
 distribution of $pD$ with rate $\beta$. So $D/t_{\mathrm{mem}}=2pD\,[1+O(p)]$ is exponential with mean $s$ in the limit. Because both
 covariances are multiples of the identity to leading order, the same holds for the share of the capacity of any
 readout. Finally, $\sum_kkG_k=(1-\mathcal F)^{-1}\Sigma=\Sigma/(\beta p)+O(p)$ gives
@@ -112,11 +112,11 @@ positive matrices, and so does $(1-\mathcal F)^{-1}=1+(1-\mathcal T)^{-1}\mathca
 $\mathcal F_0$ therefore lie in the closed unit disk, only the simple one equals one, and only the eigenvalue of
 Eq.~\eqref{eq:ordereig} makes the sum diverge.
 
-\subsection{Physical channels without a reset}
+\subsection{Reservoirs without a reset}
 \label{app:physical}
-A physical channel does not reset to a prescribed state, but the proof used the reset only through three facts: one
+A physical reservoir does not reset to a prescribed state, but the proof used the reset only through three facts: one
 covariance direction is slow, it leaks at a small rate, and the mean step forgets everything else. The same three
-steps therefore prove the law for general channels.
+steps therefore prove the law for general reservoirs.
 
 \emph{Setting.} One step is $r_t=A_u(\epsilon)r_{t-1}+b_u(\epsilon)$ on the coordinates that the inputs can reach,
 with a small leak $\epsilon$, and $\mathcal B$, $\mathcal T$ and $\mathcal K$ are formed from $A_u$ as before. We
@@ -124,7 +124,7 @@ assume:
 \begin{enumerate}[label=(\roman*),leftmargin=*,itemsep=2pt,topsep=4pt]
 \item $A_u$ and $b_u$ depend smoothly on $\epsilon$ in mean square, and $b_u$ vanishes at $\epsilon=0$.
 \item The mean step forgets at $\epsilon=0$: $\mathbb EA_u(0)$ has spectral radius below one.
-\item The channel is mean-square stable for small $\epsilon>0$: the covariance step $\mathcal T$ has spectral radius
+\item The reservoir is mean-square stable for small $\epsilon>0$: the covariance step $\mathcal T$ has spectral radius
   below one.
 \item One covariance direction is slow: $\mathcal T$ has a simple eigenvalue $1-\kappa\epsilon+O(\epsilon^2)$ with
   $\kappa>0$ and no other eigenvalue near one. At $\epsilon=0$ its right eigenvector is a positive matrix $Q$, and its
@@ -132,7 +132,7 @@ assume:
 \item The input writes along it: the change written by one input, of order $\epsilon$, has covariance
   $\epsilon^2V_*+O(\epsilon^3)$ with $\ell(V_*)>0$.
 \end{enumerate}
-The reset model is the case $\epsilon=p$, $\kappa=2$, $Q=1$ and $\ell=\Tr/n$. Condition (iv) concerns the
+The reset model is the case $\epsilon=p$, $\kappa=2$, $Q=1$ and $\ell=\Tr/d$. Condition (iv) concerns the
 covariance that the random steps carry, not the number of slow modes: at a fixed amplitude the inputs turn the 99
 slow dark modes of the opposite-phase channel differently in each step and spread a stored signal over all of them
 faster than it leaks, so that one covariance direction stays slow. Without (iv) one observable shows several order
@@ -163,14 +163,11 @@ $\ell(\mathcal B_0Y)\le\ell(\mathcal T_0Y)=\ell(Y)$ for every positive $Y$, so $
 B_0^j\mathcal K_0Q)\le s\le1$ for every $j$. If $s$ vanished, the series $\mathcal F_0=\sum_j\mathcal B_0^j\mathcal
 K_0$ would give $\ell(\mathcal F_0Q)=0$, which contradicts $\mathcal F_0Q=Q$ and $\ell(Q)=1$.
 
-For three spins the certificates of Appendix~\ref{app:spins} check these conditions, and for five spins we check the
-law itself.
-
 \emph{Numerical check.} We compared the law with exact moments for 24 reset reservoirs and readouts in dimensions two to four. The largest
-deviation from the law shrinks in proportion to $p$, from 0.08 at $p=3\%$ to 0.003 at $p=0.1\%$. For five spins the share of the capacity in products of more than $K$ inputs approaches
-$e^{-K/(s\,t_{\mathrm{mem}})}$: its largest deviation, over $K$ and the reservoirs, falls from 0.33 and 0.43 at
-$s\,t_{\mathrm{mem}}\approx1$ to 0.07 and 0.14 at $s\,t_{\mathrm{mem}}\approx20$, with the opposite-phase channel and
-with independent decay.
+deviation from the law shrinks in proportion to $p$, from 0.08 at $p=3\%$ to 0.003 at $p=0.1\%$. For five spins the share of the capacity in products of more than $k$ inputs approaches
+$e^{-k/(s\,t_{\mathrm{mem}})}$. Its largest deviation, over $k$ and the reservoirs, falls from 0.33 at
+$s\,t_{\mathrm{mem}}\approx1$ to 0.07 at $s\,t_{\mathrm{mem}}\approx20$ with the opposite-phase channel, and from
+0.43 to 0.14 with independent decay.
 
 \subsection{The scaling limit}
 \label{app:gentle}
@@ -184,11 +181,11 @@ with independent decay.
 \end{equation}
 with a rotation $O_0$, $\mathbb Ea_1=0$, and a step that is a rotation without the leak, so that
 $a_1^{\mathsf T}=-a_1$ and $a_2+a_2^{\mathsf T}=a_1^2$. Weak independent decay has this form with $\epsilon=\gamma$,
-and the effective generator of Eq.~\eqref{eq:reduced} has it on the dark coordinates with $\epsilon=1/\gamma$:
+and the effective Liouvillian of Eq.~\eqref{eq:reduced} has it on the dark coordinates with $\epsilon=1/\gamma$:
 $O_0$ is the step of the Hamiltonian at the mean input, $a_1$ and $a_2$ are its response to the input field, and $Y$
 and $c_0$ the leak. Let $\Pi_0$ project onto the vectors that $O_0$ leaves fixed and $\Pi$ onto the symmetric matrices
-that commute with $O_0$, the slow covariances. For $d$ energy levels with distinct transition frequencies these are
-the covariances of the $d-1$ populations and one variance for each coherence, $d(d-1)$ numbers. On them, with
+that commute with $O_0$, the slow covariances. For $q$ energy levels with distinct transition frequencies these are
+the covariances of the $q-1$ populations and one variance for each coherence, $q(q-1)$ numbers. On them, with
 $\bar a_2=\mathbb Ea_2$,
 \begin{equation}
   \begin{aligned}
@@ -253,7 +250,7 @@ For (d), (b) is linear in $\nu$ to first order. For large $\nu$, $\mathsf F_\nu\
 leaves the identity unchanged because $\mathsf S1=\mathsf K1$, with the left eigenvector $X\mapsto\Tr\mathsf SX$. To
 first order in $1/\nu$ its eigenvalue moves to $1-2\Tr Y/(\nu\,\mathbb E\|a_1\|_F^2)$. The mean $m_0$ falls as
 $1/\nu$, $V_1$ as $1/\nu^2$, and $\Sigma_\nu$, which piles up along the identity as in Eq.~\eqref{eq:slowcov}, as
-$1/\nu$. In the reset model $Y=1$ and $s=\eta^2\,\mathbb E\|a_1\|_F^2/n$ to leading order.
+$1/\nu$. In the reset model $Y=1$ and $s=\eta^2\,\mathbb E\|a_1\|_F^2/d$ to leading order.
 
 \section{One qubit in closed form}
 \label{app:qubit}
@@ -270,8 +267,8 @@ $\theta^2/\epsilon\to\nu$, Appendix~\ref{app:gentle} applies with $O_0=1$ and gi
   \mathrm{Var}\,Y\to\frac{4\nu}{(\nu+2)(3\nu+2)} .
   \label{eq:qubitlimit}
 \end{equation}
-Single past inputs keep the share $1-\chi$. The signal is largest at $\nu=2/\sqrt3$, where single inputs carry 80\% of the
-capacity, and vanishes as $4/(3\nu)$ for $\nu\gg1$ and as $\nu$ for $\nu\ll1$. Direct propagation of the density
+Single inputs keep the share $1-\chi$. The variance of $Y$ is largest at $\nu=2/\sqrt3$, where single inputs carry
+80\% of it, and vanishes as $4/(3\nu)$ for $\nu\gg1$ and as $\nu$ for $\nu\ll1$. Direct propagation of the density
 matrix reproduces these expressions.
 
 \section{Three spins at strong loss}
@@ -282,9 +279,10 @@ Hamiltonians H1--H4 with couplings drawn from fixed seeds, and every Hamiltonian
 box around theirs. As $\gamma$ grows:
 \begin{itemize}[leftmargin=*,itemsep=2pt,topsep=4pt]
 \item At a fixed input amplitude, the order of the memory of $X_1$, divided by $\gamma$, becomes exponentially
-  distributed, and the signal in $X_1$ falls as $1/\gamma$ (boxes of half-width 1/32).
-\item With the amplitude scaled as $8/\sqrt\gamma$, single past inputs keep a finite share of the capacity of $X_1$,
-  and the range of delays that holds 90\% of their recall grows in proportion to $\gamma$ (boxes of half-width 1/512).
+  distributed, and the variance of $X_1$ falls as $1/\gamma$ (boxes of half-width 1/32).
+\item With the scaled amplitude $\eta=8/\sqrt\gamma$, that is $\nu=64$, single past inputs
+  (Appendix~\ref{sec:order}) keep a finite share of the capacity of $X_1$,
+  and the range of delays that holds 90\% of their capacity grows in proportion to $\gamma$ (boxes of half-width 1/512).
 \end{itemize}
 \end{keybox}
 
@@ -303,7 +301,7 @@ finitely many strict inequalities, which the archive \texttt{spin\_certificates.
 interval arithmetic at 256 bits (ball arithmetic of Arb, python-flint 0.9.0), and the note
 \texttt{three\_spin\_limits.pdf} writes out the derivation. An independent program builds the full finite-rate maps
 and agrees with the certified values to better than one part in a million. The certified rate of the exponential law
-lies between 61 and 133, and with the scaled amplitude at $\gamma=2^{16}$ single inputs keep between 8\% and 81\% of the
+lies between 61 and 133, and with the scaled amplitude at $\gamma=2^{16}$ single past inputs keep between 8\% and 81\% of the
 capacity of $X_1$.
 
 \paragraph{Why coherence carries the memory.}
@@ -316,13 +314,11 @@ of magnitude, when they are erased.
 
 \section{Numerical details and supporting checks}
 \label{app:numerics}
-This appendix backs the main text, section by section.
-
 \subsection{Memory lifetime and dark states (Sec.~\ref{sec:clock})}
 \label{app:num-lifetime}
 Figures smooth recall curves for display only, by averaging each delay with its neighbours within a fifth of the
 delay, and no sum uses the smoothed values. The maps of Fig.~\ref{fig:clock}a,b are computed at $\gamma=0.1$, 0.25
-and $2^{-1}$ to $2^6$ and interpolated along the delay. Figure~\ref{fig:clock}c stops the equal-phase channel and the two collective channels at
+and $2^{-1}$ to $2^6$ and interpolated along the delay. Figure~\ref{fig:clock}c stops the equal-phase channel and the two-group channel at
 $\gamma=64$, where their recall at a fixed amplitude starts to reach past the 300 delays we sum. Summed over all
 delays with exact moments (Appendix~\ref{sec:order}), their capacity keeps rising up to $\gamma=256$.
 
@@ -344,8 +340,8 @@ depends on the size.
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/figE_sizes.pdf}
-\caption{\textbf{Other reservoir sizes.} Capacity against the loss rate as in Fig.~\ref{fig:clock}c, for four and
-six spins, with the same shading. A line stops where its recall reaches past the 300 delays summed.}
+\caption{\textbf{Other reservoir sizes.} Capacity against the loss rate as in Fig.~\ref{fig:clock}c, for four
+spins (eight reservoirs) and six spins (four reservoirs), with the same shading. A line stops where its recall reaches past the 300 delays summed.}
 \label{fig:sizes}
 \end{figure}
 
@@ -356,7 +352,7 @@ $\gamma=1$ and 64 at four spins and from 15 to 51 at six, and a scaled amplitude
 two channels. At three spins, which have only three dark states, the capacity of the equal-phase channel does not
 grow.
 
-\subsection{Recall time and phases (Secs.~\ref{sec:mixing} and~\ref{sec:writing})}
+\subsection{Recall time and phases (Sec.~\ref{sec:mixing})}
 \label{app:num-mixing}
 The recall time $t_{\mathrm f}$ shows the balance of decay and mixing. Its rate adds the decay of the
 stored signal and a mixing rate that grows as $\eta^2$ (Appendix~\ref{sec:methods-slow}). The decay grows as $\gamma$
@@ -364,8 +360,7 @@ with independent decay and falls as $1/\gamma$ with the opposite-phase channel, 
 loss and input only through $\gamma/\eta^2$ and through $\gamma\eta^2$, the $1/\nu$ and $\nu$ of
 Appendix~\ref{app:gentle}. Both collapses hold for the four
 amplitudes $\eta=1$, $\tfrac12$, $\tfrac14$ and $\tfrac18$ (Fig.~\ref{fig:checks}a), for $\gamma$ from $2^{-8}$ to
-$2^6$ with independent decay and from $2^{-2}$ to $2^{12}$ with the opposite-phase channel. With the slowest mode in
-place of the mean rate they hold to within 11\% wherever the recall time exceeds four steps.
+$2^6$ with independent decay and from $2^{-2}$ to $2^{12}$ with the opposite-phase channel.
 
 \begin{figure}[!t]
 \centering
@@ -384,12 +379,12 @@ The mode-matched pattern falls as $1/\gamma$, to 0.003 at $\gamma=128$, while th
 is sharp: a phase error $\delta$ couples dark states directly at order $\delta$, so beyond $\gamma\sim1/\delta$ the
 equal-phase channel behaves like the opposite-phase channel.
 
-\subsection{Inputs mixed and capacities (Secs.~\ref{sec:mixing} and~\ref{sec:writing})}
+\subsection{Orders and capacities (Sec.~\ref{sec:mixing})}
 \label{app:num-capacity}
 The distribution of the number of inputs mixed, Eq.~\eqref{eq:recursion}, uses six-point Gauss--Legendre quadrature
 for the expectations over the input and solves the equations $X-\bar AX\bar A^{\mathsf T}=C$ in the eigenbasis of
 $\bar A$. The shares of the 45 features are summed until the rest falls below $10^{-8}$, or until successive orders
-shrink at a settled ratio, whose geometric tail we add. The linear recall follows from the same moments,
+shrink at a settled ratio, whose geometric tail we add. The recall follows from the same moments,
 $C_\tau=c_\tau^{\mathsf T}\Sigma_y^{-1}c_\tau/\mathrm{Var}\,u$ with $c_\tau$ the covariance of the features with
 $u_{t-\tau}$ and $\Sigma_y$ their covariance, and reproduces the simulated capacities to a median of 2\%. Three steps of
 inverse iteration on $\mathcal T$, from the input's covariance $V$ and from the identity, give $t_{\mathrm{mem}}$, $Q$
@@ -398,33 +393,31 @@ and $\ell$. Loss rates run in powers of four over the ranges of Fig.~\ref{fig:mi
 opposite-phase channel rises from 1.8 at $\gamma=1$ to 23 at $\gamma=4096$, and with independent decay it stays within
 2.2 of $s\,t_{\mathrm{mem}}$ up to $s\,t_{\mathrm{mem}}=18$.
 
-Figure~\ref{fig:mixing}a shows the linear recall summed over all delays, from the same moments. At a fixed amplitude
-it peaks at 16.0 units with the opposite-phase channel ($\gamma=64$, $s\,t_{\mathrm{mem}}=0.32$) and at 14.9 with
-independent decay ($\gamma=1/16$, 0.20), and falls to 2.2 and 3.7 units at lifetimes of 750 and 430 steps, where
-single past inputs carry 0.05 and 0.09 of the capacity. With the scaled amplitude single inputs carry 0.82 of the capacity
-at a lifetime of 20 steps and 0.87 to 0.90 beyond 80 steps, the recall stays between 39 and 40 units, and
-$s\,t_{\mathrm{mem}}$ between 0.007 and 0.014. Of the inputs that the scaled amplitude removes from the mean of $D$
-with the opposite-phase channel, the mixing over the lifetime accounts for 43\% at a lifetime of 20 steps, for 84\%
-at 200 steps and for 99\% at 750.
+Figure~\ref{fig:mixing}a shows the linear memory capacity over all delays, from the same moments. At a fixed
+amplitude it peaks at 16.0 units with the opposite-phase channel, at $\gamma=64$ and $s\,t_{\mathrm{mem}}=0.32$, and
+falls to 2.2 units at a lifetime of 750 steps, where single inputs carry 0.07 of the total capacity. With independent
+decay it peaks at 14.9 units, at $\gamma=1/16$ and $s\,t_{\mathrm{mem}}=0.20$, and falls to 3.7 units at 430 steps,
+where single inputs carry 0.10. With the scaled amplitude single inputs carry 0.85 of the total capacity at a
+lifetime of 20 steps and 0.88 to 0.92 beyond 80 steps, where the capacity stays between 39 and 40 units and
+$s\,t_{\mathrm{mem}}$ between 0.007 and 0.014.
 
 \paragraph{The scaling limit.}
-We build the limit of Appendix~\ref{app:gentle} from the generator of each reservoir: $O_0$, $a_1$ and $a_2$ are the
+We build the limit of Appendix~\ref{app:gentle} from the Liouvillian of each reservoir: $O_0$, $a_1$ and $a_2$ are the
 orders zero to two of the step in the input field, and $Y$ and $c_0$ its first order in the leak. Independent decay
 has 992 slow covariances and the opposite-phase channel 90, for the ten dark states under Eq.~\eqref{eq:reduced}, and
 at $\nu=1$ they decay by at least $0.5\,\epsilon$ and $1.4\,\epsilon$ per step. With the opposite-phase channel 33
 directions of the 45 features respond at leading order, 11 through the admixture of decaying operators of order
 $1/\gamma$, which the readout of the limit includes and which raises the share of single inputs by up to 0.02, and
-one at order $1/\gamma^2$, which the recursion no longer resolves from $\gamma=1024$ on. The share of single inputs is
-here the share of $D=1$, which includes the current input.
+one at order $1/\gamma^2$, which the recursion no longer resolves from $\gamma=1024$ on.
 
-For the effective generator of Eq.~\eqref{eq:reduced} the recursion converges onto the limit: at $\nu=1$ the share of single inputs agrees to
+For the effective Liouvillian of Eq.~\eqref{eq:reduced} the recursion converges onto the limit: at $\nu=1$ the share of single inputs agrees to
 four digits from $\gamma=2^{14}$ on. For the full master equation at $\gamma=1/4096$ and 4096, on two reservoirs and
 for $\nu=1/16$ to 64, it differs from the limit by at most 0.002 with independent decay and 0.009 with the
-opposite-phase channel, the mean of $D$ by 0.003 and 0.016, and the signal, the variance that single inputs leave in
-the 45 features, by 0.4\%. At $\nu=1$ the limit gives single inputs 0.86 to 0.93 of the capacity over four reservoirs
-with independent decay and 0.90 to 0.94 with the opposite-phase channel. The signal is largest at $\nu=22$ to 46 and
-at 68 to 215, where single inputs carry 0.38 to 0.55 of the capacity and $\varrho/(1-\varrho)$ lies between 0.8 and
-4.8.
+opposite-phase channel, the mean of $D$ by 0.003 and 0.016, and the variance that single inputs leave in the 45
+features by 0.4\%. At $\nu=1$ the limit gives single inputs 0.86 to 0.93 of the total capacity over four reservoirs
+with independent decay and 0.90 to 0.94 with the opposite-phase channel. The variance that single inputs leave is
+largest at $\nu=22$ to 46 with independent decay and at $\nu=68$ to 215 with the opposite-phase channel. There single
+inputs carry 0.38 to 0.55 of the total capacity, and $\varrho/(1-\varrho)$ lies between 0.8 and 4.8.
 
 Table~\ref{tab:memory} collects the capacities of simulated runs on eight reservoirs. Their readout is trained and
 tested on a finite number of inputs, and their sum stops at 300 delays. On the four reservoirs that both use, with the
@@ -437,7 +430,7 @@ memory capacity from 15 to 40 units leaves at most 5 instead of 30 for products 
 units (maximum 45) and summed over the first 300 delays: with exact expectation values, at a budget of $10^9$
 reservoir steps per output step, and with $n$ shots per setting and step with the rewinding protocol
 (Sec.~\ref{sec:price}). Mean and standard deviation over eight reservoirs. Exact moments over all delays, as quoted in
-Secs.~\ref{sec:mixing} and~\ref{sec:writing}, are higher by up to 4 units (Appendix~\ref{app:num-capacity}).}
+Sec.~\ref{sec:mixing}, are higher by up to 4 units (Appendix~\ref{app:num-capacity}).}
 \centering\footnotesize\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
@@ -455,29 +448,28 @@ $\gamma=64$, $n=10^6$$^{f}$ & $0.2\pm0.0$ & $9.9\pm0.7$ & $2.3\pm1.0$\\
 
 \smallskip
 \raggedright\footnotesize
-$^{a}$At the best loss rates, $\gamma=0.1$, 64 and 64. $^{b}$At $\gamma=1/64$ and 256. $^{c}$The uniform input is mode-matched
+$^{a}$At the loss rates with the largest sum over 300 delays, $\gamma=0.1$, 64 and 64. Over all delays the capacity of
+the equal-phase channel keeps rising up to $\gamma=256$ (Appendix~\ref{app:num-lifetime}). $^{b}$At $\gamma=1/64$ and 256. $^{c}$The uniform input is mode-matched
 to this channel. $^{d}$At $\gamma=1/8$, 16 and 1, the best loss rates on the grid. $^{e}$At $\gamma=1/64$ and 64.
 $^{f}$At a fixed amplitude.
 \end{table}
 
-\subsection{Best input amplitude (Secs.~\ref{sec:writing} and~\ref{sec:price})}
+\subsection{Best input amplitude (Secs.~\ref{sec:mixing} and~\ref{sec:price})}
 \label{app:num-amplitude}
 We mapped the linear memory capacity over loss rates and amplitudes: the first four reservoirs, independent decay at
 $\gamma=2^{-8}$ to $2^{-2}$ and at 1, the opposite-phase channel at $\gamma=1$, 4 and $2^3$ to $2^8$, and fifteen
 amplitudes from $\eta=2^{-7}$ to 1, with exact features or $10^6$ to $10^8$ shots per setting and step from
 the state with the full history. With exact expectation values the capacity rises as the input weakens, up to 43 of the 45
-units. With $10^6$ to $10^8$ shots an optimum exists. Its amplitude falls with the relaxation time, here the recall
+units. With $10^6$ to $10^8$ shots an optimum exists. Its amplitude falls with the relaxation time, computed as the recall
 time at $\eta=2^{-8}$, with fitted exponents between $-0.40$ and $-0.46$ in all six fits over the
 loss rates whose relaxation time is at least four steps. Without the loss rates whose recall reaches past the 300 delays
 summed, the exponents are $-0.48$ to $-0.56$ with independent decay and $-0.38$ to $-0.39$ with the opposite-phase
-channel. The optimum is flat: one amplitude for all loss rates recovers on average 91\% to 97\% of the capacity at
-the optimum tracked at each loss rate, so the input need not be tuned to the loss rate.
+channel. The optimum is flat. Over the loss rates of the map, one amplitude recovers on average 91\% to 97\% of the
+capacity at the optimum tracked at each loss rate, so within such a range the amplitude needs no fine tuning.
 
 \subsection{Measurement (Sec.~\ref{sec:price})}
 \label{app:num-measurement}
-Weak signals cost measurements: with independent decay at $\gamma=64$ the previous input moves the state by about
-$10^{-9}$, which gives perfect recall of that input with exact expectation values and none with $10^8$ shots per setting
-and step. With the opposite-phase channel, the scaled amplitude lowers the signal from $8\times10^{-5}$ to $5\times10^{-6}$,
+With the opposite-phase channel, the scaled amplitude lowers the variance of the features from $8\times10^{-5}$ to $5\times10^{-6}$,
 and restarting each run from $|00000\rangle$, as the rewinding protocol does, raises it to $4\times10^{-5}$, against
 $1.2\times10^{-4}$ with independent decay and the scaled amplitude at $\gamma=1/32$.
 
@@ -512,7 +504,7 @@ exchange & 0.064 & 0.30 & $25.1\pm0.8$ & $10.1\pm0.9$\\
 gain/loss & 0.079 & 0.46 & $24.4\pm0.8$ & $12.5\pm0.9$\\
 pairwise & 168 & 1.5 & $18.2\pm2.0$ & $12.4\pm1.2$\\
 opposite phases & 101 & 0.68 & $25.3\pm2.6$ & $15.0\pm1.5$\\
-two channels & 73 & 0.011 & $26.6\pm2.9$ & $0.3\pm0.1$\\
+two groups & 73 & 0.011 & $26.6\pm2.9$ & $0.3\pm0.1$\\
 equal phases & 47 & 0.018 & $35.3\pm0.8$ & $0.3\pm0.1$\\
 dephasing & 143 & 0 & 0.0 & 0.2$^{a}$\\
 \bottomrule
@@ -531,15 +523,18 @@ coefficients $\Tr(PW)$, over all Pauli strings $P$, of the change $W$: the commu
 $H_{\mathrm{in}}=h\sum_iX_i$ and $\rho_*$ the stationary state, projected spectrally onto the slow modes. These are the
 modes of the kernel, or without one those decaying at most four times faster than the slowest. The loss
 rate is matched for each reservoir, so Table~\ref{tab:matched} gives its mean. Over the 56 reservoirs of the seven channels that respond, the rank correlation of the linear response is 0.96 with
-the recovered fraction of the capacity and 0.83 with the recovered capacity itself.
+the recovered fraction of the capacity and 0.83 with the recovered capacity itself. The seven channel medians have a
+rank correlation of 0.93 with the recovered fraction. Within single channels, over eight reservoirs each, it is 0.81
+to 0.95 for six channels and 0.29 for pairwise decay, and with the variance of the features it is at least 0.83 for
+all seven.
 
-\subsection{Local loss and dephasing}
+\subsection{Added independent decay and dephasing}
 \label{app:num-noise}
-Adding independent decay $\sqrt{\gamma_{\mathrm{loc}}}\,\sigma_i^-$ to the equal-phase channel gives
-$\bar\kappa=\kappa_{\mathrm c}/\gamma+\kappa_{\mathrm l}\gamma_{\mathrm{loc}}$, where to first order $\kappa_{\mathrm l}$
-is the trace of the added dissipator on the 99 slow dark modes divided by 99, $140/99\approx1.414$. Local dephasing
-$\sqrt{\gamma_\phi}\,Z_i$ adds $\kappa_\phi\gamma_\phi$ with $\kappa_\phi=403.2/99\approx4.073$, and the full spectra
-reproduce both coefficients to within 0.2\%. A recall time of at least $T$ steps,
-$\kappa_{\mathrm c}/\gamma+\kappa_{\mathrm l}\gamma_{\mathrm{loc}}\le1/(\Delta t\,T)$, then needs
-$\gamma/\gamma_{\mathrm{loc}}\ge4\kappa_{\mathrm c}\kappa_{\mathrm l}\,\Delta t^2T^2\approx4.2\,T^2$, or $12\,T^2$ for
+Adding independent decay $\sqrt{\gamma_{\mathrm{ind}}}\,\sigma_i^-$ to the equal-phase channel gives the dark modes
+the mean decay rate $\bar\kappa_0=\kappa_{\mathrm c}/\gamma+\kappa_{\mathrm l}\gamma_{\mathrm{ind}}$, where to first
+order $\kappa_{\mathrm l}$ is the trace of the added dissipator on the 99 slow dark modes divided by 99,
+$140/99\approx1.414$. Dephasing $\sqrt{\gamma_\phi}\,Z_i$ adds $\kappa_\phi\gamma_\phi$ with
+$\kappa_\phi=403.2/99\approx4.073$, and the full spectra reproduce both coefficients to within 0.2\%. A relaxation
+time of at least $T$ steps, $\bar\kappa_0\le1/(\Delta t\,T)$, then needs
+$\gamma/\gamma_{\mathrm{ind}}\ge4\kappa_{\mathrm c}\kappa_{\mathrm l}\,\Delta t^2T^2\approx4.2\,T^2$, or $12\,T^2$ for
 dephasing.
